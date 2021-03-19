@@ -1,13 +1,14 @@
-const { Merchant } = require('../models')
+const { Merchant, User } = require('../models')
 
 class MerchantController {
   static getAllMerchant(req, res, next) {
     const activeUser = req.decoded.id
+    console.log(activeUser);
     Merchant.findAll({
       where: {
         user_id: activeUser
       },
-      include: [User]
+      include: User
     })
       .then(result => {
         res.status(200).json(result)
@@ -68,7 +69,7 @@ class MerchantController {
       returning: true
     })
       .then(result => {
-        if (!result[0]) throw { name: "DATA_NOT_FOUND" }
+        if (!result[0]) throw { name: "CustomError", message: 'Data Not Found', status: 404 }
         res.status(200).json(result[1][0])
       })
       .catch(err => {
@@ -84,9 +85,9 @@ class MerchantController {
       }
     })
       .then(result => {
-        if (!result) throw { name: "DATA_NOT_FOUND" }
-        let msg = "Merchant is successfully deleted"
-        res.status(200).json({ msg })
+        if (!result) throw { name: "CustomError", message: 'Data Not Found', status: 404 }
+        let message = "Merchant is successfully deleted"
+        res.status(200).json({ message })
       })
       .catch(err => {
         next(err)
