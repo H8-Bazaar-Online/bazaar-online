@@ -12,6 +12,14 @@ let data = {
     logo: 'unsplash.com/lkjljl.jpg',
     category: 'Food'
 }
+let data2 = {
+    username: 'user2',
+    email : 'user2@mail.com',
+    password : 'secret',
+    merchantName: 'Bazol',
+    logo: 'unsplash.com/lkjljl.jpg',
+    category: 'Electronic'
+}
 
 let productData = {
     name: 'Tes Product',
@@ -19,6 +27,7 @@ let productData = {
     price: 20000,
     stock: 10,
     image_url: 'http://usplash.com',
+    category: 'Snack',
     merchant_id: 1
 }
 
@@ -29,17 +38,20 @@ describe('Product routes',()=>{
         User.create({ username: data.username, email: data.email, password: data.password, role: 'merchant' })
           .then(user => {
             userToken = generateToken({ id: user.id, email: user.email, role: user.role }, 'secret')
-            user2Token = generateToken({ id: user.id, email: user.email, role: 'customer' }, 'secret')
             let merchantData = {
               name: data.merchantName,
               logo: data.logo,
               category: data.category,
-              user_id
+              user_id: user.id
             }
             return Merchant.create(merchantData)
           })
           .then(merchant => {
             productData.merchant_id = merchant.id
+            return User.create({ username: data2.username, email: data2.email, password: data2.password, role: 'merchant' })
+          })
+          .then(user2 => {
+            user2Token = generateToken({ id: user2.id, email: user2.email, role: user2.role }, 'secret')
             done()
           })
           .catch(err => {
@@ -72,6 +84,7 @@ describe('Product routes',()=>{
                         expect(res.body.product).toHaveProperty('price', expect.any(Number))
                         expect(res.body.product).toHaveProperty('stock', expect.any(Number))
                         expect(res.body.product).toHaveProperty('image_url', expect.any(String))
+                        expect(res.body.product).toHaveProperty('category', expect.any(String))
                         expect(res.body.product).toHaveProperty('merchant_id', expect.any(Number))
                         expect(res.status).toBe(201)
                         done()
@@ -159,7 +172,8 @@ describe('Product routes',()=>{
             test('should send an error with status 401 because invalid access_token',(done)=>{
                 request(app)
                     .delete('/products/' + productId)
-                    .set('access_token', user2Token) //tokennya si role = customer
+                    .set('access_token', user2Token) //tokennya merchant lain | => cek product.merchant_id === merchant.id ?
+                                                    // user token => id, email, role, => role === 'merchant' => merchant.id === user.merchant_id
                     .end((err,res)=>{
                         expect(err).toBe(null)
                         expect(res.body).toHaveProperty('message', 'not authorized')

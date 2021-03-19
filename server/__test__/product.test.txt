@@ -17,12 +17,12 @@ afterAll(done => {
     })
 });
 
-describe('SUCCESS POST /products', function() {
+describe('POST /products', function() {
   it('should return status 201 with new data product', function(done) {
     const payload = {
       id: 1,
-      email: 'admin@mail.com',
-      role: 'admin'
+      email: 'merchant@mail.com',
+      role: 'merchant'
     }
     const access_token = hashPass(payload);
     const body = {
@@ -31,6 +31,7 @@ describe('SUCCESS POST /products', function() {
       price: 200000,
       stock: 3,
       image_url: 'http://usplash.com',
+      category: 'Pants'
       merchant_id: 1
     }
     request(app)
@@ -51,6 +52,7 @@ describe('SUCCESS POST /products', function() {
         expect(res.body).toHaveProperty('price');
         expect(res.body).toHaveProperty('stock');
         expect(res.body).toHaveProperty('image_url');
+        expect(res.body).toHaveProperty('category');
         expect(res.body).toHaveProperty('merchant_id');
 
         expect(typeof res.body.id).toEqual('number');
@@ -59,19 +61,22 @@ describe('SUCCESS POST /products', function() {
         expect(typeof res.body.price).toEqual('number');
         expect(typeof res.body.stock).toEqual('number');
         expect(typeof res.body.image_url).toEqual('string');
+        expect(typeof res.body.category).toEqual('string');
         expect(typeof res.body.merchant_id).toEqual('number');
 
         done()
       })
   })
 
-  it('access_token is undefined', function(done) {
+  it('access_token not provided', function(done) {
     const body = {
       name: 'Tes Product',
       description: 'ini tes product',
       price: 20000,
       stock: 10,
       image_url: 'http://usplash.com',
+      merchant_id: 1,
+      category: 'tes',
       merchant_id: 1
     }
     request(app)
@@ -104,6 +109,8 @@ describe('SUCCESS POST /products', function() {
       price: 20000,
       stock: 10,
       image_url: 'http://usplash.com',
+      merchant_id: 1,
+      category: 'tes',
       merchant_id: 1
     }
     request(app)
@@ -127,8 +134,8 @@ describe('SUCCESS POST /products', function() {
   it('blank required fields', function(done) {
     const payload = {
       id: 1,
-      email: 'admin@mail.com',
-      role: 'admin'
+      email: 'merchant@mail.com',
+      role: 'merchant'
     }
     const access_token = hashPass(payload);
     const body = {
@@ -136,7 +143,9 @@ describe('SUCCESS POST /products', function() {
       description: 'ini tes product',
       price: 20000,
       stock: 10,
-      image_url: ''
+      image_url: '',
+      category: '',
+      merchant_id: 1
     }
     request(app)
       .post('/products')
@@ -160,8 +169,8 @@ describe('SUCCESS POST /products', function() {
   it('invalid price', function(done) {
     const payload = {
       id: 1,
-      email: 'admin@mail.com',
-      role: 'admin'
+      email: 'merchant@mail.com',
+      role: 'merchant'
     }
     const access_token = hashPass(payload);
     const body = {
@@ -169,7 +178,9 @@ describe('SUCCESS POST /products', function() {
       description: 'ini tes product',
       price: -20000,
       stock: 10,
-      image_url: 'http://usplash.com'
+      image_url: 'http://usplash.com',
+      category: 'tes',
+      merchant_id: 1
     }
     request(app)
     .post('/products')
@@ -192,8 +203,8 @@ describe('SUCCESS POST /products', function() {
   it('invalid stock', function(done) {
     const payload = {
       id: 1,
-      email: 'admin@mail.com',
-      role: 'admin'
+      email: 'merchant@mail.com',
+      role: 'merchant'
     }
     const access_token = hashPass(payload);
     const body = {
@@ -201,7 +212,9 @@ describe('SUCCESS POST /products', function() {
       description: 'ini tes product',
       price: 20000,
       stock: "tiga",
-      image_url: 'http://usplash.com'
+      image_url: 'http://usplash.com',
+      category: 'tes',
+      merchant_id: 1
     }
     request(app)
       .post('/products')
@@ -224,15 +237,18 @@ describe('SUCCESS POST /products', function() {
   it('invalid data type input', function(done) {
     const payload = {
       id: 1,
-      email: 'admin@mail.com',
-      role: 'admin'
+      email: 'merchant@mail.com',
+      role: 'merchant'
     }
     const access_token = hashPass(payload);
     const body = {
-      name: 'Tes Product', 
-      image_url: 'https://usplash.com/',
-      price: 200000,
-      stock: 'tiga'
+      name: 'Tes Product',
+      description: 'ini tes product',
+      price: 20000,
+      stock: "tiga",
+      image_url: 'http://usplash.com',
+      category: 'tes',
+      merchant_id: 1
     }
     request(app)
     .post('/products')
