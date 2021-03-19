@@ -4,33 +4,32 @@ const { generateToken } = require('../helpers/jwt')
 
 class UserController {
   static register(req, res, next) {
-    //   res.send('ini register')
     const { username, email, password, role } = req.body
     User.create({ username, email, password, role })
       .then(user => {
         res.status(201).json({
-          msg: 'Register Success',
           id: user.id,
-          email: user.email
+          email: user.email,
+          username: user.username,
+          role: user.role
         })
       })
       .catch(err => {
-        res.status(500).json({ err })
-        // next(err)
+        next(err)
       })
   }
 
   static login(req, res, next) {
-    //   res.send('ini login')
     const { email, password } = req.body
+
     User.findOne({
       where: { email }
     })
       .then(user => {
-        if (!user) throw { msg: 'Invalid email or password' }
+        if (!user) throw { name: 'CustomError', message: 'Invalid Email or Password', status: 400 }
         const comparedPassword = comparePass(password, user.password)
-        if (!comparedPassword) throw { msg: 'Invalid email or password' }
-
+        if (!comparedPassword) throw { name: 'CustomError', message: 'Invalid Email or Password', status: 400 }
+        
         const access_token = generateToken({
           id: user.id,
           email: user.email
@@ -38,9 +37,7 @@ class UserController {
         res.status(200).json({ access_token })
       })
       .catch(err => {
-        const error = err.msg || 'internal server error'
-        res.status(500).json({ error })
-        // next(err)
+        next(err)
       })
   }
 }

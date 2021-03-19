@@ -1,13 +1,25 @@
 const request = require('supertest')
 const app = require('../app.js')
-const userValid = { username: 'merchant', email: 'merchant@mail.com', password: 'merchant123', role: 'merchant' }
+const { sequelize, User } = require('../models')
+const { hashPass } = require('../helpers/bcrypt')
+const { queryInterface } = sequelize
+const userValid = { username: 'user1', email: 'merchant@mail.com', password: hashPass('merchant123'), role: 'merchant' }
+
+// beforeAll(done => {
+//   User.create(userValid)
+//   .then(user => {
+//     console.log(user, '<<<');
+//     done()
+//   })
+//   .catch(err => done(err) )
+// })
 
 describe('POST /login success', () => {
   test('login success', (done) => {
     request(app)
-      .post('/login')
+      .post('/users/login')
       .set('Accept', 'application/json')
-      .send(userValid)
+      .send({ email: 'merchant@mail.com', password: "merchant123" })
       .then(response => {
         const { status, body } = response
         expect(status).toBe(200)
@@ -23,13 +35,14 @@ describe('POST /login success', () => {
 describe('POST /login failed', () => {
   test('login failed, wrong password', (done) => {
     request(app)
-      .post('/login')
+      .post('/users/login')
       .set('Accept', 'application/json')
       .send({ email: 'admin@mail.com', password: 'salah123' })
       .then(response => {
         const { status, body } = response
-        expect(status).toBe(401)
-        expect(body).toHaveProperty('message', 'Invalid Email or Password')
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('message', expect.any(Array))
+        expect(body.message).toContain('Invalid Email or Password')
         return done()
       })
       .catch(err => {
@@ -39,13 +52,14 @@ describe('POST /login failed', () => {
 
   test('login failed, email does not exist in the database', (done) => {
     request(app)
-      .post('/login')
+      .post('/users/login')
       .set('Accept', 'application/json')
       .send({ email: 'user@mail.com', password: 'admin123' })
       .then(response => {
         const { status, body } = response
         expect(status).toBe(400)
-        expect(body).toHaveProperty('message', 'Invalid Email or Password')
+        expect(body).toHaveProperty('message', expect.any(Array))
+        expect(body.message).toContain('Invalid Email or Password')
         return done()
       })
       .catch(err => {
@@ -55,17 +69,18 @@ describe('POST /login failed', () => {
 
   test('login failed, email/password not empty', (done) => {
     request(app)
-      .post('/login')
+      .post('/users/login')
       .set('Accept', 'application/json')
       .send({ email: '', password: '' })
       .then(response => {
         const { status, body } = response
         expect(status).toBe(400)
-        expect(body).toHaveProperty('message', 'Email or password cannot be empty')
-        done()
+        expect(body).toHaveProperty('message', expect.any(Array))
+        expect(body.message).toContain('Invalid Email or Password')
+        return done()
       })
       .catch(err => {
-        done(err)
+        return done(err)
       })
   })
 })
