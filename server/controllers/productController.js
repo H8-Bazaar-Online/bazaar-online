@@ -15,7 +15,7 @@ class productController {
     const { name, description, price, stock, category, image_url } = req.body
     Product.create({ name, description, price, stock, category, image_url, merchant_id})
     .then((newProduct) => {
-      res.status(200).json(newProduct)
+      res.status(201).json(newProduct)
     })
     .catch((err) => {
       next(err)
@@ -39,20 +39,21 @@ class productController {
   }
 
   static updateProduct(req, res, next) {
-    const merchant_id = +req.decoded.id
+    const merchant_id = +req.merchant.id
     const { name, description, price, stock, category, image_url} = req.body
     const id = +req.params.id
     const option = {
       where: {
-        id
+        id,
+        merchant_id
       },
       returning: true
     }
 
-    Product.update({ name, description, price, stock, category, image_url, merchant_id }, option)
+    Product.update({ name, description, price, stock, category, image_url }, option)
     .then((updateProduct) => {
-      // console.log(updateProduct, "<<update");
-      if(!updateProduct[1][0]) throw { name: 'Error404', status: 404, msg: 'Error Not Found !!'}
+      console.log(updateProduct, "<<update");
+      if(!updateProduct[1][0]) throw { name: 'CustomError', status: 404, message: 'Error Not Found !!'}
 
       res.status(200).json(updateProduct[1][0])
     })
@@ -63,14 +64,17 @@ class productController {
 
   static deleteProduct(req, res, next){
     const id = +req.params.id
+    const merchant_id = +req.merchant.id
+    
     Product.destroy({
       where: {
-        id
+        id,
+        merchant_id
       }
     })
     .then((data) => {
       console.log(data);
-      if(!data) throw { name: 'Error404', status: 404, msg: 'Error Not Found !!'}
+      if(!data) throw { name: 'CustomError', status: 404, message: 'Error Not Found !!'}
 
       res.status(200).json({ message : 'Product success to delete!!'})
     }).catch((err) => {
