@@ -1,0 +1,254 @@
+const request = require('supertest');
+const app = require('../app');
+const { Product, sequelize } = require('../models/index');
+const { hashPass } = require('../helpers/bcrypt');
+
+let id = 1;
+
+afterAll(done => {
+  Product.destroy({ where: {} })
+    .then(() => {
+      done();
+    }).catch(err => {
+      console.log(err);
+    }).then(() => {
+      sequelize.close();
+      done();
+    })
+});
+
+describe('SUCCESS POST /products', function() {
+  it('should return status 201 with new data product', function(done) {
+    const payload = {
+      id: 1,
+      email: 'admin@mail.com',
+      role: 'admin'
+    }
+    const access_token = hashPass(payload);
+    const body = {
+      name: 'Tes Product',
+      description: 'Ini tes product', 
+      price: 200000,
+      stock: 3,
+      image_url: 'http://usplash.com',
+      merchant_id: 1
+    }
+    request(app)
+      .post('/products')
+      .send(body)
+      .set('access_token', access_token)
+      .end(( err, res ) => {
+        if (err) return done(err);
+
+        id = res.body.id
+
+        expect(res.status).toEqual(201);
+        expect(typeof res.body).toEqual('object');
+
+        expect(res.body).toHaveProperty('id');
+        expect(res.body).toHaveProperty('name');
+        expect(res.body).toHaveProperty('description');
+        expect(res.body).toHaveProperty('price');
+        expect(res.body).toHaveProperty('stock');
+        expect(res.body).toHaveProperty('image_url');
+        expect(res.body).toHaveProperty('merchant_id');
+
+        expect(typeof res.body.id).toEqual('number');
+        expect(typeof res.body.name).toEqual('string');
+        expect(typeof res.body.description).toEqual('string');
+        expect(typeof res.body.price).toEqual('number');
+        expect(typeof res.body.stock).toEqual('number');
+        expect(typeof res.body.image_url).toEqual('string');
+        expect(typeof res.body.merchant_id).toEqual('number');
+
+        done()
+      })
+  })
+
+  it('access_token is undefined', function(done) {
+    const body = {
+      name: 'Tes Product',
+      description: 'ini tes product',
+      price: 20000,
+      stock: 10,
+      image_url: 'http://usplash.com',
+      merchant_id: 1
+    }
+    request(app)
+      .post('/products')
+      .send(body)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        expect(res.status).toEqual(500);
+        expect(typeof res.body).toEqual('object');
+
+        expect(res.body).toHaveProperty('errors');
+
+        expect(Array.isArray(res.body.errors)).toEqual(true)
+        expect(res.body.errors).toContain('Please Login First')
+        done();
+      })
+  })
+
+  it('not authorized', function(done) {
+    const payload = {
+      id: 2,
+      email: 'customer@mail.com',
+      role: 'customer'
+    }
+    const access_token = hashPass(payload);
+    const body = {
+      name: 'Tes Product',
+      description: 'ini tes product',
+      price: 20000,
+      stock: 10,
+      image_url: 'http://usplash.com',
+      merchant_id: 1
+    }
+    request(app)
+      .post('/products')
+      .send(body)
+      .set('access_token', access_token)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        expect(res.status).toEqual(401);
+        expect(typeof res.body).toEqual('object');
+
+        expect(res.body).toHaveProperty('errors');
+
+        expect(Array.isArray(res.body.errors)).toEqual(true)
+        expect(res.body.errors).toContain('Not Authorize')
+        done();
+      })
+  })
+
+  it('blank required fields', function(done) {
+    const payload = {
+      id: 1,
+      email: 'admin@mail.com',
+      role: 'admin'
+    }
+    const access_token = hashPass(payload);
+    const body = {
+      name: '',
+      description: 'ini tes product',
+      price: 20000,
+      stock: 10,
+      image_url: ''
+    }
+    request(app)
+      .post('/products')
+      .send(body)
+      .set('access_token', access_token)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        expect(res.status).toEqual(400);
+        expect(typeof res.body).toEqual('object');
+
+        expect(res.body).toHaveProperty('errors');
+
+        expect(Array.isArray(res.body.errors)).toEqual(true)
+        // expect(res.body.errors).toContain('Name is required')
+        // expect(res.body.errors).toContain('Image URL is required')
+        done();
+      })
+  })
+
+  it('invalid price', function(done) {
+    const payload = {
+      id: 1,
+      email: 'admin@mail.com',
+      role: 'admin'
+    }
+    const access_token = hashPass(payload);
+    const body = {
+      name: 'Tes Product',
+      description: 'ini tes product',
+      price: -20000,
+      stock: 10,
+      image_url: 'http://usplash.com'
+    }
+    request(app)
+    .post('/products')
+    .send(body)
+    .set('access_token', access_token)
+    .end((err, res) => {
+      if (err) return done(err);
+      
+      expect(res.status).toEqual(400);
+      expect(typeof res.body).toEqual('object');
+      
+      expect(res.body).toHaveProperty('errors');
+      
+      expect(Array.isArray(res.body.errors)).toEqual(true)
+      expect(res.body.errors).toContain('Cannot insert negative number')
+      done();
+      })
+  })
+
+  it('invalid stock', function(done) {
+    const payload = {
+      id: 1,
+      email: 'admin@mail.com',
+      role: 'admin'
+    }
+    const access_token = hashPass(payload);
+    const body = {
+      name: 'Tes Product',
+      description: 'ini tes product',
+      price: 20000,
+      stock: "tiga",
+      image_url: 'http://usplash.com'
+    }
+    request(app)
+      .post('/products')
+      .send(body)
+      .set('access_token', access_token)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        expect(res.status).toEqual(400);
+        expect(typeof res.body).toEqual('object');
+
+        expect(res.body).toHaveProperty('errors');
+
+        expect(Array.isArray(res.body.errors)).toEqual(true)
+        expect(res.body.errors).toContain('Stock must be a number')
+        done();
+      })
+  })
+
+  it('invalid data type input', function(done) {
+    const payload = {
+      id: 1,
+      email: 'admin@mail.com',
+      role: 'admin'
+    }
+    const access_token = hashPass(payload);
+    const body = {
+      name: 'Tes Product', 
+      image_url: 'https://usplash.com/',
+      price: 200000,
+      stock: 'tiga'
+    }
+    request(app)
+    .post('/products')
+    .send(body)
+    .set('access_token', access_token)
+    .end((err, res) => {
+      if (err) return done(err);
+      
+      expect(res.status).toEqual(400);
+        expect(typeof res.body).toEqual('object');
+        
+        expect(res.body).toHaveProperty('errors');
+        
+        expect(Array.isArray(res.body.errors)).toEqual(true)
+        expect(res.body.errors).toContain('Stock must be a number')
+        done();
+      })
+  })
+})
