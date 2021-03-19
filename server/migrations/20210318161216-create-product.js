@@ -20,8 +20,11 @@ module.exports = {
       stock: {
         type: Sequelize.INTEGER
       },
-      image_url: {
+      category: {
         type: Sequelize.STRING
+      },
+      category: {
+      type: Sequelize.STRING
       },
       merchant_id: {
         type: Sequelize.INTEGER
