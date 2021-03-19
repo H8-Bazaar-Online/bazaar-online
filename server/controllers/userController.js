@@ -1,18 +1,38 @@
-const { User } = require('../models/')
+const { User, Merchant } = require('../models/')
 const { comparePass } = require('../helpers/bcrypt')
 const { generateToken } = require('../helpers/jwt')
 
 class UserController {
   static register(req, res, next) {
-    const { username, email, password, role } = req.body
+    const { username, email, password, role, name, logo, category } = req.body
+    let dataUser;
     User.create({ username, email, password, role })
       .then(user => {
-        res.status(201).json({
-          id: user.id,
-          email: user.email,
-          username: user.username,
-          role: user.role
-        })
+        if (role === 'customer') {
+          res.status(201).json({
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            role: user.role
+          })
+        } else {
+          dataUser = {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            role: user.role
+          }
+          console.log('tesssssss');
+          return Merchant.create({ name, logo, category, user_id: dataUser.id })
+          .then(merchant => {
+            console.log(merchant);
+            res.status(201).json({
+              id: merchant.id,
+              name: merchant.name,
+              user_id: merchant.user_id
+            })
+          })
+        }
       })
       .catch(err => {
         next(err)

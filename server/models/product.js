@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // Product.belongsToMany(models.User, { through: models.Cart, foreignKey: 'product_id' })
+      // Product.hasMany(models.Cart, { foreignKey: 'product_id' })
+      Product.belongsTo(models.Merchant, { foreignKey: 'merchant_id' })
     }
   };
   Product.init({
@@ -69,13 +71,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     merchant_id: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "The Merchant ID field is required"
-        }
-      }
+      type: DataTypes.INTEGER
     }
   }, {
     sequelize,

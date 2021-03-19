@@ -1,6 +1,6 @@
-const { User } = require('../models/')
+const { User, Merchant } = require('../models/')
 
-const authorize = function (req, res, next) {
+const authorizeCustomer = function (req, res, next) {
   User.findOne({
     where: {
       email: req.decoded.email
@@ -22,4 +22,17 @@ const authorize = function (req, res, next) {
     })
 }
 
-module.exports = authorize
+const authorizeMerchant = async (req, res, next) => {
+
+  try {
+    const merchant = await Merchant.findOne({
+      where: { user_id: req.decoded.id }
+    })
+    req.merchant = merchant
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = {authorizeCustomer, authorizeMerchant}

@@ -1,5 +1,5 @@
 function errorHandler(err, req, res, next) {
-
+  console.log(err.message);
   let errMsg = [];
   let status = 500;
 
