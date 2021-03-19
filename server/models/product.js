@@ -68,7 +68,15 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    merchant_id: DataTypes.INTEGER
+    merchant_id: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "The Merchant ID field is required"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Product',

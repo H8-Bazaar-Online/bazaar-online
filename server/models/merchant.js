@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: {
           args: true,
-          msg: "Merchant name is required"
+          msg: "The Name field is required"
         }
       }
     },
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: {
           args: true,
-          msg: "Merchant logo is required"
+          msg: "The Logo field is required"
         }
       }
     },
@@ -39,7 +39,16 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: {
           args: true,
-          msg: "Merchant category is required"
+          msg: "The Category field is required"
+        }
+      }
+    },
+    merchant_id: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "The Merchant ID field is required"
         }
       }
     }
