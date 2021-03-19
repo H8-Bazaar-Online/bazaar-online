@@ -14,11 +14,60 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Product.init({
-    name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    price: DataTypes.INTEGER,
-    stock: DataTypes.INTEGER,
-    image_url: DataTypes.STRING,
+    name: {
+    type: DataTypes.STRING,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: 'The Name field is required'
+      }
+    }
+  },
+    description: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'The Description field is required'
+        }
+      }
+    },
+    price: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'The Price field is required'
+        }
+      }
+    },
+    stock: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'The Stock field is required'
+        }
+      }
+    },
+    category: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'The Category field is required'
+        }
+      }
+    },
+    image_url: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'The Image field is required'
+        }
+      }
+    },
     merchant_id: DataTypes.INTEGER
   }, {
     sequelize,
