@@ -11,7 +11,7 @@ const authorizeCustomer = function (req, res, next) {
       if (user.role === "merchant") {
         next()
       } else {
-        throw { name: 'CustomError', msg: 'not authorized' }
+        throw { name: 'CustomError', message: 'not authorized', status: 401 }
       }
     })
     .catch(err => {
