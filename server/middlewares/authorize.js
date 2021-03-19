@@ -11,14 +11,11 @@ const authorizeCustomer = function (req, res, next) {
       if (user.role === "merchant") {
         next()
       } else {
-        res.status(401).json({ message: "You are not authorize" })
-        // next()
+        throw { name: 'CustomError', message: 'not authorized', status: 401 }
       }
     })
     .catch(err => {
-      // console.log(err);
-      res.status(500).json(err)
-      // next(err)
+      next(err)
     })
 }
 

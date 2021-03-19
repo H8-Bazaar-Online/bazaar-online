@@ -13,6 +13,12 @@ const userValid = { username: 'user1', email: 'merchant@mail.com', password: has
 //   })
 //   .catch(err => done(err) )
 // })
+afterAll(done => {
+  queryInterface
+    .bulkDelete('Users', {})
+    .then(() => done())
+    .catch(err => done(err))
+})
 
 describe('POST /login success', () => {
   test('login success', (done) => {

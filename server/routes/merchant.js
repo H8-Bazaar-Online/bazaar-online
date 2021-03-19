@@ -1,10 +1,10 @@
 const router = require('express').Router()
 const MerchantController = require('../controllers/merchantController')
-// const authentication = require('../middlewares/authentication')
+const {authenticate} = require('../middlewares/authenticate')
 // const { authorizationAdmin } = require('../middlewares/authorization')
 
+router.use(authenticate)
 router.get('/', MerchantController.getAllMerchant)
-// router.use(authentication)
 router.post('/', MerchantController.createMerchant)
 
 // router.use('/:merchantid', authorizationAdmin)
