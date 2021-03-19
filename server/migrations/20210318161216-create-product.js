@@ -23,8 +23,17 @@ module.exports = {
       category: {
         type: Sequelize.STRING
       },
+      image_url: {
+        type: Sequelize.STRING
+      },
       merchant_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: { tableName: 'Merchants' },
+          key: "id"
+        },
+        onUpdate: "cascade",
+        onDelete: "cascade"
       },
       createdAt: {
         allowNull: false,

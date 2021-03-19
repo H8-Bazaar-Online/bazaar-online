@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Merchant.belongsTo(models.User)
-      Merchant.hasMany(models.Product)
+      Merchant.belongsTo(models.User, { foreignKey: 'user_id' })
+      // Merchant.hasMany(models.Product, { foreignKey: 'product_id' })
     }
   };
   Merchant.init({
@@ -43,14 +43,8 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    merchant_id: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "The Merchant ID field is required"
-        }
-      }
+    user_id: {
+      type: DataTypes.INTEGER
     }
   }, {
     sequelize,

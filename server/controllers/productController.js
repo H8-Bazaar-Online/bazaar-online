@@ -11,7 +11,7 @@ class productController {
   }
 
   static createProduct(req, res, next) {
-    const merchant_id = +req.decoded.id
+    const merchant_id = req.merchant.id
     const { name, description, price, stock, category, image_url } = req.body
     Product.create({ name, description, price, stock, category, image_url, merchant_id})
     .then((newProduct) => {

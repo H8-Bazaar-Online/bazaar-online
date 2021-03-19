@@ -19,8 +19,8 @@ function authenticate(req, res, next) {
           })
         } else {
           req.decoded = decoded
+          next()
         }
-        next()
       })
 
   } catch (err) {
