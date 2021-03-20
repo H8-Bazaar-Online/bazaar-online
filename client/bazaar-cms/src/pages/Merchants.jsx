@@ -1,6 +1,14 @@
-import React, { useRef } from 'react'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 export default function Merchants() {
+  const history = useHistory()
+
+  useEffect(() => {
+    if (!localStorage.access_token || localStorage.access_token === 'undefined') {
+      history.push('/login')
+    }
+  })
   return (
     <>
       <div className="flex flex-wrap bg-gray-900 w-full h-screen">
