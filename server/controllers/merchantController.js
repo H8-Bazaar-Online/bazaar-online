@@ -29,6 +29,7 @@ class MerchantController {
       include: [User]
     })
       .then(result => {
+        if (!result) throw { name: 'CustomError', message: 'Data Not Found', status: 404 }
         res.status(200).json(result)
       })
       .catch(err => {

@@ -3,12 +3,12 @@ const { User, Merchant } = require('../models/')
 const authorizeCustomer = function (req, res, next) {
   User.findOne({
     where: {
-      email: req.decoded.email
+      email: req.decoded.email //nunggu cart
     }
   })
     .then(user => {
-      console.log(user.role);
-      if (user.role === "merchant") {
+      if (!user) throw { name: 'CustomError', message: 'not authorized', status: 401 }
+      if (user.role === "customer") {
         next()
       } else {
         throw { name: 'CustomError', message: 'not authorized', status: 401 }
@@ -25,6 +25,7 @@ const authorizeMerchant = async (req, res, next) => {
     const merchant = await Merchant.findOne({
       where: { user_id: req.decoded.id }
     })
+    if (!merchant) throw { name: 'CustomError', message: 'not authorized', status: 401 }
     req.merchant = merchant
     next()
   } catch (error) {
