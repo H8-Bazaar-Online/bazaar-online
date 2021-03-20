@@ -5,6 +5,7 @@ const {authenticate} = require('../middlewares/authenticate')
 const { authorizeMerchant } = require('../middlewares/authorize')
 
 router.use(authenticate)
+router.post('/uploadimage', ProductController.uploadImage)
 router.get('/', ProductController.getAllProduct)
 router.post('/', authorizeMerchant, ProductController.createProduct)
 

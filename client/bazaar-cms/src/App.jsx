@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import Merchants from './pages/Merchants'
 import Sidebar from './components/Sidebar'
 import Login from './pages/Login'
+import Upload from './pages/Upload'
 
 export default function App(props) {
   return (
@@ -17,6 +18,9 @@ export default function App(props) {
         </Route>
         <Route path="/products">
           <Products />
+        </Route>
+        <Route path="/uploadimage">
+          <Upload />
         </Route>
         <Route path="/merchants">
           <Merchants />

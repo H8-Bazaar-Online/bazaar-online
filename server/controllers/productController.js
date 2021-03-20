@@ -1,4 +1,5 @@
 const { Product } = require('../models/')
+const { cloudinary } = require('../utils/cloudinary');
 
 class productController {
   static getAllProduct(req, res, next) {
@@ -10,9 +11,23 @@ class productController {
     })
   }
 
-  static createProduct(req, res, next) {
+  static async uploadImage (req,res, next){
+      try {
+          const fileStr = req.body.data;
+          const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+              upload_preset: 'dev_setups',
+          });
+          res.json(uploadResponse.url)
+      } catch (err) {
+          console.error(err);
+          res.status(500).json({ err: 'Something went wrong' });
+      }
+  } 
+
+  static createProduct (req, res, next) {
     const merchant_id = req.merchant.id
     const { name, description, price, stock, category, image_url } = req.body
+    
     Product.create({ name, description, price, stock, category, image_url, merchant_id})
     .then((newProduct) => {
       res.status(201).json(newProduct)
@@ -24,7 +39,6 @@ class productController {
 
   static getProductById(req, res ,next) {
     const id = +req.params.id
-    console.log(id);
     Product.findOne({
       where: {
         id
@@ -52,7 +66,6 @@ class productController {
 
     Product.update({ name, description, price, stock, category, image_url }, option)
     .then((updateProduct) => {
-      console.log(updateProduct, "<<update");
       if(!updateProduct[1][0]) throw { name: 'CustomError', status: 404, message: 'Error Not Found !!'}
 
       res.status(200).json(updateProduct[1][0])
@@ -73,7 +86,6 @@ class productController {
       }
     })
     .then((data) => {
-      console.log(data);
       if(!data) throw { name: 'CustomError', status: 404, message: 'Error Not Found !!'}
 
       res.status(200).json({ message : 'Product success to delete!!'})

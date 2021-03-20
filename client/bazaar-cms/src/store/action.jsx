@@ -32,22 +32,29 @@ export function setLoading(payload) {
 }
 
 export function AddProduct(payload) {
-  console.log(payload, '<<< PAYLOAD ADD PRODUCT');
+  
   return async (dispatch) => {
     try {
       dispatch(setLoading(true))
+      
+      const uploadImage = await fetch('http://localhost:3001/products/uploadimage', {
+        method: 'POST',
+        body: JSON.stringify({ data: payload.image_url }),
+        headers: { 'Content-Type': 'application/json', access_token: localStorage.getItem("access_token") }
+      });
+      const newUploadImage = await uploadImage.json()
+      let newPayload = {...payload, image_url: newUploadImage}
+
       const response = await fetch(`${base_url}/products`, {
         headers: {
           "Content-Type": "application/json",
           access_token: localStorage.getItem("access_token"),
         },
         method: "POST",
-        body: JSON.stringify(payload)
+        body: JSON.stringify(newPayload)
       })
       const data = await response.json()
-      console.log(data, '<<<<<<<<< data');
-      console.log('BERHASIL GK NIH');
-      dispatch(setFetchProduct(data))
+      dispatch(setAddProduct(data))
       dispatch(fetchProduct())
       dispatch(setLoading(false))
     } catch (err) {

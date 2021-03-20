@@ -20,14 +20,28 @@ export default function Products() {
   })
 
   const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    console.log(name, value ,'<<<<<<<<<<<<<<< ASD');
+    let { name, value } = e.target;
+    
+    if(name === 'image_url'){
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onloadend = () => {
+        value = reader.result  
+        setFormData({...formData, image_url:value})
+      };
+      reader.onerror = () => {
+          console.error('ERROR');
+      };
+    }
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
-    // useHistory.push('/products')
+    
+    
     dispatch(AddProduct(formData))
   }
   const handleDelete = (id) => {
@@ -46,8 +60,6 @@ export default function Products() {
     // }
   }, [dispatch])
 
-  console.log(products, '<<<<<<< PRODUCTS');
-  console.log(loading, '<<<<<<< LOADING');
   return (
     <>
       <div className="flex flex-wrap bg-gray-900 w-full h-screen">
@@ -118,8 +130,8 @@ export default function Products() {
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Image
                             </label>
-                            <input value={formData.image_url} onChange={handleOnChange} name="image_url"
-                            type="text"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                            <input onChange={handleOnChange} name="image_url"
+                            type="file"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
                         </div>
                       </div>
                       </div>
