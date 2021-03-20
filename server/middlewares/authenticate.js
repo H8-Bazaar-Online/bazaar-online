@@ -14,9 +14,7 @@ function authenticate(req, res, next) {
     })
       .then(user => {
         if (!user) {
-          return res.status(401).json({
-            message: "You are not authenticate"
-          })
+          throw { name: 'CustomError', message: "You are not authenticate", status: 401 }
         } else {
           req.decoded = decoded
           next()
@@ -24,7 +22,8 @@ function authenticate(req, res, next) {
       })
 
   } catch (err) {
-    res.status(401).json(err)
+    console.log(err, '||||||||||||||||');
+    next({ name: 'CustomError', message: "You are not authenticate", status: 401 })
   }
 }
 

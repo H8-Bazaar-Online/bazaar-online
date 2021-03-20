@@ -1,5 +1,5 @@
 function errorHandler(err, req, res, next) {
-  console.log(err.message);
+  console.log(err.name, '<<<<<< HANDLER');
   let errMsg = [];
   let status = 500;
 
@@ -9,6 +9,7 @@ function errorHandler(err, req, res, next) {
 
   } else if(err.name === 'JsonWebTokenError') {
     errMsg.push(err.message);
+    status = err.status
 
   } else if (err.name === 'CustomError') {
     errMsg.push(err.message);
@@ -16,7 +17,7 @@ function errorHandler(err, req, res, next) {
   } else {
     errMsg.push('Internal Server Error')
   }
-  console.log(errMsg, 'ERROR HANDLER');
+  // console.log(errMsg, 'ERROR HANDLER');
   res.status(status).json({ message: errMsg});
 }
 

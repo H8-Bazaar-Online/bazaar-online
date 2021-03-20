@@ -1,38 +1,60 @@
 const request = require('supertest')
 const app = require('../app')
-const { sequelize, User } = require('../models')
+const { sequelize, User, Merchant, Product, Cart } = require('../models')
 const { queryInterface } = sequelize
 const { generateToken } = require('../helpers/jwt')
 
-let access_token_admin
-let access_token_cust
+describe('Cart', () => {
+  let access_token_cust
+  let access_token_merchant
+  let product_id
+  let user_id
+  let cart_id
 
 beforeAll((done) => {
-  User.findOne({
-    where: {
-      email: 'admin@mail.com'
-    }
-  })
-    .then(data => {
-      const payload = {
-        id: data.id,
-        email: data.email,
-        role: data.role
-      }
-      access_token_admin = generateToken(payload)
-      return Cart.findOne({
-        where: {
-          email: 'cust@mail.com'
-        }
-      })
+  User.create({
+    email: 'cust@mail.com',
+    username: 'cust1',
+    password: '123123',
+    role: 'customer'
     })
     .then(data => {
+      user_id = data.id
       const payload = {
         id: data.id,
         email: data.email,
         role: data.role
       }
       access_token_cust = generateToken(payload)
+      return User.create({
+        email: 'merchant11@mail.com',
+        username: 'merchant11',
+        password: '123123',
+        role: 'merchant'
+        })
+    })
+    .then(data => {
+      access_token_merchant = generateToken({id: data.id, email: data.email, role: data.role})
+      return Merchant.create({
+        name: 'merchant1',
+        logo: 'www.merchant1-logo.com',
+        category: 'food',
+        user_id : data.id
+      })
+    })
+    .then(data => {
+      return Product.create({
+        name: 'bakso',
+        description: 'bakso halus',
+        price: 10000,
+        stock: 2,
+        category: 'food',
+        image_url: 'www.bakso.com',
+        merchant_id: data.id
+      })
+    })
+    .then(data => {
+      product_id = data.id
       done()
     })
     .catch(err => {
@@ -43,140 +65,153 @@ beforeAll((done) => {
 afterAll((done) => {
   queryInterface.bulkDelete('Carts')
     .then(() => {
+      return queryInterface.bulkDelete('Users')
+    })
+    .then(() => {
+      return queryInterface.bulkDelete('Products')
       done()
     })
     .catch(done)
 })
-
-let productValid = { name: 'Jersey MU',image_url: 'MU.jpg', price: 135000, stock: 5, CategoryId: 1}
-let productFieldEmpty = { name: '',image_url: '', price: '', stock: '',CategoryId: 1}
-let productStockMinus = { name: 'Jersey MU',image_url: 'MU.jpg', price: 100000, stock: -10, CategoryId: 1}
-let productPriceMinus = { name: 'Jersey MU',image_url: 'MU.jpg', price: -100000, stock: 10, CategoryId: 1}
-let productWrongTypeData = { name: 'Jersey MU',image_url: 'MU.jpg', price: 100000, stock: 'sepuluh', CategoryId: 1}
-
-
-describe('POST /product success', () => {
-  test('create success', (done) => {
+  
+  describe('POST /carts success', () => {
+    test('create success', (done) => {
     request(app)
-      .post('/product/create')
+      .post(`/carts/${product_id}`)
       .set('Accept', 'application/json')
-      .set('access_token', access_token_admin)
-      .send(productValid)
+      .set('access_token', access_token_cust)
+      .send({user_id: user_id, product_id: product_id, quantity: 1})
       .then(response => {
         const { status, body } = response
         expect(status).toBe(201)
-        expect(body).toHaveProperty('id', expect.any(Number))
-        expect(body).toHaveProperty('name', productValid.name)
-        expect(body).toHaveProperty('image_url', productValid.image_url)
-        expect(body).toHaveProperty('price', productValid.price)
-        expect(body).toHaveProperty('stock', productValid.stock)
+        expect(body).toHaveProperty('user_id', expect.any(Number))
+        expect(body).toHaveProperty('product_id', expect.any(Number))
+        expect(body).toHaveProperty('quantity', expect.any(Number))
         done()
       })
       .catch(err => {
         done(err)
       })
-  })
-})
-
-describe('POST /product failed', () => {
-  test('create failed, access_token not exist', (done) => {
-    request(app)
-      .post('/product/create')
-      .set('Accept', 'application/json')
-      .send(productValid)
-      .then(response => {
-        const { status, body } = response
-        expect(status).toBe(401)
-        expect(body).toHaveProperty('message', 'Please Login First')
-        done()
-      })
-      .catch(err => {
-        done(err)
-      })
+    })
   })
 
-  test('create failed, access_token isn\'t access token admin', (done) => {
+  describe('POST /carts success', () => {
+    test('create success', (done) => {
     request(app)
-      .post('/product/create')
+      .post(`/carts/${product_id}`)
       .set('Accept', 'application/json')
       .set('access_token', access_token_cust)
-      .send(productValid)
+      .send({user_id: user_id, product_id: product_id, quantity: 1})
       .then(response => {
         const { status, body } = response
-        expect(status).toBe(403)
-        expect(body).toHaveProperty('message', 'You don\'t have an access')
+        cart_id = body.id
+        expect(status).toBe(200)
+        expect(body).toHaveProperty('message', expect.any(String))
+        expect(body).toHaveProperty('id', expect.any(Number))
         done()
       })
       .catch(err => {
         done(err)
       })
+    })
+  })
+  
+  describe('POST /carts failed', () => {
+    test('create failed, quantity more than stock', (done) => {
+    request(app)
+      .post(`/carts/${product_id}`)
+      .set('Accept', 'application/json')
+      .set('access_token', access_token_cust)
+      .send({user_id: user_id, product_id: product_id, quantity: 15})
+      .end((err, res) => {
+        expect(err).toBe(null)
+        expect(res.body).toHaveProperty('message', expect.any(Array))
+        expect(res.body.message).toContain('Quantity can\'t more then stock')
+        expect(res.status).toBe(400)
+        done()
+      })
+    })
+
+    test('create failed, access_token not exist', (done) => {
+    request(app)
+      .post(`/carts/${product_id}`)
+      .set('Accept', 'application/json')
+      .send({user_id: user_id, product_id: product_id, quantity: 1})
+      .end((err, res) => {
+        expect(err).toBe(null)
+        expect(res.body).toHaveProperty('message', expect.any(Array))
+        expect(res.body.message).toContain('You are not authenticate')
+        expect(res.status).toBe(401)
+        done()
+      })
+    })
+  
+    test('create failed, access_token isn\'t access token customer', (done) => {
+    request(app)
+      .post(`/carts/${product_id}`)
+      .set('Accept', 'application/json')
+      .set('access_token', access_token_merchant)
+      .send({user_id: user_id, product_id: product_id, quantity: 1})
+      .end((err, res) => {
+        expect(err).toBe(null)
+        expect(res.body).toHaveProperty('message', expect.any(Array))
+        expect(res.body.message).toContain('not authorized')
+        expect(res.status).toBe(401)
+        done()
+      })
+    })
   })
 
-  test('create failed, field require is empty', (done) => {
+  describe('GET /carts success', () => {
+    test('get all cart success', (done) => {
     request(app)
-      .post('/product/create')
+      .get(`/carts`)
       .set('Accept', 'application/json')
-      .set('access_token', access_token_admin)
-      .send(productFieldEmpty)
+      .set('access_token', access_token_cust)
       .then(response => {
         const { status, body } = response
-        expect(status).toBe(400)
+        expect(status).toBe(200)
         expect(Array.isArray(body)).toEqual(true)
+        expect(status).toBe(200)
         done()
       })
       .catch(err => {
         done(err)
       })
+    })
   })
 
-  test('create failed, field stock is minus', (done) => {
+  describe('DELETE /carts', () => {
+    test('delete success', (done) => {
     request(app)
-      .post('/product/create')
+      .delete(`/carts/${cart_id}`)
       .set('Accept', 'application/json')
-      .set('access_token', access_token_admin)
-      .send(productStockMinus)
+      .set('access_token', access_token_cust)
       .then(response => {
         const { status, body } = response
-        expect(status).toBe(400)
-        expect(Array.isArray(body)).toEqual(true)
+        expect(status).toBe(200)
+        expect(body).toHaveProperty('message', expect.any(String))
         done()
       })
       .catch(err => {
         done(err)
       })
-  })
+    })
 
-  test('create failed, field price is minus', (done) => {
+    test('delete error', (done) => {
     request(app)
-      .post('/product/create')
+      .delete(`/carts/9999`)
       .set('Accept', 'application/json')
-      .set('access_token', access_token_admin)
-      .send(productPriceMinus)
+      .set('access_token', access_token_cust)
       .then(response => {
         const { status, body } = response
-        expect(status).toBe(400)
-        expect(Array.isArray(body)).toEqual(true)
+        expect(status).toBe(404)
+        expect(body).toHaveProperty('message', expect.any(Array))
         done()
       })
       .catch(err => {
         done(err)
       })
-  })
-
-  test('create failed, type data is wrong', (done) => {
-    request(app)
-      .post('/product/create')
-      .set('Accept', 'application/json')
-      .set('access_token', access_token_admin)
-      .send(productWrongTypeData)
-      .then(response => {
-        const { status, body } = response
-        expect(status).toBe(400)
-        expect(Array.isArray(body)).toEqual(true)
-        done()
-      })
-      .catch(err => {
-        done(err)
-      })
+    })
   })
 })

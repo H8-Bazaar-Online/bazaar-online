@@ -24,17 +24,13 @@ class CartController {
       })
   }
 
-  static create(req, res, next) {
-    console.log('masukkk sini cuyy');
-    // console.log(req.decoded, '>>>>>>>>>>>');
-    console.log(req.merchant, '>>>>>>>>>>>');
+  static create(req, res, next) {;
     let newCart = {
       user_id: +req.decoded.id,
       product_id: +req.params.product_id,
-      // merchant_id: req.merchant.id,
       quantity: 1
     }
-
+    let cart_id
 
     Cart.findOne({ 
       attributes: ['id', 'user_id', 'product_id', 'quantity'],
@@ -65,6 +61,7 @@ class CartController {
               next(err)
             })
         } else {
+          cart_id = dataCart.id
           if (dataCart.quantity < dataCart.dataValues.Product.stock && dataCart.quantity >= 1) {
             return Cart.update({
               quantity: sequelize.literal('quantity +1')
@@ -76,13 +73,13 @@ class CartController {
                 }
               })
                 .then(dataCart => {
-                  res.status(200).json({message: 'Quantity has been increased by 1'})
+                  res.status(200).json({message: 'Quantity has been increased by 1', id: cart_id})
                 })
                 .catch(err => {
                   next(err)
                 })
           } else {
-            throw ({name: 'CustomError', message: 'Quantity can\'t more then stock'})
+            throw ({name: 'CustomError', status: 400, message: 'Quantity can\'t more then stock'})
           }
         }
       })
@@ -92,7 +89,7 @@ class CartController {
   }
 
   static delete(req, res, next) {
-    let id = +req.params.id
+    let id = +req.params.cart_id
     Cart.destroy({
       where: {
         id

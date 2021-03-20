@@ -20,9 +20,6 @@ module.exports = {
       product_id: {
         type: Sequelize.INTEGER
       },
-      merchant_id: {
-        type: Sequelize.INTEGER
-      },
       quantity: {
         type: Sequelize.INTEGER
       },
