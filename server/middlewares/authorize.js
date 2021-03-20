@@ -7,7 +7,6 @@ const authorizeCustomer = function (req, res, next) {
     }
   })
     .then(user => {
-      if (!user) throw { name: 'CustomError', message: 'not authorized', status: 401 }
       if (user.role === "customer") {
         next()
       } else {
@@ -20,7 +19,6 @@ const authorizeCustomer = function (req, res, next) {
 }
 
 const authorizeMerchant = async (req, res, next) => {
-
   try {
     const merchant = await Merchant.findOne({
       where: { user_id: req.decoded.id }
