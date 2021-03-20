@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import React from 'react'
+// import Navbar from './components/Navbar'
+import { Switch, Route } from 'react-router-dom'
+import Products from './pages/Products'
+import Dashboard from './pages/Dashboard'
+import Merchants from './pages/Merchants'
+import Sidebar from './components/Sidebar'
+import Login from './pages/Login'
 
-function App() {
+export default function App(props) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div>
+      {/* <Switch> */}
+      {/* </Switch> */}
+          {/* <Switch>
+          </Switch> */}
+            {/* <div className="flex flex-wrap bg-gray-100 w- full h-screen">  */}
+        {/* <Sidebar /> */}
+        {/* <div className="w-9/12"> */}
+          <Switch>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+            <Route path="/products">
+              <Products />
+            </Route>
+            <Route path="/merchants">
+              <Merchants />
+            </Route>
+            <Route exact path="/">
+              <Dashboard />
+            </Route>
+          </Switch>
 
-export default App;
+        {/* </div> */}
+        
+      </div>
+    // </div>
+  )
+}
