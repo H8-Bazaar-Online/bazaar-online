@@ -7,7 +7,6 @@ const authorizeCustomer = function (req, res, next) {
     }
   })
     .then(user => {
-      // if (!user) throw { name: 'CustomError', message: 'not authorized', status: 401 }
       if (user.role === "customer") {
         next()
       } else {
