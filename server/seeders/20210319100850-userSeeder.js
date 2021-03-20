@@ -16,7 +16,15 @@ module.exports = {
          role: 'merchant',
          createdAt: new Date(),
          updatedAt: new Date()
-       }
+       },
+       {
+        username: 'customer1',
+        email: 'customer1@mail.com',
+        password: hashPass('cust123'),
+        role: 'customer',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
     ], {});
   },
 

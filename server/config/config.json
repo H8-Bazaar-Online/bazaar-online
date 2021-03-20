@@ -1,16 +1,16 @@
 {
   "development": {
     "username": "postgres",
-    "password": "ami12uriza",
-    "database": "bazaar_dev",
+    "password": "postgres",
+    "database": "bazaar-online-dev",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
-    "password": "ami12uriza",
-    "database": "bazaar-test",
-    "host": "127.0.0.1",
+    "password": "postgres",
+    "database": "bazaar-online-test",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "production": {

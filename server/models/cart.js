@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Cart.belongsTo(models.User, {foreignKey: 'user_id'})
-      // Cart.belongsTo(models.Product, {foreignKey: 'product_id'})
-      Cart.belongsTo(models.Merchant, {foreignKey: 'merchant_id'})
+      Cart.belongsTo(models.Product, {foreignKey: 'product_id'})
+      // Cart.belongsTo(models.Merchant, {foreignKey: 'merchant_id'})
     }
   };
   Cart.init({
     user_id: DataTypes.INTEGER,
     product_id: DataTypes.INTEGER,
-    merchant_id: DataTypes.INTEGER,
+    // merchant_id: DataTypes.INTEGER,
     quantity: DataTypes.INTEGER
   }, {
     sequelize,

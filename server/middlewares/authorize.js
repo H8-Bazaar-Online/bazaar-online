@@ -8,22 +8,18 @@ const authorizeCustomer = function (req, res, next) {
   })
     .then(user => {
       console.log(user.role);
-      if (user.role === "merchant") {
+      if (user.role === "customer") {
         next()
       } else {
         res.status(401).json({ message: "You are not authorize" })
-        // next()
       }
     })
     .catch(err => {
-      // console.log(err);
       res.status(500).json(err)
-      // next(err)
     })
 }
 
 const authorizeMerchant = async (req, res, next) => {
-
   try {
     const merchant = await Merchant.findOne({
       where: { user_id: req.decoded.id }
