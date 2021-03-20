@@ -1,6 +1,53 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import { AddProduct, deleteProduct, fetchProduct} from '../store/action'
 export default function Products() {
+  const { products } = useSelector((state) => (state.products))
+  const { loading } = useSelector((state) => (state.products))
+
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    category: '',
+    price: 0,
+    stock: 0,
+    image_url: ''
+  })
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value ,'<<<<<<<<<<<<<<< ASD');
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+    // useHistory.push('/products')
+    dispatch(AddProduct(formData))
+  }
+  const handleDelete = (id) => {
+    dispatch(deleteProduct(id))
+  }
+
+  useEffect(() => {
+    if (!localStorage.access_token || localStorage.access_token === 'undefined') {
+      history.push('/login')
+    }
+  })
+  
+  useEffect(() => {
+    dispatch(fetchProduct()) 
+    // if (localStorage.access_token && !localStorage.access_token === 'undefined') {
+    // }
+  }, [dispatch])
+
+  console.log(products, '<<<<<<< PRODUCTS');
+  console.log(loading, '<<<<<<< LOADING');
   return (
     <>
       <div className="flex flex-wrap bg-gray-900 w-full h-screen">
@@ -11,7 +58,7 @@ export default function Products() {
           </div>
           <div className="w-full bg-gray-900 p-10">
             <div>
-              <form className="w-full mx-auto bg-white shadow rounded">
+              <form onSubmit={handleOnSubmit} className="w-full mx-auto bg-white shadow rounded">
                 <div>
                   <div className="xl:w-full border-b border-gray-300 dark:border-gray-700 py-5">
                     <div className="flex items-center w-11/12 mx-auto">
@@ -31,37 +78,48 @@ export default function Products() {
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Name
                             </label>
-                            <input type="text" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
+                            <input
+                              type="text"
+                              value={formData.name} onChange={handleOnChange} name="name"
+                              className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
+                              placeholder="Name..."
+                              
+                            />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Category
                             </label>
-                            <input type="text" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="category.." />
+                            <input value={formData.category} onChange={handleOnChange} name="category"
+                            type="text"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="category.." />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Price
                             </label>
-                            <input type="number" min="10" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
+                            <input value={formData.price} onChange={handleOnChange} name="price"
+                            type="number" min="0"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Stock
                             </label>
-                            <input type="number" min="10" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
+                            <input value={formData.stock} onChange={handleOnChange} name="stock"
+                            type="number" min="0"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Description
                             </label>
-                            <textarea type="text" required className="h-20 border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="description..." />
+                            <textarea value={formData.description} onChange={handleOnChange} name="description"
+                             type="text"  className="h-20 border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="description..." />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Image
                             </label>
-                            <input type="file" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                            <input value={formData.image_url} onChange={handleOnChange} name="image_url"
+                            type="text"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
                         </div>
                       </div>
                       </div>
@@ -96,43 +154,30 @@ export default function Products() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b hover:bg-orange-100">
-                      <td className="p-3 px-5 hover:bg-gray-100">Name contoh</td>
-                      <td className="p-3 px-5 hover:bg-gray-100"><img src="https://dynamic.zacdn.com/lpv9Ca8dKJ2pYmnrlR9dwJG5Fww=/fit-in/236x345/filters:quality(90):fill(ffffff)/http://static.id.zalora.net/p/tolliver-7205-5741852-4.jpg" alt=""/></td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Fashion</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">98000000</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">100</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita necessitatibus eos natus debitis numquam accusantium, ad et dolores quam est accusamus officia! Quos expedita qui illo provident enim dolores hic!</td>
-                      <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                        <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
-                        <button type="button" className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                      </td>
-                    </tr>
-                    <tr className="border-b hover:bg-orange-100">
-                      <td className="p-3 px-5 hover:bg-gray-100">Name contoh</td>
-                      <td className="p-3 px-5 hover:bg-gray-100"><img src="https://static-id.zacdn.com/cms/cw11/996x500_HERO_HNMLaunchCR_W_11_C.jpg" alt=""/></td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Fashion</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">98000000</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">100</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita necessitatibus eos natus debitis numquam accusantium, ad et dolores quam est accusamus officia! Quos expedita qui illo provident enim dolores hic!</td>
-                      <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                        <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
-                        <button type="button" className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                      </td>
-                    </tr>
-                    <tr className="border-b hover:bg-orange-100">
-                      <td className="p-3 px-5 hover:bg-gray-100">Name contoh</td>
-                      <td className="p-3 px-5 hover:bg-gray-100"><img src="https://static-id.zacdn.com/cms/cw11/996x500_HERO_HNMLaunchCR_W_11_C.jpg" alt=""/></td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Fashion</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">98000000</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">100</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita necessitatibus eos natus debitis numquam accusantium, ad et dolores quam est accusamus officia! Quos expedita qui illo provident enim dolores hic!</td>
-                      <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                        <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
-                        <button type="button" className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                      </td>
-                    </tr>
+                    {
+                      loading ? (<tr className="bg-red-500">
+                        <td>LOADING BRO</td>
+                      </tr>) :
+                      (products?.map((product) => {
+                        return (
+                          <tr className="border-b hover:bg-orange-100" key={product.id}>
+                            <td className="p-3 px-5 hover:bg-gray-100">{product.name}</td>
+                            <td className="p-3 px-5 hover:bg-gray-100">
+                              <img className="w-80" src={product.image_url} alt={product.name}/>
+                            </td>
+                            <td className="p-3 px-5 hover:bg-gray-100">{product.category}</td>
+                            <td className="p-3 px-5 hover:bg-gray-100">{product.price}</td>
+                            <td className="p-3 px-5 hover:bg-gray-100">{product.stock}</td>
+                            <td className="p-3 px-5 hover:bg-gray-100">{product.description}</td>
+                            <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
+                              <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
+                              <button type="button" onClick={() => handleDelete(product.id)} className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
+                            </td>
+                         </tr>
                     
+                        )
+                      }))
+                    }
                   </tbody>
                 </table>
               </div>
