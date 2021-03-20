@@ -1,5 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { login } from '../store/action';
 export default function Login() {
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value ,'<<<<<<<<<<<<<<< FORM DATA');
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+  
+  const dispatch = useDispatch()
+
+  const history = useHistory()
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+    dispatch(login(formData))
+    if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
+      history.push('/login')
+    } else {
+      history.push('/')
+    }
+  }
+  
+  useEffect(() => {
+    if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
+      history.push('/login')
+    } else {
+      history.push('/')
+    }
+  })
+
+
   return (
     <div className="font-sans">
       <div className="relative min-h-screen flex flex-col sm:justify-center items-center bg-gray-900 ">
@@ -12,15 +50,12 @@ export default function Login() {
             <label className="block text-sm text-gray-700 text-center font-semibold">
               Login
             </label>
-            <form className="mt-10">
-              <div>
-                <input type="text" placeholder="Name" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>
+            <form onSubmit={handleOnSubmit} className="mt-10">
+              <div className="mt-7">                
+                <input value={formData.email} onChange={handleOnChange} name="email" type="email" placeholder="Email" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
               </div>
               <div className="mt-7">                
-                <input type="email" placeholder="Email" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
-              </div>
-              <div className="mt-7">                
-                <input type="password" placeholder="Password" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
+                <input value={formData.password} onChange={handleOnChange} name="password" type="password" placeholder="Password" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
               </div>
               <div className="mt-7">
                 <button className="bg-blue-500 w-full py-3 rounded-xl text-white shadow-xl hover:shadow-inner focus:outline-none transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
