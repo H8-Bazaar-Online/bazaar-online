@@ -31,7 +31,7 @@ class productController {
       }
     })
     .then((data) => {
-      console.log(data)
+      if (!data) throw { name: 'CustomError', message: 'Data Not Found', status: 404 }
       res.status(200).json(data)
     }).catch((err) => {
       next(err)

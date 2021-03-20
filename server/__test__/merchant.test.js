@@ -105,7 +105,56 @@ describe('Merchant routes', () => {
       })
     })
   })
-  
+  describe('GET ALL /merchants', () => {
+    describe('Success process', () => {
+      test('should return array of merchants with status code 200', (done) => {
+        request(app)
+          .get('/merchants')
+          .set('access_token', userToken)
+          .end((err, res) => {
+
+            expect(err).toBe(null)
+            expect(Array.isArray(res.body)).toEqual(true)
+            expect(res.status).toBe(200)
+            done()
+          })
+      })
+    })
+  })
+  describe('GET ONE /merchants', () => {
+    describe('Success process', () => {
+      test('should return data merchant with status code 200', (done) => {
+        request(app)
+          .get('/merchants/' + merchantId)
+          .set('access_token', userToken)
+          .end((err, res) => {
+
+            expect(err).toBe(null)
+            expect(res.body).toHaveProperty('id', expect.any(Number))
+            expect(res.body).toHaveProperty('name', expect.any(String))
+            expect(res.body).toHaveProperty('category', expect.any(String))
+            expect(res.body).toHaveProperty('logo', expect.any(String))
+            expect(res.body).toHaveProperty('user_id', expect.any(Number))
+            expect(res.status).toBe(200)
+            done()
+          })
+      })
+    })
+    describe('Error process', () => {
+      test('should send an error with status 404 not found', (done) => {
+        request(app)
+          .get('/merchants/9999')
+          .set('access_token', userToken)
+          .end((err, res) => {
+            expect(err).toBe(null)
+            expect(res.body).toHaveProperty('message', expect.any(Array))
+            expect(res.body.message).toContain('Data Not Found')
+            expect(res.status).toBe(404)
+            done()
+          })
+      })
+    })
+  })
   describe('PUT /merchants', () => {
     describe('Success process', () => {
       test('should send a success message with status code 200', (done) => {

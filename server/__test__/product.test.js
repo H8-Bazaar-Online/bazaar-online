@@ -33,7 +33,7 @@ let productData = {
 
 
 describe('Product routes', () => {
-  let userToken, productId, user2Token
+  let userToken, productId, user2Token, user3Token
   beforeAll(done => {
     User.create({ username: data.username, email: data.email, password: data.password, role: 'merchant' })
       .then(user => {
@@ -154,6 +154,43 @@ describe('Product routes', () => {
       })
     })
   })
+  describe('GET ONE /products', () => {
+    describe('Success process', () => {
+      test('should return data product with status code 200', (done) => {
+        request(app)
+          .get('/products/' + productId)
+          .set('access_token', userToken)
+          .end((err, res) => {
+
+            expect(err).toBe(null)
+            expect(res.body).toHaveProperty('id', expect.any(Number))
+            expect(res.body).toHaveProperty('name', expect.any(String))
+            expect(res.body).toHaveProperty('description', expect.any(String))
+            expect(res.body).toHaveProperty('price', expect.any(Number))
+            expect(res.body).toHaveProperty('stock', expect.any(Number))
+            expect(res.body).toHaveProperty('image_url', expect.any(String))
+            expect(res.body).toHaveProperty('category', expect.any(String))
+            expect(res.body).toHaveProperty('merchant_id', expect.any(Number))
+            expect(res.status).toBe(200)
+            done()
+          })
+      })
+    })
+    describe('Error process', () => {
+      test('should send an error with status 404 not found', (done) => {
+        request(app)
+          .get('/products/9999')
+          .set('access_token', userToken)
+          .end((err, res) => {
+            expect(err).toBe(null)
+            expect(res.body).toHaveProperty('message', expect.any(Array))
+            expect(res.body.message).toContain('Data Not Found')
+            expect(res.status).toBe(404)
+            done()
+          })
+      })
+    })
+  })
   describe('UPDATE /products', () => {
     describe('Success process', () => {
       test('should send a success message with status code 200', (done) => {
@@ -238,6 +275,18 @@ describe('Product routes', () => {
       })
     })
     describe('Error process', () => {
+      test('should send an error with status 401 not authorize', (done) => {
+        request(app)
+          .delete('/products/' + productId)
+          .set('access_token', user2Token)
+          .end((err, res) => {
+            expect(err).toBe(null)
+            expect(res.body).toHaveProperty('message', expect.any(Array))
+            expect(res.body.message).toContain('not authorized')
+            expect(res.status).toBe(401)
+            done()
+          })
+      })
       test('should send an error with status 404 if product not found', (done) => {
         request(app)
           .delete('/products/99999')
