@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { login } from '../store/action';
+import { NavLink, useHistory } from 'react-router-dom';
+import { register } from '../store/action';
 export default function Register() {
 
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
-    password: ''
+    password: '',
+    name: '',
+    logo: '',
+    category: '',
+    role: 'merchant'
   })
   
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value ,'<<<<<<<<<<<<<<< FORM DATA');
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
   
@@ -21,21 +25,9 @@ export default function Register() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
-    dispatch(login(formData))
-    // if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
-    //   history.push('/login')
-    // } else {
-    //   history.push('/')
-    // }
+    dispatch(register(formData))
+      history.push('/login')
   }
-  
-  useEffect(() => {
-    // if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
-    //   history.push('/login')
-    // } else {
-    //   history.push('/')
-    // }
-  })
 
 
   return (
@@ -61,7 +53,7 @@ export default function Register() {
                 <input value={formData.password} onChange={handleOnChange} name="password" type="password" placeholder="*******" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
               </div>
               <div className="mt-7">                
-                <input value={formData.name} onChange={handleOnChange} name="name" type="text" placeholder="Name" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
+                <input value={formData.name} onChange={handleOnChange} name="name" type="text" placeholder="Name of Merchant" className="mt-1 pl-3 py-3 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
               </div>
               <div className="mt-7">                
                 <input onChange={handleOnChange} name="logo" type="file" placeholder="Email" className="mt-1 pl-3 px-3 pt-2 block w-full border focus:border-yellow-500 bg-gray-100 h-11 rounded-xl focus:outline-none shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0 placeholder-gray-500 placeholder-opacity-30"/>                           
@@ -81,9 +73,9 @@ export default function Register() {
               <div className="mt-7">
                 <div className="flex items-center text-center">
                   <label className="w-full text-sm text-gray-600">Already have an account? </label>
-                  <a href="/#" className="w-full text-blue-500 transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
+                  <NavLink to='/login' className="w-full text-blue-500 transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
                     Login
-                  </a>
+                  </NavLink>
                 </div>
               </div>
             </form>

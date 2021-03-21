@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import { login } from '../store/action';
 export default function Login() {
+  const history = useHistory()
 
   const [formData, setFormData] = useState({
     email: '',
@@ -11,33 +12,19 @@ export default function Login() {
   
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value ,'<<<<<<<<<<<<<<< FORM DATA');
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
   
   const dispatch = useDispatch()
 
-  const history = useHistory()
-
   const handleOnSubmit = (e) => {
     e.preventDefault()
-    dispatch(login(formData))
-    if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
-      history.push('/login')
-    } else {
-      history.push('/')
-    }
+      dispatch(login(formData))
+      setTimeout(()=> {
+        history.push('/')
+      }, 500)
   }
   
-  useEffect(() => {
-    if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
-      history.push('/login')
-    } else {
-      history.push('/')
-    }
-  })
-
-
   return (
     <div className="font-sans">
       <div className="relative min-h-screen flex flex-col sm:justify-center items-center bg-gray-900 ">

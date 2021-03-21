@@ -7,7 +7,6 @@ const initialState = {
 
 function reducer(state = initialState, action) {
   const { type, payload } = action
-  console.log(payload, '<<<<<<<<<<< PAYLOAD');
   switch(type) {
     case 'PRODUCTS/FETCH_ALL':
       return { ...state, products: payload }

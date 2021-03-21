@@ -3,7 +3,6 @@ const { Merchant, User } = require('../models')
 class MerchantController {
   static getAllMerchant(req, res, next) {
     const activeUser = req.decoded.id
-    console.log(activeUser);
     Merchant.findAll({
       where: {
         user_id: activeUser

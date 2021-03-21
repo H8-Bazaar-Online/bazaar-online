@@ -22,7 +22,6 @@ class UserController {
             username: user.username,
             role: user.role
           }
-          // console.log('tesssssss');
           return Merchant.create({ name, logo, category, user_id: dataUser.id })
           .then(merchant => {
             // console.log(merchant);
@@ -54,7 +53,7 @@ class UserController {
           id: user.id,
           email: user.email
         })
-        res.status(200).json({ access_token })
+        res.status(200).json({ access_token, name: user.username })
       })
       .catch(err => {
         next(err)

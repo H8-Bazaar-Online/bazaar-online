@@ -6,7 +6,7 @@ const { authorizeMerchant } = require('../middlewares/authorize')
 
 router.use(authenticate)
 router.post('/uploadimage', ProductController.uploadImage)
-router.get('/', ProductController.getAllProduct)
+router.get('/',authorizeMerchant, ProductController.getAllProduct)
 router.post('/', authorizeMerchant, ProductController.createProduct)
 
 // router.use('/:id', authorizationAdmin)

@@ -1,14 +1,20 @@
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import { fetchMerchant } from '../store/action'
+
 export default function Merchants() {
+  const { merchants } = useSelector((state) => (state.merchants))
+  const { loading } = useSelector((state) => (state.products))
+
   const history = useHistory()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!localStorage.access_token || localStorage.access_token === 'undefined') {
-      history.push('/login')
-    }
-  })
+    dispatch(fetchMerchant())
+  }, [dispatch])
+
   return (
     <>
       <div className="flex flex-wrap bg-gray-900 w-full h-screen">
