@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
-import { fetchMerchant } from '../store/action'
+import { fetchMerchant, AddMerchant } from '../store/action'
 
 export default function Merchants() {
   const { merchants } = useSelector((state) => (state.merchants))
@@ -10,6 +10,37 @@ export default function Merchants() {
 
   const history = useHistory()
   const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    category: '',
+    logo: ''
+  })
+
+  const handleOnChange = (e) => {
+    let { name, value } = e.target;
+    
+    if(name === 'logo'){
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onloadend = () => {
+        value = reader.result  
+        setFormData({...formData, logo:value})
+      };
+      reader.onerror = () => {
+          console.error('ERROR');
+      };
+    }
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+    console.log('masuk, ditekan');
+    dispatch(AddMerchant(formData))
+  }
 
   useEffect(() => {
     dispatch(fetchMerchant())
@@ -25,7 +56,7 @@ export default function Merchants() {
           </div>
           <div className="w-full bg-gray-900 p-10">
             <div>
-              <form className="w-full mx-auto bg-white shadow rounded">
+              <form onSubmit={handleOnSubmit} className="w-full mx-auto bg-white shadow rounded">
                 <div>
                   <div className="xl:w-full border-b border-gray-300 dark:border-gray-700 py-5">
                     <div className="flex items-center w-11/12 mx-auto">
@@ -45,19 +76,25 @@ export default function Merchants() {
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Name
                             </label>
-                            <input type="text" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
+                            <input type="text"
+                            value={formData.name} onChange={handleOnChange} name='name'
+                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Category
                             </label>
-                            <input type="text" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="category.." />
+                            <input type="text" 
+                            value={formData.category} onChange={handleOnChange} name='category'
+                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="category.." />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Logo
                             </label>
-                            <input type="file" required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                            <input type="file" 
+                            name='logo' onChange={handleOnChange} 
+                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
                         </div>
                       </div>
                       </div>
