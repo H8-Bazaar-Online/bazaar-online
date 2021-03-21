@@ -17,10 +17,10 @@ class productController {
           const uploadResponse = await cloudinary.uploader.upload(fileStr, {
               upload_preset: 'dev_setups',
           });
-          res.json(uploadResponse.url)
+          res.status(200).json(uploadResponse.url)
       } catch (err) {
           console.error(err);
-          res.status(500).json({ err: 'Something went wrong' });
+          next(err)
       }
   } 
 

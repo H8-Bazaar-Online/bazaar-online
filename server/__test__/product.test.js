@@ -94,6 +94,19 @@ describe('Product routes', () => {
       })
     })
     describe('Error process', () => {
+      test('should return error status code 500', (done) => {
+        request(app)
+          .post('/products/uploadimage')
+          .send("sudoku.png")
+          .set('access_token', userToken)
+          .end((err, res) => {
+            expect(err).toBe(null)
+            expect(res.body).toHaveProperty('message', expect.any(Array))
+            expect(res.body.message).toContain('Internal Server Error')
+            expect(res.status).toBe(500)
+            done()
+          })
+      })
       test('should send an error wtih status 400 because of empty name validation', (done) => {
         const emptyName = { ...productData, name: '' }
         request(app)
