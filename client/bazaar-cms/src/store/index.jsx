@@ -9,7 +9,8 @@ const rootReducer = combineReducers({
   users: usersReducer,
   products: productsReducer,
   product: productsReducer,
-  merchants: merchantsReducer
+  merchants: merchantsReducer,
+  merchant: merchantsReducer
 })
 
 const store = createStore(rootReducer, applyMiddleware(logger, thunk))

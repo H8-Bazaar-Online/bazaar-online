@@ -25,48 +25,62 @@ export default function Products() {
   })
 
   const [formDataEdit, setFormDataEdit] = useState({
-    nameEdit: '',
-    descriptionEdit: '',
-    categoryEdit: '',
-    priceEdit: 0,
-    stockEdit: 0,
-    image_urlEdit: ''
+    id: '',
+    name: '',
+    description: '',
+    category: '',
+    price: 0,
+    stock: 0,
+    image_url: '',
+    merchant_id: ''
   })
 
   const handleOnChange = (e) => {
     let { name, value } = e.target;
     
     if(name === 'image_url'){
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onloadend = () => {
-        value = reader.result  
-        setFormData({...formData, image_url:value})
-      };
-      reader.onerror = () => {
-          console.error('ERROR');
-      };
+      if (e.target.files[0].size > 60000) {
+        document.getElementById("addFileImage").value = ""
+        value = ''
+      } else {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+  
+        reader.onloadend = () => {
+          value = reader.result
+          setFormData({...formData, image_url:value})
+        };
+        reader.onerror = () => {
+            console.error('ERROR');
+        };
+      }
     }
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleOnChangeEdit = (e) => {
-    let { name, value } = e.target;
-    
-    if(name === 'image_url'){
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
 
-      reader.onloadend = () => {
-        value = reader.result  
-        setFormDataEdit({...formData, image_url:value})
-      };
-      reader.onerror = () => {
-          console.error('ERROR');
-      };
+    let { name, value } = e.target;
+    if(name === 'image_url'){
+      if (e.target.files[0].size > 60000) {
+        // document.getElementById("editFileImage").value = ""
+        value = ''
+      } else {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onloadend = () => {
+          value = reader.result  
+          setFormDataEdit({...formDataEdit, image_url:value})
+        };
+        reader.onerror = () => {
+            console.error('ERROR');
+        };
+      }
+      
+      
     }
     setFormDataEdit((prev) => ({ ...prev, [name]: value }))
   }
@@ -75,35 +89,45 @@ export default function Products() {
     e.preventDefault()
     dispatch(AddProduct(formData))
   }
-
+  
   const handleOnSubmitEdit = (e) => {
+
     setShowModal(false)
     e.preventDefault()
-    console.log('YEY');
     dispatch(editProduct(formDataEdit))
   }
 
-  const handleDelete = (id) => {
+  const handleButtonDelete = (id) => {
     dispatch(deleteProduct(id))
-  }
-
-  const handleEdit = (id) => {
-    setShowModal(true)
-    console.log(id, 'EIDTT ID');
-    dispatch(fetchProductById(id))
   }
 
   useEffect(() => {
     setFormDataEdit({
-      nameEdit: 'EDIT BOS',
-      descriptionEdit: product.description,
-      categoryEdit: product.category,
-      priceEdit: product.price,
+      id: product.id,
+      name: product.name ,
+      description: product.description,
+      category: product.category,
+      price: product.price,
       stockEdit: product.stock,
-      image_urlEdit: product.image_url
+      image_url: product.image_url,
+      merchant_id: product.merchant_id
     })
   }, [product])
-  
+  function test(image) {
+    
+    // var res = json[1].substr(1, json[1].length-2);
+    // document.getElementById("editFileImage").value = "C:/asdkajsda.jpg"
+    // document.getElementById("editMyImage").src = image
+
+  }
+
+  const handleButtonEdit = async (id) => {
+    dispatch(fetchProductById(id))
+    setShowModal(true)
+    // await test(formDataEdit.image_url)
+
+  }
+
   useEffect(() => {
     dispatch(fetchProduct())
     dispatch(fetchMerchant()) 
@@ -118,7 +142,6 @@ export default function Products() {
             Product
           </div>
           <div className="w-full bg-gray-900 p-10">
-            <div>
               <form onSubmit={handleOnSubmit} className="w-full mx-auto bg-white shadow rounded">
                 <div>
                   <div className="xl:w-full border-b border-gray-300 dark:border-gray-700 py-5">
@@ -149,15 +172,18 @@ export default function Products() {
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                                Merchant
+                              Merchant
                             </label>
-                            <input
-                              type="text"
-                              value={formData.name} onChange={handleOnChange} name="name"
+                            <select 
+                              onChange={handleOnChange} 
+                              name='merchant_id' 
                               className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
-                              placeholder="Name..."
-                              
-                            />
+                            >
+                              <option defaultValue disabled selected>Please Choose Merchant </option>
+                              {
+                                merchants?.map((merchant) => <option key={merchant.id} value={merchant.id}>{ merchant.name }</option>)
+                              }
+                            </select>
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
@@ -182,19 +208,20 @@ export default function Products() {
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                                Image
+                            </label>
+                            <input id="addFileImage" onChange={handleOnChange} name="image_url"
+                            type="file" size="1" accept="image/png, image/jpeg" className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                            {/* <img src={formData.} alt=""/> */}
+                          </div>
+                          <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                            <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Description
                             </label>
                             <textarea value={formData.description} onChange={handleOnChange} name="description"
                              type="text"  className="h-20 border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="description..." />
                           </div>
-                          <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
-                            <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                                Image
-                            </label>
-                            <input onChange={handleOnChange} name="image_url"
-                            type="file"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
                         </div>
-                      </div>
                       </div>
                     
                     </div>
@@ -206,7 +233,7 @@ export default function Products() {
                   </div>
                 </div>
               </form>
-            </div>
+            
 
             <div className="w-full mx-auto bg-white shadow rounded mt-10">
               <div>
@@ -218,6 +245,7 @@ export default function Products() {
                 <table className="w-full text-md bg-white shadow-md rounded table-auto">
                   <thead>
                     <tr className="border-b">
+                      <th className="text-left p-3 px-5 w-5">#</th>
                       <th className="text-left p-3 px-5">Name</th>
                       <th className="text-left p-3 px-5">Image</th>
                       <th className="text-left p-3 px-5">Category</th>
@@ -232,20 +260,21 @@ export default function Products() {
                       loading ? (<tr className="bg-red-500">
                         <td>LOADING BRO</td>
                       </tr>) :
-                      (products?.map((product) => {
+                      (products?.map((product, index) => {
                         return (
                           <tr className="border-b hover:bg-orange-100" key={product.id}>
+                            <td className="p-3 px-5 hover:bg-gray-100 w-5">{index + 1}</td>
                             <td className="p-3 px-5 hover:bg-gray-100">{product.name}</td>
                             <td className="p-3 px-5 hover:bg-gray-100">
-                              <img className="w-80" src={product.image_url} alt={product.name}/>
+                              <img className="w-40" src={product.image_url} alt={product.name}/>
                             </td>
                             <td className="p-3 px-5 hover:bg-gray-100">{product.category}</td>
                             <td className="p-3 px-5 hover:bg-gray-100">{product.price}</td>
                             <td className="p-3 px-5 hover:bg-gray-100">{product.stock}</td>
                             <td className="p-3 px-5 hover:bg-gray-100">{product.description}</td>
                             <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                              <button type="button" onClick={() => handleEdit(product.id)} className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
-                              <button type="button" onClick={() => handleDelete(product.id)} className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
+                              <button type="button" onClick={() => handleButtonEdit(product.id)} className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
+                              <button type="button" onClick={() => handleButtonDelete(product.id)} className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
                             </td>
                          </tr>
                     
@@ -261,10 +290,7 @@ export default function Products() {
         </div>
         {showModal ? (
         <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-            onClick={() => setShowModal(false)}
-          >
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -282,20 +308,20 @@ export default function Products() {
                     </span>
                   </button>
                 </div>
-                {/* <form onSubmit={handleOnSubmitEdit}> */}
+                <form onSubmit={handleOnSubmitEdit}>
 
                   {/*body*/}
                   <div className="relative p-6 flex-auto">
                     <div className="mx-auto xl:w-full xl:mx-0">
                       <div className="xl:flex lg:flex md:flex flex-wrap justify-between">
-                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
-                          
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6"> 
+                        <input value={formDataEdit.id} onChange={handleOnChangeEdit} name="id" hidden/>
                           <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Name
                           </label>
                           <input
                             type="text"
-                            value={formDataEdit.nameEdit} onChange={handleOnChangeEdit} name="name"
+                            value={formDataEdit.name} onChange={handleOnChangeEdit} name="name"
                             className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
                             placeholder="Name..."
                           />
@@ -304,36 +330,56 @@ export default function Products() {
                           <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Category
                           </label>
-                          <input value={formDataEdit.categoryEdit} onChange={handleOnChangeEdit} name="category"
+                          <input value={formDataEdit.category} onChange={handleOnChangeEdit} name="category"
                           type="text"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="category.." />
                         </div>
                         <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                           <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Price
                           </label>
-                          <input value={formDataEdit.priceEdit} onChange={handleOnChangeEdit} name="price"
+                          <input value={formDataEdit.price} onChange={handleOnChangeEdit} name="price"
                           type="number" min="0"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
                         </div>
                         <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                           <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Stock
                           </label>
-                          <input value={formDataEdit.stockEdit} onChange={handleOnChangeEdit} name="stock"
+                          <input value={formDataEdit.stock} onChange={handleOnChangeEdit} name="stock"
                           type="number" min="0"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
                         </div>
                         <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                           <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Description
                           </label>
-                          <textarea value={formDataEdit.descriptionEdit} onChange={handleOnChangeEdit} name="description"
+                          <textarea value={formDataEdit.description} onChange={handleOnChangeEdit} name="description"
                             type="text"  className="h-20 border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="description..." />
                         </div>
                         <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                           <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                            Merchant
+                          </label>
+                          <select 
+                            onChange={handleOnChangeEdit} 
+                            name='merchant_id' 
+                            className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
+                          >
+                            <option defaultValue disabled selected>Please Choose Merchant </option>
+                            {
+                              merchants?.map((merchant) => <option key={merchant.id} value={merchant.id} selected={merchant.id}>{ merchant.name }</option>)
+                            }
+                          </select>  
+                        </div>
+                        
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Image
                           </label>
-                          <input onChange={handleOnChangeEdit} name="image_url"
+                          <input id="editFileImage" onChange={handleOnChangeEdit} name="image_url"
                           type="file"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                          <label className="mt-2 mb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                            Curent Image
+                          </label>
+                          {/* <img id="editMyImage" className="w-40 justify-center" src={formDataEdit.image_url} alt={formDataEdit.name}/> */}
                       </div>
                       </div>
                     </div>
@@ -354,7 +400,7 @@ export default function Products() {
                       Save Changes
                     </button>
                   </div>
-                {/* </form> */}
+                </form>
               </div>
             </div>
           </div>
