@@ -1,16 +1,30 @@
 import './App.css'
 import React from 'react'
-// import Navbar from './components/Navbar'
 import { Switch, Route } from 'react-router-dom'
 import Products from './pages/Products'
 import Dashboard from './pages/Dashboard'
 import Merchants from './pages/Merchants'
-import Sidebar from './components/Sidebar'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import Upload from './pages/Upload'
+import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
 export default function App() {
+  
+  const history = useHistory()
+
+  useEffect(() => {
+    if (window.location.pathname === '/register') {
+      history.push('/register')
+    } else {
+      if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
+        history.push('/login')
+      } else {
+        history.push('/')
+      }
+    }
+  }, [])
+
   return (
     <div>
       <Switch>
@@ -19,9 +33,6 @@ export default function App() {
         </Route>
         <Route path="/products">
           <Products />
-        </Route>
-        <Route path="/uploadimage">
-          <Upload />
         </Route>
         <Route path="/merchants">
           <Merchants />

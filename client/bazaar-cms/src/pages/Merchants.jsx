@@ -15,12 +15,6 @@ export default function Merchants() {
     dispatch(fetchMerchant())
   }, [dispatch])
 
-
-  useEffect(() => {
-    if (!localStorage.access_token || localStorage.access_token === 'undefined') {
-      history.push('/login')
-    }
-  })
   return (
     <>
       <div className="flex flex-wrap bg-gray-900 w-full h-screen">
