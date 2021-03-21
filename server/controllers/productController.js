@@ -19,7 +19,6 @@ class productController {
           const uploadResponse = await cloudinary.uploader.upload(fileStr, {
               upload_preset: 'dev_setups',
           });
-          console.log(uploadResponse.url, '++++++++++++');
           res.status(200).json(uploadResponse.url)
       } catch (err) {
           console.error(err);
@@ -29,7 +28,7 @@ class productController {
 
   static createProduct (req, res, next) {
     // const merchant_id = req.merchant.id
-    const { name, description, price, stock, category, image_url, merchant_id} = req.body
+    const { name, description, price, stock, category, image_url, merchant_id } = req.body
     
     Product.create({ name, description, price, stock, category, image_url, merchant_id})
     .then((newProduct) => {
