@@ -75,12 +75,46 @@ export function setAddProduct(payload) {
   return { type: 'PRODUCTS/SET_ADD_PRODUCT', payload }
 }
 
+export function setAddMerchant(payload) {
+  return { type: 'MERCHANTS/SET_ADD_MERCHANT', payload }
+}
+
+export function AddMerchant(payload) {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const uploadImage = await fetch('http://localhost:3001/products/uploadimage', {
+        method: 'POST',
+        body: JSON.stringify({ data: payload.logo }),
+        headers: { 'Content-Type': 'application/json', access_token: localStorage.getItem("access_token") }
+      });
+      const newUploadImage = await uploadImage.json()
+      let newPayload = {...payload, logo: newUploadImage}
+
+      console.log(newPayload, '>>>>>>>>>');
+      const response = await fetch(`${base_url}/merchants`, {
+        headers: {
+          "Content-Type": "application/json",
+          access_token: localStorage.getItem("access_token"),
+        },
+        method: "POST",
+        body: JSON.stringify(newPayload)
+      })
+      const data = await response.json()
+      dispatch(setAddMerchant(data))
+      dispatch(fetchMerchant())
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
 export function setLoading(payload) {
   return { type: 'PRODUCTS/SET_LOADING', payload }
 }
 
 export function AddProduct(payload) {
-  
   return async (dispatch) => {
     try {
       dispatch(setLoading(true))

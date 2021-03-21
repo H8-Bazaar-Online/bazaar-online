@@ -3,7 +3,6 @@ const { cloudinary } = require('../utils/cloudinary');
 
 class productController {
   static getAllProduct(req, res, next) {
-    console.log(req.decoded, '+++++++++++++++=')
     Product.findAll({
       where: {merchant_id: req.decoded.id}
     })
@@ -20,6 +19,7 @@ class productController {
           const uploadResponse = await cloudinary.uploader.upload(fileStr, {
               upload_preset: 'dev_setups',
           });
+          console.log(uploadResponse.url, '++++++++++++');
           res.status(200).json(uploadResponse.url)
       } catch (err) {
           console.error(err);
