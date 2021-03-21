@@ -4,7 +4,7 @@ const { cloudinary } = require('../utils/cloudinary');
 class productController {
   static getAllProduct(req, res, next) {
     Product.findAll({
-      where: {merchant_id: req.decoded.id}
+      where: {user_id: req.decoded.id}
     })
     .then((product) => {
       res.status(200).json(product)
@@ -27,10 +27,10 @@ class productController {
   } 
 
   static createProduct (req, res, next) {
-    // const merchant_id = req.merchant.id
+    const user_id = req.decoded.id
     const { name, description, price, stock, category, image_url, merchant_id } = req.body
     
-    Product.create({ name, description, price, stock, category, image_url, merchant_id})
+    Product.create({ name, description, price, stock, category, image_url, merchant_id, user_id})
     .then((newProduct) => {
       res.status(201).json(newProduct)
     })
@@ -55,8 +55,8 @@ class productController {
   }
 
   static updateProduct(req, res, next) {
-    const merchant_id = +req.merchant.id
-    const { name, description, price, stock, category, image_url} = req.body
+    const user_id = req.decoded.id
+    const { name, description, price, stock, category, image_url, merchant_id} = req.body
     const id = +req.params.id
     const option = {
       where: {
@@ -66,10 +66,10 @@ class productController {
       returning: true
     }
 
-    Product.update({ name, description, price, stock, category, image_url }, option)
+    Product.update({ name, description, price, stock, category, image_url, merchant_id, user_id }, option)
     .then((updateProduct) => {
       if(!updateProduct[1][0]) throw { name: 'CustomError', status: 404, message: 'Error Not Found !!'}
-
+      console.log(updateProduct[1][0], '<<<<<<<<<<<<<<<<< DAPET PLSSSSS !!!!!!!!!!!!!!!!!!');
       res.status(200).json(updateProduct[1][0])
     })
     .catch((err) => {
@@ -79,12 +79,9 @@ class productController {
 
   static deleteProduct(req, res, next){
     const id = +req.params.id
-    const merchant_id = +req.merchant.id
-    
     Product.destroy({
       where: {
-        id,
-        merchant_id
+        id
       }
     })
     .then((data) => {

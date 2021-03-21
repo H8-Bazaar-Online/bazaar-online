@@ -5,7 +5,6 @@ export default function Sidebar() {
 
   const history = useHistory()
   const handleLogout = (e) => {
-    console.log('yey');
     localStorage.clear()
     history.push('/login')
   }

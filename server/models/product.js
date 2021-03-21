@@ -71,9 +71,8 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    merchant_id: {
-      type: DataTypes.INTEGER
-    }
+    merchant_id: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Product',

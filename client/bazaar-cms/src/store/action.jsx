@@ -27,6 +27,10 @@ export function setFetchProductById(payload) {
   return { type: 'PRODUCTS/FETCH_BY_ID', payload }
 }
 
+export function setFetchMerchantById(payload) {
+  return { type: 'MERCHANTS/FETCH_BY_ID', payload }
+}
+
 export function fetchProductById(payload) {
   return async (dispatch) => {
     try {
@@ -38,6 +42,24 @@ export function fetchProductById(payload) {
       })
       const data = await response.json()
       dispatch(setFetchProductById(data))
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    } 
+  }
+}
+
+export function fetchMerchantById(payload) {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/merchants/${payload}`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      const data = await response.json()
+      dispatch(setFetchMerchantById(data))
       dispatch(setLoading(false))
     } catch (err) {
       console.log(err);
@@ -141,8 +163,7 @@ export function AddProduct(payload) {
 }
 
 export function editProduct(payload) {
-  const id = payload
-  console.log(id, '<<<<<<<ID DARI ACTION');
+  const id = payload.id
   return async (dispatch) => {
     try {
       dispatch(setLoading(true))
@@ -165,6 +186,37 @@ export function editProduct(payload) {
       // const data = await response.json()
       // dispatch(setAddProduct(data))
       dispatch(fetchProduct())
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+export function editMerchant(payload) {
+  const id = payload.id
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const uploadImage = await fetch('http://localhost:3001/products/uploadimage', {
+        method: 'POST',
+        body: JSON.stringify({ data: payload.logo }),
+        headers: { 'Content-Type': 'application/json', access_token: localStorage.getItem("access_token") }
+      });
+      const newUploadImage = await uploadImage.json()
+      let newPayload = {...payload, logo: newUploadImage}
+
+      await fetch(`${base_url}/merchants/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          access_token: localStorage.getItem("access_token"),
+        },
+        method: "PUT",
+        body: JSON.stringify(newPayload)
+      })
+      // const data = await response.json()
+      // dispatch(setAddProduct(data))
+      dispatch(fetchMerchant())
       dispatch(setLoading(false))
     } catch (err) {
       console.log(err);
@@ -228,15 +280,13 @@ export function login(payload) {
 export function register (payload) {
   return async (dispatch) => {
     try {
-      const response = await fetch(`${base_url}/users/register`, {
+      await fetch(`${base_url}/users/register`, {
         headers: {
           "Content-Type": "application/json"
         },
         method: "POST",
         body: JSON.stringify(payload)
       })
-      const data = await response.json()
-      console.log(data, '????????');
     } catch (err) {
       console.log(err);
     }

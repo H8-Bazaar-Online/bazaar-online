@@ -24,7 +24,6 @@ class UserController {
           }
           return Merchant.create({ name, logo, category, user_id: dataUser.id })
           .then(merchant => {
-            // console.log(merchant);
             res.status(201).json({
               id: merchant.id,
               name: merchant.name,
