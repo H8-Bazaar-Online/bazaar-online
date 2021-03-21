@@ -1,26 +1,30 @@
 const request = require('supertest')
 const app = require('../app.js')
 const { sequelize, User } = require('../models')
-const { hashPass } = require('../helpers/bcrypt')
 const { queryInterface } = sequelize
-const userValid = { username: 'user1', email: 'merchant@mail.com', password: hashPass('merchant123'), role: 'merchant' }
 
-// beforeAll(done => {
-//   User.create(userValid)
-//   .then(user => {
-//     console.log(user, '<<<');
-//     done()
-//   })
-//   .catch(err => done(err) )
-// })
-afterAll(done => {
-  queryInterface
-    .bulkDelete('Users', {})
-    .then(() => done())
-    .catch(err => done(err))
-})
+let data = {
+  email : 'merchant@mail.com',
+  username: 'user1',
+  role: 'merchant',
+  password : 'merchant123'
+}
 
 describe('POST /login success', () => {
+  beforeAll(done => {
+    User.create(data)
+      .then(_ => {
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+})
+afterAll((done) => {
+    queryInterface.bulkDelete('Users', {})
+      .then(_ => done())
+      .catch(err => done(err))
+})
   test('login success', (done) => {
     request(app)
       .post('/users/login')
