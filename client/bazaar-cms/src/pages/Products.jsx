@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Sidebar from '../components/Sidebar'
-import { AddProduct, deleteProduct, fetchProduct, fetchMerchant } from '../store/action'
-
 export default function Products() {
   const { products } = useSelector((state) => (state.products))
+  const { product } = useSelector((state) => (state.product))
   const { loading } = useSelector((state) => (state.products))
+  
+  const [showModal, setShowModal] = React.useState(false);
   const { merchants } = useSelector((state) => (state.merchants))
 
   const dispatch = useDispatch();
@@ -18,6 +19,15 @@ export default function Products() {
     stock: 0,
     image_url: '',
     merchant_id: ''
+  })
+
+  const [formDataEdit, setFormDataEdit] = useState({
+    nameEdit: '',
+    descriptionEdit: '',
+    categoryEdit: '',
+    priceEdit: 0,
+    stockEdit: 0,
+    image_urlEdit: ''
   })
 
   const handleOnChange = (e) => {
@@ -39,13 +49,57 @@ export default function Products() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const handleOnChangeEdit = (e) => {
+    let { name, value } = e.target;
+    
+    if(name === 'image_url'){
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onloadend = () => {
+        value = reader.result  
+        setFormDataEdit({...formData, image_url:value})
+      };
+      reader.onerror = () => {
+          console.error('ERROR');
+      };
+    }
+    setFormDataEdit((prev) => ({ ...prev, [name]: value }))
+  }
+
   const handleOnSubmit = (e) => {
     e.preventDefault()
     dispatch(AddProduct(formData))
   }
+
+  const handleOnSubmitEdit = (e) => {
+    setShowModal(false)
+    e.preventDefault()
+    console.log('YEY');
+    dispatch(editProduct(formDataEdit))
+  }
+
   const handleDelete = (id) => {
     dispatch(deleteProduct(id))
   }
+
+  const handleEdit = (id) => {
+    setShowModal(true)
+    console.log(id, 'EIDTT ID');
+    dispatch(fetchProductById(id))
+  }
+
+  useEffect(() => {
+    setFormDataEdit({
+      nameEdit: 'EDIT BOS',
+      descriptionEdit: product.description,
+      categoryEdit: product.category,
+      priceEdit: product.price,
+      stockEdit: product.stock,
+      image_urlEdit: product.image_url
+    })
+  }, [product])
   
   useEffect(() => {
     dispatch(fetchProduct())
@@ -139,6 +193,7 @@ export default function Products() {
                         </div>
                       </div>
                       </div>
+                    
                     </div>
                   </div>
                   <div className="w-full py-4 sm:px-12 px-4 bg-gray-300 dark:bg-gray-700 mt-6 flex justify-end rounded-bl rounded-br">
@@ -186,7 +241,7 @@ export default function Products() {
                             <td className="p-3 px-5 hover:bg-gray-100">{product.stock}</td>
                             <td className="p-3 px-5 hover:bg-gray-100">{product.description}</td>
                             <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                              <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
+                              <button type="button" onClick={() => handleEdit(product.id)} className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
                               <button type="button" onClick={() => handleDelete(product.id)} className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
                             </td>
                          </tr>
@@ -201,6 +256,108 @@ export default function Products() {
           </div>
           
         </div>
+        {showModal ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            onClick={() => setShowModal(false)}
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">
+                    Edit Product
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/* <form onSubmit={handleOnSubmitEdit}> */}
+
+                  {/*body*/}
+                  <div className="relative p-6 flex-auto">
+                    <div className="mx-auto xl:w-full xl:mx-0">
+                      <div className="xl:flex lg:flex md:flex flex-wrap justify-between">
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                          
+                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Name
+                          </label>
+                          <input
+                            type="text"
+                            value={formDataEdit.nameEdit} onChange={handleOnChangeEdit} name="name"
+                            className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
+                            placeholder="Name..."
+                          />
+                        </div>
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Category
+                          </label>
+                          <input value={formDataEdit.categoryEdit} onChange={handleOnChangeEdit} name="category"
+                          type="text"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="category.." />
+                        </div>
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Price
+                          </label>
+                          <input value={formDataEdit.priceEdit} onChange={handleOnChangeEdit} name="price"
+                          type="number" min="0"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
+                        </div>
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Stock
+                          </label>
+                          <input value={formDataEdit.stockEdit} onChange={handleOnChangeEdit} name="stock"
+                          type="number" min="0"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="0" />
+                        </div>
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Description
+                          </label>
+                          <textarea value={formDataEdit.descriptionEdit} onChange={handleOnChangeEdit} name="description"
+                            type="text"  className="h-20 border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="description..." />
+                        </div>
+                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Image
+                          </label>
+                          <input onChange={handleOnChangeEdit} name="image_url"
+                          type="file"  className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                    {/*footer*/}
+                    <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                    <button
+                      className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Close
+                    </button>
+                    <button
+                      className="bg-indigo-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      type="submit"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                {/* </form> */}
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
       </div>
     </>
   )

@@ -8,6 +8,7 @@ import logger from './middlewares/logger'
 const rootReducer = combineReducers({
   users: usersReducer,
   products: productsReducer,
+  product: productsReducer,
   merchants: merchantsReducer
 })
 
