@@ -112,8 +112,26 @@ export function login(payload) {
         body: JSON.stringify(payload)
       })
       const data = await response.json()
-      localStorage.access_token = data.access_token;
-      localStorage.name = data.name
+      localStorage.access_token = await data.access_token;
+      localStorage.name = await data.name
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
+
+export function register (payload) {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(`${base_url}/users/register`, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      const data = await response.json()
+      console.log(data, '????????');
     } catch (err) {
       console.log(err);
     }

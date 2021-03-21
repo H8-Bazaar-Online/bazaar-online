@@ -3,7 +3,10 @@ const { cloudinary } = require('../utils/cloudinary');
 
 class productController {
   static getAllProduct(req, res, next) {
-    Product.findAll()
+    console.log(req.decoded, '+++++++++++++++=')
+    Product.findAll({
+      where: {merchant_id: req.decoded.id}
+    })
     .then((product) => {
       res.status(200).json(product)
     }).catch((err) => {
@@ -25,8 +28,8 @@ class productController {
   } 
 
   static createProduct (req, res, next) {
-    const merchant_id = req.merchant.id
-    const { name, description, price, stock, category, image_url } = req.body
+    // const merchant_id = req.merchant.id
+    const { name, description, price, stock, category, image_url, merchant_id} = req.body
     
     Product.create({ name, description, price, stock, category, image_url, merchant_id})
     .then((newProduct) => {

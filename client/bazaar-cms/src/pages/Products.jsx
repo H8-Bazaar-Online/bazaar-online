@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
-import { AddProduct, deleteProduct, fetchProduct} from '../store/action'
+import { AddProduct, deleteProduct, fetchProduct, fetchMerchant } from '../store/action'
+
 export default function Products() {
   const { products } = useSelector((state) => (state.products))
   const { loading } = useSelector((state) => (state.products))
+  const { merchants } = useSelector((state) => (state.merchants))
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -16,7 +16,8 @@ export default function Products() {
     category: '',
     price: 0,
     stock: 0,
-    image_url: ''
+    image_url: '',
+    merchant_id: ''
   })
 
   const handleOnChange = (e) => {
@@ -40,24 +41,15 @@ export default function Products() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
-    
-    
     dispatch(AddProduct(formData))
   }
   const handleDelete = (id) => {
     dispatch(deleteProduct(id))
   }
-
-  useEffect(() => {
-    if (!localStorage.access_token || localStorage.access_token === 'undefined') {
-      history.push('/login')
-    }
-  })
   
   useEffect(() => {
-    dispatch(fetchProduct()) 
-    // if (localStorage.access_token && !localStorage.access_token === 'undefined') {
-    // }
+    dispatch(fetchProduct())
+    dispatch(fetchMerchant()) 
   }, [dispatch])
 
   return (
@@ -89,6 +81,18 @@ export default function Products() {
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                                 Name
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.name} onChange={handleOnChange} name="name"
+                              className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
+                              placeholder="Name..."
+                              
+                            />
+                          </div>
+                          <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                            <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                                Merchant
                             </label>
                             <input
                               type="text"
