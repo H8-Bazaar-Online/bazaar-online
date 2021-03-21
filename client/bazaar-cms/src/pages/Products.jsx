@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
-import { AddProduct, deleteProduct, editProduct, fetchProduct, fetchProductById} from '../store/action'
+import { AddProduct, deleteProduct, editProduct, fetchProduct, fetchProductById } from '../store/action'
 export default function Products() {
   const { products } = useSelector((state) => (state.products))
   const { product } = useSelector((state) => (state.product))
   const { loading } = useSelector((state) => (state.products))
+  
   const [showModal, setShowModal] = React.useState(false);
+  const { merchants } = useSelector((state) => (state.merchants))
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -91,12 +93,6 @@ export default function Products() {
   }
 
   useEffect(() => {
-    if (!localStorage.access_token || localStorage.access_token === 'undefined') {
-      history.push('/login')
-    }
-  })
-
-  useEffect(() => {
     setFormDataEdit({
       nameEdit: 'EDIT BOS',
       descriptionEdit: product.description,
@@ -108,10 +104,8 @@ export default function Products() {
   }, [product])
   
   useEffect(() => {
-    dispatch(fetchProduct()) 
-    // dispatch(fetchProductById())
-    // if (localStorage.access_token && !localStorage.access_token === 'undefined') {
-    // }
+    dispatch(fetchProduct())
+    dispatch(fetchMerchant()) 
   }, [dispatch])
 
   return (
