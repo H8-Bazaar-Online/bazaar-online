@@ -24,12 +24,10 @@ export function fetchProduct() {
 }
 
 export function setFetchProductById(payload) {
-  console.log(payload, '<<<<<<< KETRIGER');
   return { type: 'PRODUCTS/FETCH_BY_ID', payload }
 }
 
 export function fetchProductById(payload) {
-  console.log(payload, '<<<<<<< PAYLOAD FETCH BY ID');
   return async (dispatch) => {
     try {
       dispatch(setLoading(true))
@@ -89,8 +87,6 @@ export function AddMerchant(payload) {
       });
       const newUploadImage = await uploadImage.json()
       let newPayload = {...payload, logo: newUploadImage}
-
-      console.log(newPayload, '>>>>>>>>>');
       const response = await fetch(`${base_url}/merchants`, {
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +146,6 @@ export function editProduct(payload) {
   return async (dispatch) => {
     try {
       dispatch(setLoading(true))
-      
       const uploadImage = await fetch('http://localhost:3001/products/uploadimage', {
         method: 'POST',
         body: JSON.stringify({ data: payload.image_url }),
@@ -188,6 +183,23 @@ export function deleteProduct(payload) {
         }
       );
       dispatch(fetchProduct());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
+
+export function deleteMerchant(payload) {
+  return async (dispatch) => {
+    try {
+      await fetch(`${base_url}/merchants/${payload}`, {
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+          method: "delete"
+        }
+      );
+      dispatch(fetchMerchant());
     } catch (err) {
       console.log(err);
     }

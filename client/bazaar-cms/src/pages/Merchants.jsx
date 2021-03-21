@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
-import { fetchMerchant, AddMerchant } from '../store/action'
+import { fetchMerchant, AddMerchant, deleteMerchant } from '../store/action'
 
 export default function Merchants() {
   const { merchants } = useSelector((state) => (state.merchants))
@@ -19,18 +19,18 @@ export default function Merchants() {
 
   const handleOnChange = (e) => {
     let { name, value } = e.target;
-    
-    if(name === 'logo'){
+
+    if (name === 'logo') {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(file);
 
       reader.onloadend = () => {
-        value = reader.result  
-        setFormData({...formData, logo:value})
+        value = reader.result
+        setFormData({ ...formData, logo: value })
       };
       reader.onerror = () => {
-          console.error('ERROR');
+        console.error('ERROR');
       };
     }
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -38,14 +38,24 @@ export default function Merchants() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
-    console.log('masuk, ditekan');
     dispatch(AddMerchant(formData))
   }
 
+  const handleDelete = (id) => {
+    dispatch(deleteMerchant(id))
+  }
+
+  const handleEdit = (id) => {
+    console.log(id, '>> ini ID yang akan di edit');
+  }
+
   useEffect(() => {
-    dispatch(fetchMerchant())
+    setTimeout(() => {
+      dispatch(fetchMerchant())
+    }, 500);
   }, [dispatch])
 
+  console.log(merchants);
   return (
     <>
       <div className="flex flex-wrap bg-gray-900 w-full h-screen">
@@ -74,29 +84,39 @@ export default function Merchants() {
                         <div className="xl:flex lg:flex md:flex flex-wrap justify-between">
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                                Name
+                              Name
                             </label>
                             <input type="text"
-                            value={formData.name} onChange={handleOnChange} name='name'
-                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
+                              value={formData.name} onChange={handleOnChange} name='name'
+                              required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                                Category
+                              Category
                             </label>
-                            <input type="text" 
-                            value={formData.category} onChange={handleOnChange} name='category'
-                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="category.." />
+                            <label className="block mt-4">
+                              <select
+                                onChange={handleOnChange} 
+                                name='category'
+                                className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
+                                >
+                                <option selected disabled> Please Choose Category </option>
+                                <option>Fashion</option>
+                                <option>Food</option>
+                                <option>Jewelry</option>
+                                <option>Gemstone</option>
+                              </select>
+                            </label>
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                                Logo
+                              Logo
                             </label>
-                            <input type="file" 
-                            name='logo' onChange={handleOnChange} 
-                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                            <input type="file"
+                              name='logo' onChange={handleOnChange}
+                              required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                          </div>
                         </div>
-                      </div>
                       </div>
                     </div>
                   </div>
@@ -113,7 +133,7 @@ export default function Merchants() {
               <div>
                 <div className="xl:w-full border-b border-gray-300 dark:border-gray-700 py-5">
                   <div className="flex items-center w-11/12 mx-auto">
-                    <p className="text-lg text-gray-800 dark:text-gray-100 font-bold">Merchant Table</p> 
+                    <p className="text-lg text-gray-800 dark:text-gray-100 font-bold">Merchant Table</p>
                   </div>
                 </div>
                 <table className="w-full text-md bg-white shadow-md rounded table-auto">
@@ -126,40 +146,25 @@ export default function Merchants() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b hover:bg-orange-100">
-                      <td className="p-3 px-5 hover:bg-gray-100">Name contoh</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Fashion</td>
-                      <td className="p-3 px-5 hover:bg-gray-100"><img src="https://dynamic.zacdn.com/lpv9Ca8dKJ2pYmnrlR9dwJG5Fww=/fit-in/236x345/filters:quality(90):fill(ffffff)/http://static.id.zalora.net/p/tolliver-7205-5741852-4.jpg" alt=""/></td>
-                      <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                        <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
-                        <button type="button" className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                      </td>
-                    </tr>
-                    <tr className="border-b hover:bg-orange-100">
-                      <td className="p-3 px-5 hover:bg-gray-100">Name contoh</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Fashion</td>
-                      <td className="p-3 px-5 hover:bg-gray-100"><img src="https://dynamic.zacdn.com/lpv9Ca8dKJ2pYmnrlR9dwJG5Fww=/fit-in/236x345/filters:quality(90):fill(ffffff)/http://static.id.zalora.net/p/tolliver-7205-5741852-4.jpg" alt=""/></td>
-                      <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                        <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
-                        <button type="button" className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                      </td>
-                    </tr>
-                    <tr className="border-b hover:bg-orange-100">
-                      <td className="p-3 px-5 hover:bg-gray-100">Name contoh</td>
-                      <td className="p-3 px-5 hover:bg-gray-100">Fashion</td>
-                      <td className="p-3 px-5 hover:bg-gray-100"><img src="https://dynamic.zacdn.com/lpv9Ca8dKJ2pYmnrlR9dwJG5Fww=/fit-in/236x345/filters:quality(90):fill(ffffff)/http://static.id.zalora.net/p/tolliver-7205-5741852-4.jpg" alt=""/></td>
-                      <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
-                        <button type="button" className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
-                        <button type="button" className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                      </td>
-                    </tr>
-                    
+                    {
+                      merchants?.map((merchant) => (
+                        <tr className="border-b hover:bg-orange-100" key={merchant.id}>
+                          <td className="p-3 px-5 hover:bg-gray-100">{merchant.name}</td>
+                          <td className="p-3 px-5 hover:bg-gray-100">{merchant.category}</td>
+                          <td className="p-3 px-5 hover:bg-gray-100"><img src={merchant.logo} alt={merchant.name} /></td>
+                          <td className="p-3 px-5 hover:bg-gray-100 flex justify-center">
+                            <button type="button" onClick={() => handleEdit(merchant.id)} className="mr-3 text-sm bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</button>
+                            <button type="button" onClick={() => handleDelete(merchant.id)} className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
+                          </td>
+                        </tr>
+                      ))
+                    }
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-          
+
         </div>
       </div>
     </>
