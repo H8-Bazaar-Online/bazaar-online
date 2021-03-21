@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { login } from '../store/action';
 export default function Login() {
 
@@ -77,9 +77,9 @@ export default function Login() {
               <div className="mt-7">
                 <div className="flex items-center text-center">
                   <label className="w-full text-sm text-gray-600">Don't have an account?</label>
-                  <a href="/#" className="w-full text-blue-500 transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
+                  <NavLink to="/register" className="w-full text-blue-500 transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
                     Create Account
-                  </a>
+                  </NavLink>
                 </div>
               </div>
             </form>
