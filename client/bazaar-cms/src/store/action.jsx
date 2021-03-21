@@ -1,7 +1,6 @@
 
 const base_url = 'http://localhost:3001'
 export function setFetchProduct(payload) {
-  console.log(payload, '<<<<<<< KETRIGER');
   return { type: 'PRODUCTS/FETCH_ALL', payload }
 }
 
@@ -16,6 +15,28 @@ export function fetchProduct() {
       })
       const data = await response.json()
       dispatch(setFetchProduct(data))
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+export function setFetchMerchant(payload) {
+  return { type: 'MERCHANTS/FETCH_ALL', payload }
+}
+
+export function fetchMerchant() {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/merchants`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      const data = await response.json()
+      dispatch(setFetchMerchant(data))
       dispatch(setLoading(false))
     } catch (err) {
       console.log(err);
@@ -91,9 +112,7 @@ export function login(payload) {
         body: JSON.stringify(payload)
       })
       const data = await response.json()
-      console.log(data, '<<<<<< DATA');
       localStorage.access_token = data.access_token;
-      // console.log(data, "<<< data");
       localStorage.name = data.name
     } catch (err) {
       console.log(err);

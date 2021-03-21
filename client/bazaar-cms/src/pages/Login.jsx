@@ -11,7 +11,6 @@ export default function Login() {
   
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value ,'<<<<<<<<<<<<<<< FORM DATA');
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
   
