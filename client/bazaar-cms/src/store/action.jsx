@@ -62,7 +62,6 @@ export function fetchMerchant() {
         },
       })
       const data = await response.json()
-      
       dispatch(setFetchMerchant(data))
       dispatch(setLoading(false))
     } catch (err) {
