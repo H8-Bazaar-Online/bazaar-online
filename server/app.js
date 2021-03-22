@@ -22,8 +22,13 @@ app.use(errorHandler)
 
 
 io.on('connection', socket => {
+  console.log(`${socket.id} connected`);
   socket.on('message', ({ name, message }) => {
     io.emit('message', { name, message })
+  })
+
+  socket.on('disconnect', () => {
+    console.log(`${socket.id} disconnected`);
   })
 })
 

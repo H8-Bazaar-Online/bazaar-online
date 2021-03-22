@@ -1,11 +1,11 @@
 .App {
   margin: 0px;
   padding: 40px 40px 90px 40px;
-  background-color: black;
+  background-color: rgb(255, 255, 255);
 }
 
 .Sprite-container {
-  background-image: url(./img/m1.png);
+  background-image: url(./img/m2.png);
 }
 
 .card {

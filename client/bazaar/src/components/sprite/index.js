@@ -1,7 +1,7 @@
 
 function Sprite({ image, data, position }) {
   const { x, y, h, w } = data
-  // console.log(image)
+  console.log(image)
   // console.log(typeof(image))
   return (
     <div className="Sprite-container" style={{
@@ -12,9 +12,14 @@ function Sprite({ image, data, position }) {
       top: position.y,
       left: position.x,
       // error in importing image using in-line style
-      // backgroundImage: `url(./img/m1.png)`,
+      backgroundImage: image,
       backgroundRepeat: "no-repeat"
     }}>
+      <div style={{ backgroundColor: 'red', color: 'white', marginTop: '-40px', marginLeft: 3}}>
+        <p>{localStorage.name}</p>
+      </div>
+      <div style={{ width: '26px', height: '9px', marginTop: '40px', backgroundColor: 'yellow', marginLeft: '3px', borderRadius: '30px' }}>
+      </div>
     </div>
   );
 }
