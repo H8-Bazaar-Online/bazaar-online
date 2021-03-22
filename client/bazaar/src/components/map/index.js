@@ -6,6 +6,8 @@ function getTileSprite(type){
       return 'grass'
     case 1:
       return 'road'
+    case 8:
+      return 'house'
     case 9:
       return 'house'
     default:
@@ -38,7 +40,7 @@ function Map(props) {
       position: 'relative',
       top: '0px',
       left: '0px',
-      width: '800px',
+      width: '810px',
       // height: '400px',
       backgroundColor: 'grey',
       border: '4px solid white',

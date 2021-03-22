@@ -17,6 +17,16 @@ class MerchantController {
       })
   }
 
+  static getAllMerchantCustomer(req, res, next) {
+    Merchant.findAll()
+      .then(result => {
+        res.status(200).json(result)
+      })
+      .catch(err => {
+        next(err)
+      })
+  }
+
   static getMerchantById(req, res, next) {
     const targetedMerchant = req.params.merchantid
     const activeUser = req.decoded.id

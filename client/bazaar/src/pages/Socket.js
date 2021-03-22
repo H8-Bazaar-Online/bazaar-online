@@ -1,4 +1,3 @@
-import TextField from '@material-ui/core/TextField'
 import React, { useEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
 import '../App.css'
@@ -51,7 +50,7 @@ function Socket() {
                 <TextField name="name" onChange={(e) => setState({...state, name: e.target.value})} value={state.name} label="Name" />
             </div> */}
             <div>
-                <TextField
+                <input
                     name="message"
                     onChange={(e) => {
 											console.log(e.target.value);

@@ -1,6 +1,7 @@
 import './App.css';
 import World from './components/world/index'
-import Socket from './pages/Socket'
+import Booth from './components/Booth'
+// import Socket from './pages/Socket'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 function App() {
@@ -15,7 +16,12 @@ function App() {
       <Router>
         <Switch>
           <Route exact path='/' component={World} />
-          <Route path='/chat' component={Socket} />
+        </Switch>
+        <Switch>
+          <Route exact path='/buy-product' component={Booth} />
+        </Switch>
+        <Switch>
+          <Route exact path='/both' component={Booth} />
         </Switch>
       </Router>
     </div>

@@ -2,9 +2,11 @@ import Player from '../player/index'
 import Map from '../map/index'
 import { tiles } from '../map/tiles'
 import Socket from '../../pages/Socket'
+import Booth from '../Booth'
 import { useEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
 function World() {
+  
   
   const [players, setPlayers] = useState([])
   const socketRef = useRef()
@@ -32,6 +34,7 @@ function World() {
         <Player skin="m1" player={players}/>
         {/* <Player skin="m2" /> */}
         <Socket />
+        {/* <Booth /> */}
       </div>
     </>
   )
