@@ -7,6 +7,8 @@ const errorHandler = require('./middlewares/errorHandler')
 const express = require('express')
 const router = require('./routes/index.js')
 const app = express()
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
 
 const PORT = process.env.PORT || 3001
 
@@ -18,8 +20,19 @@ app.use('/', router)
 
 app.use(errorHandler)
 
-app.listen(PORT, () => {
-  console.log(`app running on port ${PORT}`)
+
+io.on('connection', socket => {
+  socket.on('message', ({ name, message }) => {
+    io.emit('message', { name, message })
+  })
 })
+
+http.listen(PORT, function() {
+  console.log(`app listening on port ${PORT}`)
+})
+
+// app.listen(PORT, () => {
+//   console.log(`app running on port ${PORT}`)
+// })
 
 module.exports = app
