@@ -33,7 +33,7 @@ let productData = {
 
 
 describe('Product routes', () => {
-  let userToken, productId, user2Token, user3Token
+  let userToken, productId, user2Token, merchantId
   beforeAll(done => {
     User.create({ username: data.username, email: data.email, password: data.password, role: 'merchant' })
       .then(user => {
@@ -48,6 +48,7 @@ describe('Product routes', () => {
       })
       .then(merchant => {
         productData.merchant_id = merchant.id
+        merchantId = merchant.id
         return User.create({ username: data2.username, email: data2.email, password: data2.password, role: 'customer' })
       })
       .then(user2 => {
@@ -211,7 +212,8 @@ describe('Product routes', () => {
           name: 'Tes Product Update',
           image_url: 'https://imgurl.com/',
           price: 30000,
-          stock: 10
+          stock: 10,
+          merchant_id: merchantId
         }
         request(app)
           .put('/products/' + productId)
@@ -238,7 +240,8 @@ describe('Product routes', () => {
           name: 'Tes Product Update',
           image_url: 'https://imgurl.com/',
           price: 30000,
-          stock: 10
+          stock: 10,
+          merchant_id: merchantId
         }
         request(app)
           .put('/products/99999')
@@ -257,7 +260,8 @@ describe('Product routes', () => {
           name: '',
           image_url: 'https://imgurl.com/',
           price: 30000,
-          stock: 10
+          stock: 10,
+          merchant_id: merchantId
         }
         request(app)
           .put('/products/' + productId)
