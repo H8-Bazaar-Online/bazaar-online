@@ -12,7 +12,7 @@ function Socket() {
 	useEffect(() => {
 			socketRef.current = io.connect("http://localhost:3001")
 			socketRef.current.on("message", ({ name, message }) => {
-				setChat([ ...chat, { name, message } ])
+				setChat([ ...chat, { name: localStorage.name, message } ])
 			})
 			return () => socketRef.current.disconnect()
 		},[ chat ])
@@ -43,12 +43,15 @@ function Socket() {
         <form onSubmit={onMessageSubmit}>
             <h1>Messenger</h1>
             <div className="name-field">
-                <TextField name="name" onChange={(e) => onTextChange(e)} value={state.name} label="Name" />
+                <TextField name="name"  value={localStorage.name} label="Name" />
             </div>
             <div>
                 <TextField
                     name="message"
-                    onChange={(e) => onTextChange(e)}
+                    onChange={(e) => {
+											console.log(e.target.value);
+											onTextChange(e)
+										}}
                     value={state.message}
                     id="outlined-multiline-static"
                     variant="outlined"
