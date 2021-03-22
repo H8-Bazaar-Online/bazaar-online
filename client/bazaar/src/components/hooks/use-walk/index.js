@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { tiles } from '../../map/tiles'
 
-function useWalk(maxSteps) {
+
+function useWalk(maxSteps, player) {
   const [dir, setDir] = useState(0)
   const [step, setStep] = useState(0)
-  const [position, setPosition] = useState({ x: 4, y: 184 })
+  const [position, setPosition] = useState({ x: 4, y: 164 })
+
+  const socketRef = useRef()
 
   const directions = {
     down: 0,
@@ -12,7 +15,6 @@ function useWalk(maxSteps) {
     right: 2,
     up: 3
   }
-
   //stepsize value came from half size of MapTile
   const stepSize = 20
 

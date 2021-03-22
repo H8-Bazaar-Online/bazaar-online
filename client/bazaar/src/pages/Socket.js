@@ -4,7 +4,7 @@ import io from 'socket.io-client'
 import '../App.css'
 
 function Socket() {
-	const [ state, setState ] = useState({ message: "", name: "" })
+	const [ state, setState ] = useState({ message: " ", name: "" })
 	const [ chat, setChat ] = useState([])
     
 	const socketRef = useRef()
@@ -12,7 +12,7 @@ function Socket() {
 	useEffect(() => {
 			socketRef.current = io.connect("http://localhost:3001")
 			socketRef.current.on("message", ({ name, message }) => {
-				setChat([ ...chat, { name: localStorage.name, message } ])
+				setChat([ ...chat, { name, message } ])
 			})
 			return () => socketRef.current.disconnect()
 		},[ chat ])
@@ -22,8 +22,9 @@ function Socket() {
 	}
 
 	const onMessageSubmit = (e) => {
+		document.getElementById('outlined-multiline-static').blur()
 		const { name, message } = state
-		socketRef.current.emit("message", { name, message })
+		socketRef.current.emit("message", { name: localStorage.name, message })
 		e.preventDefault()
 		setState({ message: "", name })
 	}
@@ -40,11 +41,15 @@ function Socket() {
 
 	return (
     <div className="card">
+			<div className="render-chat">
+        <h1>Chat Log</h1>
+            {renderChat()}
+      </div>
         <form onSubmit={onMessageSubmit}>
             <h1>Messenger</h1>
-            <div className="name-field">
-                <TextField name="name"  value={localStorage.name} label="Name" />
-            </div>
+            {/* <div className="name-field">
+                <TextField name="name" onChange={(e) => setState({...state, name: e.target.value})} value={state.name} label="Name" />
+            </div> */}
             <div>
                 <TextField
                     name="message"
@@ -60,10 +65,6 @@ function Socket() {
             </div>
             <button>Send Message</button>
         </form>
-      <div className="render-chat">
-        <h1>Chat Log</h1>
-            {renderChat()}
-      </div>
     </div>
 	)
 }
