@@ -1,20 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux';
 import io from 'socket.io-client'
 import '../App.css'
 
 function Socket() {
-	const [ state, setState ] = useState({ message: " ", name: "" })
+	const [ state, setState ] = useState({ message: " ", name: localStorage.name })
 	const [ chat, setChat ] = useState([])
-    
-	const socketRef = useRef()
-
+  
+  const { socketConnect } = useSelector((state) => state.socketConnect)
+	// console.log(chat, '<<<<<<<<<< CHAT KELUARLAHH');
 	useEffect(() => {
-			socketRef.current = io.connect("http://localhost:3001")
-			socketRef.current.on("message", ({ name, message }) => {
-				setChat([ ...chat, { name, message } ])
+		if (socketConnect) {
+			// console.log('yeyyy');
+			socketConnect.on("message", ({ name, message }) => {
+				// console.log('YEYEYEYEYEYEYEYEYEYEYYEEY');
+				// console.log(name, message, '<<<<<<<<<< NAME MESSAGE');
+				// setChat([ ...chat, { name, message } ])
+        setChat((chat) => chat.concat({name, message}));
+        // setPlayers((player) => player.concat(state));
 			})
-			return () => socketRef.current.disconnect()
-		},[ chat ])
+		}
+		// return () => socketConnect.disconnect()
+	},[socketConnect])
 
 	const onTextChange = (e) => {
 		setState({ ...state, [e.target.name]: e.target.value })
@@ -23,9 +30,11 @@ function Socket() {
 	const onMessageSubmit = (e) => {
 		document.getElementById('outlined-multiline-static').blur()
 		const { name, message } = state
-		socketRef.current.emit("message", { name: localStorage.name, message })
+		socketConnect.emit("message", { name: localStorage.name, message })
 		e.preventDefault()
+		// console.log(state, '<<<<<<<<<<<<<< SEBELUM RESET');
 		setState({ message: "", name })
+		// console.log(state, '<<<<<<<<<<<<<< SESUDAH RESET');
 	}
 
 	const renderChat = () => {

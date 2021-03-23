@@ -10,9 +10,9 @@ export default function Booth() {
    }
   return (
     <div>
-          <button type="button" className="nes-btn is-primary" onClick={modaldeh}>
-            Open dark dialog
-          </button>
+      <button type="button" className="nes-btn is-primary" onClick={modaldeh}>
+        Open dark dialog
+      </button>
       { showModal2 ? (
         <>
         <div>asdasd</div>
