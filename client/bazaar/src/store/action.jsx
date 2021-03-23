@@ -138,5 +138,12 @@ export function setSocketConnect(payload) {
 }
 
 export function setSocketPlayer(payload) {
+  return { type: 'SOCKET/SET_PLAYER', payload }
+}
+
+export function setSocketPlayers(payload) {
   return { type: 'SOCKET/SET_PLAYERS', payload }
+}
+export function setSocketUpdatePlayers(payload) {
+  return { type: 'SOCKET/SET_UPDATEPLAYERS', payload }
 }

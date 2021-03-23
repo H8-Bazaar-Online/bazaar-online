@@ -1,6 +1,12 @@
 const initialState = {
   socketConnect : null,
-  players : []
+  players : [],
+  player: {},
+  updatePlayers: {
+    id: '',
+    name: '',
+    position: { x: 4, y: 164 }
+  }
 }
 
 function reducer(state = initialState, action) {
@@ -9,7 +15,12 @@ function reducer(state = initialState, action) {
     case 'SOCKET/SET_CONNECT':
       return { ...state, socketConnect: payload }
     case 'SOCKET/SET_PLAYERS':
-      return { ...state, players: [...state.players , payload] }
+      return { ...state, players: payload }
+      // return { ...state, players: [...state.players , payload] }
+    case 'SOCKET/SET_PLAYER':
+      return { ...state, player: payload }
+    case 'SOCKET/SET_UPDATEPLAYERS':
+      return { ...state, updatePlayers: payload }
     default:
       return state
   }
