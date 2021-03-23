@@ -1,10 +1,11 @@
-import './App.css'
+// import './App.css'
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Products from './pages/Products'
 import Dashboard from './pages/Dashboard'
 import Merchants from './pages/Merchants'
 import Login from './pages/Login'
+// import './index.css';
 import Register from './pages/Register'
 import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
