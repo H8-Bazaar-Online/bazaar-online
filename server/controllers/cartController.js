@@ -57,9 +57,6 @@ class CartController {
               }
               res.status(201).json(cart)
             })
-            .catch(err => {
-              next(err)
-            })
         } else {
           cart_id = dataCart.id
           if (dataCart.quantity < dataCart.dataValues.Product.stock && dataCart.quantity >= 1) {
@@ -74,9 +71,6 @@ class CartController {
               })
                 .then(dataCart => {
                   res.status(200).json({message: 'Quantity has been increased by 1', id: cart_id})
-                })
-                .catch(err => {
-                  next(err)
                 })
           } else {
             throw ({name: 'CustomError', status: 400, message: 'Quantity can\'t more then stock'})

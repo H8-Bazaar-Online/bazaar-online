@@ -108,7 +108,7 @@ export default function Products() {
       description: product.description,
       category: product.category,
       price: product.price,
-      stockEdit: product.stock,
+      stock: product.stock,
       image_url: product.image_url,
       merchant_id: product.merchant_id
     })

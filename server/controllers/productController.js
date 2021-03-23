@@ -26,6 +26,22 @@ class productController {
       }
   } 
 
+  static getAllProductCustomer(req, res, next) {
+    const user_id = +req.params.user_id
+    console.log(user_id, '<<<<<<<<<<<<<<< req id');
+    Product.findAll({
+      where: {
+        user_id
+      }
+    })
+      .then(result => {
+        res.status(200).json(result)
+      })
+      .catch(err => {
+        next(err)
+      })
+  }
+
   static createProduct (req, res, next) {
     const user_id = req.decoded.id
     const { name, description, price, stock, category, image_url, merchant_id } = req.body
