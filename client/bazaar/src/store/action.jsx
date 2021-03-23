@@ -132,3 +132,11 @@ export function register (payload) {
   };
 }
 
+export function setSocketConnect(payload) {
+  console.log(payload, '<<<<<<<<<<<<< SOCKET CONNECT');
+  return { type: 'SOCKET/SET_CONNECT', payload }
+}
+
+export function setSocketPlayer(payload) {
+  return { type: 'SOCKET/SET_PLAYERS', payload }
+}

@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 import productsReducer from './reducers/products';
 import usersReducer from './reducers/users';
 import merchantsReducer from './reducers/merchants';
+import socketConnectReducer from './reducers/socket';
 import logger from './middlewares/logger'
 
 const rootReducer = combineReducers({
@@ -10,10 +11,11 @@ const rootReducer = combineReducers({
   products: productsReducer,
   product: productsReducer,
   merchants: merchantsReducer,
-  merchant: merchantsReducer
+  merchant: merchantsReducer,
+  socketConnect: socketConnectReducer
 })
 
-const store = createStore(rootReducer, applyMiddleware(logger, thunk))
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 // console.log(store.getState(), 'ini dari store/index.jsgit');
 
