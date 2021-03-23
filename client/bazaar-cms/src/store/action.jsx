@@ -1,3 +1,4 @@
+import Swal from "sweetalert2"
 
 const base_url = 'http://localhost:3001'
 
@@ -117,12 +118,19 @@ export function AddMerchant(payload) {
         method: "POST",
         body: JSON.stringify(newPayload)
       })
+      if (!response.ok) {
+        const data = await response.json()
+        throw ({data})
+      }
       const data = await response.json()
       dispatch(setAddMerchant(data))
       dispatch(fetchMerchant())
       dispatch(setLoading(false))
     } catch (err) {
-      console.log(err);
+      Swal.fire({
+        title: 'Error !', 
+        text: err.data.message.map(error => {return (` ${error}`)}),
+        icon: 'error'})
     }
   }
 }
@@ -152,12 +160,20 @@ export function AddProduct(payload) {
         method: "POST",
         body: JSON.stringify(newPayload)
       })
+      if (!response.ok) {
+        const data = await response.json()
+        dispatch(setLoading(false))
+        throw ({data})
+      }
       const data = await response.json()
       dispatch(setAddProduct(data))
       dispatch(fetchProduct())
       dispatch(setLoading(false))
     } catch (err) {
-      console.log(err);
+      Swal.fire({
+        title: 'Error !', 
+        text: err.data.message.map(error => {return (` ${error}`)}),
+        icon: 'error'})
     }
   }
 }
@@ -175,7 +191,7 @@ export function editProduct(payload) {
       const newUploadImage = await uploadImage.json()
       let newPayload = {...payload, image_url: newUploadImage}
 
-      await fetch(`${base_url}/products/${id}`, {
+      const response = await fetch(`${base_url}/products/${id}`, {
         headers: {
           "Content-Type": "application/json",
           access_token: localStorage.getItem("access_token"),
@@ -183,8 +199,8 @@ export function editProduct(payload) {
         method: "PUT",
         body: JSON.stringify(newPayload)
       })
-      // const data = await response.json()
-      // dispatch(setAddProduct(data))
+      const data = await response.json()
+      console.log(data, '>>>>>>>>>>>>?????');
       dispatch(fetchProduct())
       dispatch(setLoading(false))
     } catch (err) {

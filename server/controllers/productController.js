@@ -28,7 +28,6 @@ class productController {
 
   static getAllProductCustomer(req, res, next) {
     const user_id = +req.params.user_id
-    console.log(user_id, '<<<<<<<<<<<<<<< req id');
     Product.findAll({
       where: {
         user_id
@@ -72,7 +71,8 @@ class productController {
 
   static updateProduct(req, res, next) {
     const user_id = req.decoded.id
-    const { name, description, price, stock, category, image_url, merchant_id} = req.body
+    const { name, description, price, stock, category, image_url } = req.body
+    const merchant_id = +req.body.merchant_id
     const id = +req.params.id
     const option = {
       where: {
@@ -85,10 +85,10 @@ class productController {
     Product.update({ name, description, price, stock, category, image_url, merchant_id, user_id }, option)
     .then((updateProduct) => {
       if(!updateProduct[1][0]) throw { name: 'CustomError', status: 404, message: 'Error Not Found !!'}
-      console.log(updateProduct[1][0], '<<<<<<<<<<<<<<<<< DAPET PLSSSSS !!!!!!!!!!!!!!!!!!');
       res.status(200).json(updateProduct[1][0])
     })
     .catch((err) => {
+      console.log(err);
       next(err)
     })
   }
