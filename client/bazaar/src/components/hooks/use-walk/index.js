@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import { tiles } from '../../map/tiles'
+import { useSelector } from 'react-redux'
 
 
-function useWalk(maxSteps, player) {
+function useWalk(maxSteps, player, updatePlayer) {
+  // console.log(player, ')))))))))))))');
   const [dir, setDir] = useState(0)
   const [step, setStep] = useState(0)
-  const [position, setPosition] = useState({ x: 4, y: 164 })
+  const [position, setPosition] = useState({ x: updatePlayer.position.x, y: updatePlayer.position.y })
 
+  const { socketConnect } = useSelector(state => state.socketConnect)
+
+  console.log(updatePlayer, '=>>>>>>>');
   const directions = {
     down: 0,
     left: 1,
@@ -32,7 +37,9 @@ function useWalk(maxSteps, player) {
   }
 
   function move(dir) {
+    const { id, name, position } = updatePlayer
     setPosition((prev) => {
+      console.log(prev, '<<<<<<<?????????');
       const newX = prev.x + modifier[dir].x
       const newY = prev.y + modifier[dir].y
       //check the boundaries map
@@ -42,21 +49,15 @@ function useWalk(maxSteps, player) {
         let arrayY = Math.round((newY - 24) / 40)
         let tile = tiles[arrayY][arrayX]
         if (tile === 1) {
-          return {
-            x: prev.x + modifier[dir].x,
-            y: prev.y + modifier[dir].y
-          }
+          socketConnect.emit('playerPos', { id, name, position: { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y } })
+          return { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y }
         } else {
-          return {
-            x: prev.x,
-            y: prev.y
-          }
+          socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
+          return { x: prev.x, y: prev.y }
         }
       } else {
-        return {
-          x: prev.x,
-          y: prev.y
-        }
+        socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
+        return { x: prev.x, y: prev.y }
       }
     })
   }

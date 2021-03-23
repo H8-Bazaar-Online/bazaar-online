@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProduct, fetchMerchant, setSocketConnect } from '../../store/action'
 
-function Player({ skin, player }) {
+function Player({ skin, player, updatePlayer }) {
   const { merchants } = useSelector((state) => (state.merchants))
   const { products } = useSelector((state) => (state.products))
   // console.log(player, '<<<<<<<<<<<< PROPS PLAYER');
@@ -17,15 +17,14 @@ function Player({ skin, player }) {
 
   const dispatch = useDispatch();
 
-  
-  const { dir, step, walk, position } = useWalk(3, player)
-  console.log(position, '<<<<<<<<<<<<<<<<<<<< POSITION');
 
+
+  
+  const { dir, step, walk, position } = useWalk(3, player, updatePlayer)
+  // console.log(position, '<<<<<<<<<<<<<<<<<<<< POSITION');
   const currentPosition = () => {
     if (socketConnect) {
-      socketConnect.emit('playerPos', {
-        x: position.x, y: position.y
-    })
+      socketConnect.emit('playerPos', {...player, position: { x: position.x, y: position.y } })
     }
   }
   const data = {
@@ -78,7 +77,8 @@ function Player({ skin, player }) {
   })
   return (
     <>
-    <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} player={player} />
+    {/* <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} player={player} /> */}
+    <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} updatePlayer={updatePlayer} player={player} />
       { showModal2 ? (
         <>
         <div>asdasd</div>
