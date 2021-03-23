@@ -71,7 +71,15 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    merchant_id: DataTypes.INTEGER,
+    merchant_id: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'The Merchant field is required'
+        }
+      }
+    },
     user_id: DataTypes.INTEGER
   }, {
     sequelize,

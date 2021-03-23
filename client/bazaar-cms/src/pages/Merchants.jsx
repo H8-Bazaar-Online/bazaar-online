@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect,  useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { fetchMerchant, AddMerchant, deleteMerchant, editMerchant, fetchMerchantById } from '../store/action'
+import Swal from 'sweetalert2'
 
 export default function Merchants() {
   const { merchants } = useSelector((state) => (state.merchants))
   const { merchant } = useSelector((state) => (state.merchant))
 
-  // const { loading } = useSelector((state) => (state.products))
-
-  const history = useHistory()
   const dispatch = useDispatch();
   const [showModal, setShowModal] = React.useState(false);
 
+  
 
   const [formData, setFormData] = useState({
     name: '',
     category: '',
-    logo: ''
+    logo: null
   })
 
   const [formDataEdit, setFormDataEdit] = useState({
@@ -28,12 +26,8 @@ export default function Merchants() {
     logo: ''
   })
 
-  const handleOnChangeEdit = (e) => {
-    console.log(formDataEdit, '<<<<<<<<<<<<<<<<<<<<< DAPET EDIT GK CU');
-  
+  const handleOnChangeEdit = (e) => {  
       let { name, value } = e.target;
-      console.log('yeyeyey');
-      // console.log(product.logo, '<<<<<<<<<<<<<<< IMG PRODCUT');
       if(name === 'logo'){
         if (e.target.files[0].size > 60000) {
           // document.getElementById("editFileImage").value = ""
@@ -45,7 +39,6 @@ export default function Merchants() {
   
           reader.onloadend = () => {
             value = reader.result  
-            console.log(value ,'value');
             setFormDataEdit({...formDataEdit, logo:value})
           };
           reader.onerror = () => {
@@ -61,8 +54,8 @@ export default function Merchants() {
   const handleOnSubmitEdit = (e) => {
     setShowModal(false)
     e.preventDefault()
-    console.log('YEY');
     dispatch(editMerchant(formDataEdit))
+    e.target.reset()
   }
 
   const handleOnChange = (e) => {
@@ -87,18 +80,36 @@ export default function Merchants() {
   const handleOnSubmit = (e) => {
     e.preventDefault()
     dispatch(AddMerchant(formData))
+    setFormData({
+      name: ''
+    })
+    e.target.reset()
   }
 
   const handleButtonDelete = (id) => {
-    dispatch(deleteMerchant(id))
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteMerchant(id))
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
+      }
+    })
   }
 
   const handleButtonEdit = (id) => {
-    console.log(id, '<<<<<<<<<<<<<<<<<<<<');
     dispatch(fetchMerchantById(id))
     setShowModal(true)
-    // await test(formDataEdit.logo)
-
   }
 
   useEffect(() => {
@@ -147,7 +158,7 @@ export default function Merchants() {
                             </label>
                             <input type="text"
                               value={formData.name} onChange={handleOnChange} name='name'
-                              required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
+                              className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
@@ -171,7 +182,7 @@ export default function Merchants() {
                             </label>
                             <input type="file"
                               name='logo' onChange={handleOnChange}
-                              required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                              className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
                           </div>
                         </div>
                       </div>
@@ -265,10 +276,13 @@ export default function Merchants() {
                           </label>
                             <select
                               onChange={handleOnChangeEdit} 
+                              value={formDataEdit.category}
                               name='category'
+                              id='category-merchant'
+                              required
                               className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
                               >
-                              <option selected disabled> Please Choose Category </option>
+                              <option disabled> Please Choose Category </option>
                               <option>Fashion</option>
                               <option>Food</option>
                               <option>Jewelry</option>
@@ -281,7 +295,9 @@ export default function Merchants() {
                           </label>
                           <input type="file"
                             name='logo' onChange={handleOnChangeEdit}
-                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                            required 
+                            id='logo-merchant'
+                            className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
                         </div>
                       
                       </div>

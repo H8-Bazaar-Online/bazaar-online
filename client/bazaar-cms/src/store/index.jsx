@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   merchant: merchantsReducer
 })
 
-const store = createStore(rootReducer, applyMiddleware(logger, thunk))
+const store = createStore(rootReducer, applyMiddleware( thunk))
 
 // console.log(store.getState(), 'ini dari store/index.jsgit');
 
