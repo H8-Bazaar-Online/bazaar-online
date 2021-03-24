@@ -2,23 +2,23 @@ import './style.css'
 
 function getTileSprite(type) {
   switch (type) {
-    case 0:
+    case 90:
       return 'sand'
-    case 2:
+    case 91:
       return 'grass'
-    case 4:
+    case 94:
       return 'road'
-    case 5:
+    case 95:
       return 'water'
-    case 6:
+    case 96:
       return 'fountain1'
-    case 7:
+    case 97:
       return 'fountain2'
-    case 8:
+    case 98:
       return 'fountain3'
-    case 9:
+    case 99:
       return 'fountain4'
-    case 11:
+    case 0:
       return 'merchant-fashion1'
     case 111:
       return 'fashion11'
@@ -28,7 +28,7 @@ function getTileSprite(type) {
       return 'fashion13'
     case 114:
       return 'fashion14'
-    case 12:
+    case 1:
       return 'merchant-fashion2'
     case 121:
       return 'fashion21'
@@ -38,7 +38,7 @@ function getTileSprite(type) {
       return 'fashion23'
     case 124:
       return 'fashion24'
-    case 21:
+    case 2:
       return 'merchant-food1'
     case 211:
       return 'food11'
@@ -48,7 +48,7 @@ function getTileSprite(type) {
       return 'food13'
     case 214:
       return 'food14'
-    case 22:
+    case 3:
       return 'merchant-food2'
     case 221:
       return 'food21'
@@ -58,7 +58,7 @@ function getTileSprite(type) {
       return 'food23'
     case 224:
       return 'food24'
-    case 23:
+    case 4:
       return 'merchant-food3'
     case 231:
       return 'food31'
@@ -68,7 +68,7 @@ function getTileSprite(type) {
       return 'food33'
     case 234:
       return 'food34'
-    case 24:
+    case 5:
       return 'merchant-food4'
     case 241:
       return 'food41'
@@ -78,7 +78,7 @@ function getTileSprite(type) {
       return 'food43'
     case 244:
       return 'food44'
-    case 31:
+    case 6:
       return 'merchant-jew1'
     case 311:
       return 'jew11'
@@ -88,7 +88,7 @@ function getTileSprite(type) {
       return 'jew13'
     case 314:
       return 'jew14'
-    case 32:
+    case 7:
       return 'merchant-jew2'
     case 321:
       return 'jew21'

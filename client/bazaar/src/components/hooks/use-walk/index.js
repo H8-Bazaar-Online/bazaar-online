@@ -61,7 +61,7 @@ function useWalk(maxSteps, player, updatePlayer) {
         let arrayX = Math.round((newX - 4) / 40) 
         let arrayY = Math.round((newY - 24) / 40)
         let tile = tiles[arrayY][arrayX]
-        if (tile < 4) {
+        if (tile === 90 || tile === 91) {
           // socketConnect.emit('playerPos', { id, name, position: { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y } })
           return { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y }
         } else {
