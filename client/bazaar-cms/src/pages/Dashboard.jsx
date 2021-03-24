@@ -1,16 +1,38 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router';
 import Sidebar from '../components/Sidebar'
 import { fetcAllMerchant } from '../store/action'
 
 export default function Dashboard() {
   const [showModal, setShowModal] = React.useState(false);
   const { allMerchants } = useSelector((state) => state.merchants)
-  const dispatch = useDispatch()  
+  const { error } = useSelector((state)=> state.users)
+  const dispatch = useDispatch()
+  const history = useHistory()
   
   useEffect(() => {
     dispatch(fetcAllMerchant())
+    if (error) {
+      // setTimeout(() => {
+      //   history.push('/')
+      // }, 500)
+    // } else {
+      history.push('/login')
+    }
   }, [dispatch])
+
+  useEffect(() => {
+    if (window.location.pathname === '/register') {
+      history.push('/register')
+    } else {
+      if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
+        history.push('/login')
+      } else {
+        history.push('/')
+      }
+    }
+  }, [history, localStorage])
 
   return (
     <div className="flex flex-wrap bg-gray-900 w-full h-screen">

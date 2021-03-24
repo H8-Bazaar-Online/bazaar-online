@@ -24,7 +24,7 @@ export default function App() {
         history.push('/')
       }
     }
-  }, [history])
+  }, [history, localStorage])
 
   return (
     <div>

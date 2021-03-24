@@ -42,7 +42,7 @@ export default function Register() {
       let errors = message.map(error => {return (` ${error}`)}) 
       Swal.fire({
         title: 'Error !', 
-        text: `${errors} can\'t be empty !`,
+        text: `${errors} can't be empty !`,
         icon: 'error'})
     }
   }
