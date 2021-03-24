@@ -56,4 +56,41 @@ describe('Histories routes', () => {
       })
     })
   })
+
+  describe('POST /histories success', () => {
+    test('create success', (done) => {
+    request(app)
+      .post(`/histories`)
+      .set('access_token', userToken)
+      .send(historiesData)
+      .then(response => {
+        const { status, body } = response
+        expect(status).toBe(201)
+        expect(body).toHaveProperty('name', expect.any(String))
+        expect(body).toHaveProperty('price', expect.any(Number))
+        expect(body).toHaveProperty('quantity', expect.any(Number))
+        expect(body).toHaveProperty('image_url', expect.any(String))
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+    })
+  })
+  describe('POST /histories fail', () => {
+    test('should return error with status 400', (done) => {
+    request(app)
+      .post(`/histories`)
+      .set('access_token', userToken)
+      .send({ ...historiesData, name: '' })
+      .end((err, res) => {
+        expect(err).toBe(null)
+        expect(res.body).toHaveProperty('message', expect.any(Array))
+        expect(res.body.message).toContain('The Name field is required')
+        expect(res.body.message.length).toBeGreaterThan(0)
+        expect(res.status).toBe(400)
+        done()
+      })
+    })
+  })
 })
