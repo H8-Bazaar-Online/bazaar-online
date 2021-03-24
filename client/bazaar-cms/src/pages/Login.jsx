@@ -4,13 +4,12 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { login } from '../store/action';
 
 export default function Login() {
-  const history = useHistory()
 
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
-  
+  const history = useHistory()
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }))

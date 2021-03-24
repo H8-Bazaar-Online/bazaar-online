@@ -308,6 +308,7 @@ export function login(payload) {
       })
       if (!response.ok) {
         const data = await response.json()
+        dispatch(setErrorUser(true))
         throw ({data})
       }
       const data = await response.json()
@@ -331,6 +332,10 @@ export function login(payload) {
         icon: 'error'})
     }
   };
+}
+
+export function setErrorUser(payload) {
+  return { type: 'USERS/SET_ERROR', payload }
 }
 
 export function register (payload) {
