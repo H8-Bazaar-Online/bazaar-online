@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import '../App.css'
 
 function Socket() {
-	const [ state, setState ] = useState({ message: " ", name: localStorage.name })
-	const [ chat, setChat ] = useState([])
-  
-  const { socketConnect } = useSelector((state) => state.socketConnect)
+	const [state, setState] = useState({ message: " ", name: localStorage.name })
+	const [chat, setChat] = useState([])
+
+	const { socketConnect } = useSelector((state) => state.socketConnect)
 	// console.log(chat, '<<<<<<<<<< CHAT KELUARLAHH');
 	useEffect(() => {
 		if (socketConnect) {
@@ -15,12 +15,12 @@ function Socket() {
 				// console.log('YEYEYEYEYEYEYEYEYEYEYYEEY');
 				// console.log(name, message, '<<<<<<<<<< NAME MESSAGE');
 				// setChat([ ...chat, { name, message } ])
-        setChat((chat) => chat.concat({name, message}));
-        // setPlayers((player) => player.concat(state));
+				setChat((chat) => chat.concat({ name, message }));
+				// setPlayers((player) => player.concat(state));
 			})
 		}
 		// return () => socketConnect.disconnect()
-	},[socketConnect])
+	}, [socketConnect])
 
 	const onTextChange = (e) => {
 		setState({ ...state, [e.target.name]: e.target.value })
@@ -47,32 +47,33 @@ function Socket() {
 	}
 
 	return (
-    <div className="card">
-			<div className="render-chat">
-        <h1>Chat Log</h1>
-            {renderChat()}
-      </div>
-        <form onSubmit={onMessageSubmit}>
-            <h1>Messenger</h1>
-            {/* <div className="name-field">
+		<div className="card chat-container">
+			<div className="card-header render-chat">
+				<h3>Public Chat</h3>
+			</div>
+			<div className="card-body">
+				{renderChat()}
+			</div>
+			<div className="card-footer">
+				<form onSubmit={onMessageSubmit}>
+					{/* <div className="name-field">
                 <TextField name="name" onChange={(e) => setState({...state, name: e.target.value})} value={state.name} label="Name" />
             </div> */}
-            <div>
-                <input
-                    name="message"
-                    onChange={(e) => {
-											console.log(e.target.value);
-											onTextChange(e)
-										}}
-                    value={state.message}
-                    id="outlined-multiline-static"
-                    variant="outlined"
-                    label="Message"
-                />
-            </div>
-            <button>Send Message</button>
-        </form>
-    </div>
+					<input
+						name="message"
+						onChange={(e) => {
+							console.log(e.target.value);
+							onTextChange(e)
+						}}
+						value={state.message}
+						id="outlined-multiline-static"
+						variant="outlined"
+						label="Message"
+					/>
+					<button>Send</button>
+				</form>
+			</div>
+		</div>
 	)
 }
 

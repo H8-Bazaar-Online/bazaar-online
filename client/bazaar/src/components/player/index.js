@@ -14,13 +14,9 @@ function Player({ skin, player, updatePlayer }) {
   console.log(updatePlayer, '<<<<<<<<<<<< PROPS UPDATRPLAYER');
   const {socketConnect } = useSelector((state) => state.socketConnect)
 
-
   const dispatch = useDispatch();
-
-
-
   
-  const { dir, step, walk, position } = useWalk(3, player, updatePlayer)
+  const { dir, step, walk, position } = useWalk(4, player, updatePlayer)
   // console.log(position, '<<<<<<<<<<<<<<<<<<<< POSITION');
   const currentPosition = () => {
     if (socketConnect) {
@@ -28,7 +24,7 @@ function Player({ skin, player, updatePlayer }) {
     }
   }
   const data = {
-    h: 32,
+    h: 48,
     w: 32
   }
 
@@ -78,7 +74,7 @@ function Player({ skin, player, updatePlayer }) {
   return (
     <>
     {/* <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} player={player} /> */}
-    <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} updatePlayer={updatePlayer} player={player} />
+    <Actor sprite={skin} data={data} step={step} dir={dir} position={position} updatePlayer={updatePlayer} player={player} />
       { showModal2 ? (
         <>
         <div>asdasd</div>
