@@ -1,7 +1,7 @@
 
 function Sprite({player, image, data, position, updatePlayer }) {
   // console.log(player, '<<<<<<<<<<<<<<<<<<<<<<<< TUKT UTKUTK PAKET ASHIAPPPP');
-  const { x, y, h, w } = data
+  const { x, y, h, w } = updatePlayer.data
   
   return (
     <div className={`Sprite-container ${image}`} style={{

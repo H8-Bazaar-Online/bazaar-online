@@ -18,16 +18,16 @@ function Player({ skin, player, updatePlayer }) {
   
   const { dir, step, walk, position } = useWalk(4, player, updatePlayer)
   // console.log(position, '<<<<<<<<<<<<<<<<<<<< POSITION');
-  const currentPosition = () => {
-    if (socketConnect) {
-      socketConnect.emit('playerPos', {...updatePlayer, position: { x: position.x, y: position.y } })
-    }
-  }
   const data = {
     h: 48,
     w: 32
   }
-
+  const currentPosition = () => {
+    if (socketConnect) {
+      socketConnect.emit('playerPos', {...updatePlayer, position: { x: position.x, y: position.y }, data: { x: step * data.w, y: dir * data.h, h: data.h, w: data.w } })
+    }
+  }
+  
   const [showModal2, setShowModal] = useState(false)
 
   async function modaldeh(id) { 

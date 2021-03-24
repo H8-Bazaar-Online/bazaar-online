@@ -22,7 +22,7 @@ function World() {
 
   useEffect(() => {
     if (socketConnect) {
-      socketConnect.emit('ready', {name: localStorage.name, position: {x: 4, y: 170}})
+      socketConnect.emit('ready', {name: localStorage.name, position: {x: 4, y: 170}, data: { x: 0, y: 0, h: 48, w: 32 }})
       socketConnect.on('playerJoin', players => {
         dispatch(setSocketPlayers(players))
         dispatch(setSocketUpdatePlayers(players))
@@ -109,7 +109,7 @@ function World() {
         <Map tiles={tiles} />
         {
           localPlayers.map((player, index) => (
-             <Player key={index} skin="m1" player={player} updatePlayer={player}/>
+             <Player key={index} skin="char1" player={player} updatePlayer={player}/>
             //  <Player key={index} skin="m1" player={JSON.stringifyplayer}/>
           ))
         }
