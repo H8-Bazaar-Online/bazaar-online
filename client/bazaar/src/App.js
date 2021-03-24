@@ -1,7 +1,9 @@
 import './App.css';
 import World from './components/world/index'
 import Booth from './components/Booth'
-// import Socket from './pages/Socket'
+import Landing from './pages/Landing'
+import Login from './pages/Login'
+import Register from './pages/Register'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { useEffect, useRef } from 'react';
 import io from 'socket.io-client'
@@ -30,8 +32,23 @@ function App() {
       </div> */}
       <Router>
         <Switch>
-          <Route exact path='/'>
+          <Route exact path='/game'>
             <World />
+          </Route>
+        </Switch>
+        <Switch>
+          <Route exact path='/login'>
+            <Login />
+          </Route>
+        </Switch>
+        <Switch>
+          <Route exact path='/register'>
+            <Register />
+          </Route>
+        </Switch>
+        <Switch>
+          <Route exact path='/'>
+            <Landing />
           </Route>
         </Switch>
         <Switch>

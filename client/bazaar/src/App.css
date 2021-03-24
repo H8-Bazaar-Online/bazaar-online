@@ -85,3 +85,11 @@ span {
 form {
   padding: 5px;
 }
+
+body {
+  background-color: royalblue
+}
+.main-container {
+  display: flex;
+  justify-content: center;
+}
