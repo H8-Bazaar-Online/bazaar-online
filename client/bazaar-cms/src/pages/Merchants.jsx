@@ -94,13 +94,13 @@ export default function Merchants() {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, delete it !'
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteMerchant(id))
         Swal.fire(
           'Deleted!',
-          'Your file has been deleted.',
+          'Your merchant has been deleted.',
           'success'
         )
       }
