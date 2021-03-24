@@ -8,10 +8,22 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      cart_id: {
+      name: {
+        type: Sequelize.STRING
+      },
+      price: {
+        type: Sequelize.INTEGER
+      },
+      image_url: {
+        type: Sequelize.STRING
+      },
+      quantity: {
+        type: Sequelize.INTEGER
+      },
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Carts",
+          model: "Users",
           key: "id"
         },
         onUpdate: "cascade",

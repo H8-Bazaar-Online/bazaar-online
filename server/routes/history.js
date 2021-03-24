@@ -6,6 +6,6 @@ const { authorizeCustomer } = require('../middlewares/authorize')
 router.use(authenticate)
 router.get('/', HistoryController.readHistories)
 router.use('/:id', authorizeCustomer)
-router.post('/:cart_id', HistoryController.createHistory)
+router.post('/', HistoryController.createHistory)
 
 module.exports = router
