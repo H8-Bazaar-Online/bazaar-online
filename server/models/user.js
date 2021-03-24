@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // User.hasMany(models.Transaction, { foreignKey: 'user_id' })
       User.belongsToMany(models.Product, { through: models.Cart, foreignKey: 'user_id' })
       User.hasMany(models.Merchant, { foreignKey: 'user_id' })
+      User.hasMany(models.History, { foreignKey: 'user_id' })
     }
   };
   User.init({

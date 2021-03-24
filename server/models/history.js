@@ -11,10 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      History.belongsTo(models.User, { foreignKey: 'user_id' })
     }
   };
   History.init({
-    cart_id: DataTypes.INTEGER
+    name: DataTypes.STRING,
+    price: DataTypes.INTEGER,
+    image_url: DataTypes.STRING,
+    quantity: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'History',

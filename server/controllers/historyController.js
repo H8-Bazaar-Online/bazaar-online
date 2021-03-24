@@ -4,9 +4,10 @@ class HistoryController {
 
   static async createHistory(req, res, next) {
     try {
-      const cart_id = +req.params.cart_id
-      if (!cart_id) throw { name: 'CustomError', message: 'Cart Not Found', status: 404 }
-      const history = await History.create({ cart_id })
+      const user_id = +req.decoded.id
+      const { name, image_url, price, quantity } = req.body
+      if (!user_id) throw { name: 'CustomError', message: 'Cart Not Found', status: 404 }
+      const history = await History.create({ name, image_url, price, quantity, user_id })
       res.status(201).json(history)
     } catch (error) {
       next(error)
