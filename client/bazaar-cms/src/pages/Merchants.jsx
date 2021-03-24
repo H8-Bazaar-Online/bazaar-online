@@ -1,4 +1,4 @@
-import React, { useEffect,  useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Sidebar from '../components/Sidebar'
 import { fetchMerchant, AddMerchant, deleteMerchant, editMerchant, fetchMerchantById } from '../store/action'
@@ -10,8 +10,7 @@ export default function Merchants() {
 
   const dispatch = useDispatch();
   const [showModal, setShowModal] = React.useState(false);
-
-  
+  const maxMerchant = 8
 
   const [formData, setFormData] = useState({
     name: '',
@@ -26,30 +25,28 @@ export default function Merchants() {
     logo: ''
   })
 
-  const handleOnChangeEdit = (e) => {  
-      let { name, value } = e.target;
-      if(name === 'logo'){
-        if (e.target.files[0].size > 60000) {
-          // document.getElementById("editFileImage").value = ""
-          value = ''
-        } else {
-          const file = e.target.files[0];
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-  
-          reader.onloadend = () => {
-            value = reader.result  
-            setFormDataEdit({...formDataEdit, logo:value})
-          };
-          reader.onerror = () => {
-              console.error('ERROR');
-          };
-        }
-        
-        
+  const handleOnChangeEdit = (e) => {
+    let { name, value } = e.target;
+    if (name === 'logo') {
+      if (e.target.files[0].size > 60000) {
+        // document.getElementById("editFileImage").value = ""
+        value = ''
+      } else {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onloadend = () => {
+          value = reader.result
+          setFormDataEdit({ ...formDataEdit, logo: value })
+        };
+        reader.onerror = () => {
+          console.error('ERROR');
+        };
       }
-      setFormDataEdit((prev) => ({ ...prev, [name]: value }))
     }
+    setFormDataEdit((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleOnSubmitEdit = (e) => {
     setShowModal(false)
@@ -149,38 +146,45 @@ export default function Merchants() {
                   </div>
                   <div className="w-11/12 mx-auto">
                     <div className="container mx-auto">
+                      {
+                        merchants.length === 8 ? (
+                          <p className='text-2xl text-red-800 text-center'>
+                            The merchants registration already close.
+                          </p>
+                        ) : null
+                      }
                       <div className="my-8 mx-auto xl:w-full xl:mx-0">
                         <div className="xl:flex lg:flex md:flex flex-wrap justify-between">
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
-                            <input value={formDataEdit.id} onChange={handleOnChangeEdit} name="id" hidden/>
+                            <input value={formDataEdit.id} onChange={handleOnChangeEdit} name="id" hidden />
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Name
                             </label>
                             <input type="text"
-                              value={formData.name} onChange={handleOnChange} name='name'
+                              value={formData.name} onChange={handleOnChange} name='name' disabled={merchants.length === maxMerchant ? true : false}
                               className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Category
                             </label>
-                              <select
-                                onChange={handleOnChange} 
-                                name='category'
-                                className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
-                                >
-                                <option selected disabled> Please Choose Category </option>
-                                <option>Fashion</option>
-                                <option>Food</option>
-                                <option>Jewelry</option>
-                                <option>Gemstone</option>
-                              </select>
+                            <select
+                              onChange={handleOnChange}
+                              name='category' disabled={merchants.length === maxMerchant ? true : false}
+                              className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
+                            >
+                              <option selected disabled> Please Choose Category </option>
+                              <option>Fashion</option>
+                              <option>Food</option>
+                              <option>Jewelry</option>
+                              <option>Gemstone</option>
+                            </select>
                           </div>
                           <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
                             <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
                               Logo
                             </label>
-                            <input type="file"
+                            <input type="file" disabled={merchants.length === maxMerchant ? true : false}
                               name='logo' onChange={handleOnChange}
                               className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
                           </div>
@@ -188,10 +192,24 @@ export default function Merchants() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full py-4 sm:px-12 px-4 bg-gray-300 dark:bg-gray-700 mt-6 flex justify-end rounded-bl rounded-br">
-                    <button className="bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 rounded text-white px-8 py-2 text-sm focus:outline-none" type="submit">
-                      Submit
-                    </button>
+                  <div className="w-full py-4 sm:px-12 px-4 bg-gray-300 dark:bg-gray-700mt-6 flex justify-end rounded-bl rounded-br">
+                    {
+                      merchants.length === maxMerchant ? (
+                        <>
+                          {/* <div className='flex-col relative'>
+                            <div>
+                              <button className="bg-indigo-400 absolute top-0 right-0 justify-end transition duration-150 ease-in-out rounded text-white px-8 py-2 text-sm focus:outline-none" disabled type="submit">
+                                Submit
+                              </button>
+                            </div>
+                          </div> */}
+                        </>
+                      ) : (
+                        <button className="bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 rounded text-white px-8 py-2 text-sm focus:outline-none" type="submit">
+                          Submit
+                        </button>
+                      )
+                    }
                   </div>
                 </div>
               </form>
@@ -237,95 +255,95 @@ export default function Merchants() {
 
         </div>
         {showModal ? (
-        <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">
-                    Edit Merchant
+          <>
+            <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+              <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                {/*content*/}
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                  {/*header*/}
+                  <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                    <h3 className="text-3xl font-semibold">
+                      Edit Merchant
                   </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
+                    <button
+                      className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                      onClick={() => setShowModal(false)}
+                    >
+                      <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                        ×
                     </span>
-                  </button>
-                </div>
-                <form onSubmit={handleOnSubmitEdit}>
+                    </button>
+                  </div>
+                  <form onSubmit={handleOnSubmitEdit}>
 
-                  {/*body*/}
-                  <div className="relative p-6 flex-auto">
-                    <div className="mx-auto xl:w-full xl:mx-0">
-                      <div className="xl:flex lg:flex md:flex flex-wrap justify-between">
-                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
-                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                            Name
+                    {/*body*/}
+                    <div className="relative p-6 flex-auto">
+                      <div className="mx-auto xl:w-full xl:mx-0">
+                        <div className="xl:flex lg:flex md:flex flex-wrap justify-between">
+                          <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                            <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Name
                           </label>
-                          <input type="text"
-                            value={formDataEdit.name} onChange={handleOnChangeEdit} name='name'
-                            required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
-                        </div>
-                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
-                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                            Category
+                            <input type="text"
+                              value={formDataEdit.name} onChange={handleOnChangeEdit} name='name'
+                              required className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50" placeholder="Name..." />
+                          </div>
+                          <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                            <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Category
                           </label>
                             <select
-                              onChange={handleOnChangeEdit} 
+                              onChange={handleOnChangeEdit}
                               value={formDataEdit.category}
                               name='category'
                               id='category-merchant'
                               required
                               className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500 placeholder-opacity-50"
-                              >
+                            >
                               <option disabled> Please Choose Category </option>
                               <option>Fashion</option>
                               <option>Food</option>
                               <option>Jewelry</option>
                               <option>Gemstone</option>
                             </select>
-                        </div>
-                        <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
-                          <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
-                            Logo
+                          </div>
+                          <div className="xl:w-2/5 lg:w-2/5 md:w-2/5 flex flex-col mb-6">
+                            <label className="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100">
+                              Logo
                           </label>
-                          <input type="file"
-                            name='logo' onChange={handleOnChangeEdit}
-                            required 
-                            id='logo-merchant'
-                            className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                            <input type="file"
+                              name='logo' onChange={handleOnChangeEdit}
+                              required
+                              id='logo-merchant'
+                              className="border border-gray-300 dark:border-gray-700 pl-3 py-3 shadow-sm rounded text-sm focus:outline-none bg-transparent focus:border-indigo-700 text-gray-800 dark:text-gray-100 placeholder-gray-500" />
+                          </div>
+
                         </div>
-                      
                       </div>
                     </div>
-                  </div>
                     {/*footer*/}
                     <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                    <button
-                      className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                      type="button"
-                      onClick={() => setShowModal(false)}
-                    >
-                      Close
+                      <button
+                        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Close
                     </button>
-                    <button
-                      className="bg-indigo-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                      type="submit"
-                    >
-                      Save Changes
+                      <button
+                        className="bg-indigo-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="submit"
+                      >
+                        Save Changes
                     </button>
-                  </div>
-                </form>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+          </>
+        ) : null}
       </div>
     </>
   )
