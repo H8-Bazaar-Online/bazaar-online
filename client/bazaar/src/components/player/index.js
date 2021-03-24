@@ -51,7 +51,7 @@ function Player({ skin, player, updatePlayer }) {
         modaldeh()
         alert('Iya mau apa?')
         return console.log('ACTION')
-      } if (tiles[arrayY - 1][arrayX] === 8) {
+      } if (tiles[arrayY - 1][arrayX] < 50) {
         alert('MASUK MERCHANT')
         // history.push('/chat')
         modaldeh(1)
