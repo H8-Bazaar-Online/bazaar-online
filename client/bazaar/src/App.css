@@ -78,6 +78,10 @@ span {
   padding: 0px 5px;
 }
 
+.card-body {
+  overflow-y: auto;
+}
+
 form {
   padding: 5px;
 }
