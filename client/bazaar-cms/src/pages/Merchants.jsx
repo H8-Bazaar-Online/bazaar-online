@@ -192,7 +192,7 @@ export default function Merchants() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full py-4 sm:px-12 px-4 bg-gray-300 dark:bg-gray-700mt-6 flex justify-end rounded-bl rounded-br">
+                  <div className="w-full py-4 sm:px-12 px-4 bg-gray-400 dark:bg-gray-700mt-6 flex justify-end rounded-bl rounded-br">
                     {
                       merchants.length === maxMerchant ? (
                         <>
