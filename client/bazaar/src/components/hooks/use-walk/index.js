@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { tiles } from '../../map/tiles'
 import { useSelector } from 'react-redux'
 
@@ -8,10 +8,23 @@ function useWalk(maxSteps, player, updatePlayer) {
   const [dir, setDir] = useState(0)
   const [step, setStep] = useState(0)
   const [position, setPosition] = useState({ x: updatePlayer.position.x, y: updatePlayer.position.y })
+  // const [position, setPosition] = useState({ x: 4, y: 164 })
+  // const { updatePlayers } = useSelector(state => state.socketConnect)
 
-  const { socketConnect } = useSelector(state => state.socketConnect)
+  const { socketConnect, updatePlayers } = useSelector(state => state.socketConnect)
 
-  console.log(updatePlayer, '=>>>>>>>');
+  
+  useEffect(() => {
+    // if (position) {
+      //   setPosition({
+        //     x: updatePlayer.position.x,
+        //     y: updatePlayer.position.y
+        //   })
+        // }
+      console.log(updatePlayer, 'USE WALK ------')
+  }, [updatePlayer])
+
+
   const directions = {
     down: 0,
     left: 1,
@@ -49,14 +62,14 @@ function useWalk(maxSteps, player, updatePlayer) {
         let arrayY = Math.round((newY - 24) / 40)
         let tile = tiles[arrayY][arrayX]
         if (tile < 4) {
-          socketConnect.emit('playerPos', { id, name, position: { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y } })
+          // socketConnect.emit('playerPos', { id, name, position: { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y } })
           return { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y }
         } else {
-          socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
+          // socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
           return { x: prev.x, y: prev.y }
         }
       } else {
-        socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
+        // socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
         return { x: prev.x, y: prev.y }
       }
     })

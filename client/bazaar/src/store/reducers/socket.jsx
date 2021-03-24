@@ -2,11 +2,7 @@ const initialState = {
   socketConnect : null,
   players : [],
   player: {},
-  updatePlayers: {
-    id: '',
-    name: '',
-    position: { x: 4, y: 164 }
-  }
+  updatePlayers: []
 }
 
 function reducer(state = initialState, action) {
