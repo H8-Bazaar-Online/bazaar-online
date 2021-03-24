@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import { login } from '../store/action';
+
 export default function Login() {
   const history = useHistory()
 
@@ -19,10 +20,10 @@ export default function Login() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
-      dispatch(login(formData))
-      setTimeout(()=> {
-        history.push('/')
-      }, 500)
+    dispatch(login(formData))
+    setTimeout(()=> {
+      history.push('/')
+    }, 500)
   }
   
   return (

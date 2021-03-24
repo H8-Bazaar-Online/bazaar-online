@@ -1,12 +1,24 @@
 const { Merchant, User } = require('../models')
 
 class MerchantController {
-  static getAllMerchant(req, res, next) {
+  static getAllMerchantByUser(req, res, next) {
     const activeUser = req.decoded.id
     Merchant.findAll({
       where: {
         user_id: activeUser
       },
+      include: User
+    })
+      .then(result => {
+        res.status(200).json(result)
+      })
+      .catch(err => {
+        next(err)
+      })
+  }
+
+  static getAllMerchant(req, res, next) {
+    Merchant.findAll({
       include: User
     })
       .then(result => {

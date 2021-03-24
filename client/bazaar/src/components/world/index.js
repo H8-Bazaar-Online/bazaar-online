@@ -16,25 +16,28 @@ function World() {
 
   const {socketConnect, player, players, updatePlayers} = useSelector((state) => state.socketConnect)
   const [clonePlayers, setClonePlayers] = useState(players)
+  const [localPlayers, setLocalPlayers] = useState([])
   // console.log(players, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PLAYERS');
   // console.log(clonePlayers, '<<<<<<<< CLONEEEEEEE PLAYERS YEE');
 
   useEffect(() => {
     if (socketConnect) {
-      socketConnect.emit('ready', {name: localStorage.name, position: {x: 4, y: 164}})
+      socketConnect.emit('ready', {name: localStorage.name, position: {x: 4, y: 170}})
       socketConnect.on('playerJoin', players => {
         dispatch(setSocketPlayers(players))
+        dispatch(setSocketUpdatePlayers(players))
         setClonePlayers(players)
       })
 
       socketConnect.on('playerPos', (state) => {
         // setPlayers((player) => player.concat(state));
         dispatch(setSocketUpdatePlayers(state))
-        // console.log(state, '|||||||||||||||||||||');
+        console.log(state, '|||||||||||||||||||||');
       })
 
     }
   }, [socketConnect])
+
 
 
 
@@ -86,6 +89,11 @@ function World() {
   useEffect(() => {
     console.log(players, '<<<<<<<<<<<<<<<<< USE EFFECT PLAYERS');
     console.log(updatePlayers, 'TERRRRUPDATEEE');
+
+    if (updatePlayers) {
+      setLocalPlayers(updatePlayers)
+    }
+
   }, [updatePlayers, players])
   // console.log(connectSocket, '<<<<<<<<< TES');
   // console.log(players, '<<<<<<<<< PLAYERS');
@@ -100,8 +108,8 @@ function World() {
       }}>
         <Map tiles={tiles} />
         {
-          players.map((player, index) => (
-             <Player key={index} skin="char1" player={player} updatePlayer={updatePlayers}/>
+          localPlayers.map((player, index) => (
+             <Player key={index} skin="m1" player={player} updatePlayer={player}/>
             //  <Player key={index} skin="m1" player={JSON.stringifyplayer}/>
           ))
         }

@@ -11,7 +11,7 @@ import { fetchProduct, fetchMerchant, setSocketConnect } from '../../store/actio
 function Player({ skin, player, updatePlayer }) {
   const { merchants } = useSelector((state) => (state.merchants))
   const { products } = useSelector((state) => (state.products))
-  // console.log(player, '<<<<<<<<<<<< PROPS PLAYER');
+  console.log(updatePlayer, '<<<<<<<<<<<< PROPS UPDATRPLAYER');
   const {socketConnect } = useSelector((state) => state.socketConnect)
 
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function Player({ skin, player, updatePlayer }) {
   // console.log(position, '<<<<<<<<<<<<<<<<<<<< POSITION');
   const currentPosition = () => {
     if (socketConnect) {
-      socketConnect.emit('playerPos', {...player, position: { x: position.x, y: position.y } })
+      socketConnect.emit('playerPos', {...updatePlayer, position: { x: position.x, y: position.y } })
     }
   }
   const data = {
@@ -61,7 +61,7 @@ function Player({ skin, player, updatePlayer }) {
       }
     } else if (e.keyCode === 32) {
       document.getElementById('outlined-multiline-static').focus()
-    } else if (player.name === localStorage.name) {
+    } else if (updatePlayer.name === localStorage.name) {
       console.log('tesss');
       if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
         e.preventDefault()

@@ -1,6 +1,7 @@
 const initialState = {
   merchants: [],
   merchant: {},
+  allMerchants: [],
   loading: false,
   error: false
 }
@@ -10,6 +11,8 @@ function reducer(state = initialState, action) {
   switch(type) {
     case 'MERCHANTS/FETCH_ALL':
       return { ...state, merchants: payload }
+    case 'MERCHANTS/FETCH_ALLMERCHANTS':
+      return { ...state, allMerchants: payload }
     case 'MERCHANTS/FETCH_BY_ID':
       return { ...state, merchant: payload }
     case 'MERCHANTS/SET_ADD_MERCHANT':
