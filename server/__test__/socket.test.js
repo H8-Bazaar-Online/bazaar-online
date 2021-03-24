@@ -1,12 +1,8 @@
-
 const io = require('socket.io-client')
 const server = require('../socketConfig');
 
 describe('Suite of unit tests', function () {
-  //ngejalain servernya
   server.attach(3010)
-  // let sender;
-  // let receiver;
   let socket;
 
   beforeEach(function (done) {

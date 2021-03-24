@@ -15,7 +15,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   History.init({
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "The Name field is required"
+        }
+      }
+    },
     price: DataTypes.INTEGER,
     image_url: DataTypes.STRING,
     quantity: DataTypes.INTEGER,
