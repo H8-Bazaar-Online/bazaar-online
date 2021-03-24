@@ -8,6 +8,7 @@ import io from 'socket.io-client'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSocketPlayer, setSocketPlayers, setSocketUpdatePlayers } from '../../store/action'
 import Inventory from '../inventory/index'
+import AudioPlayer from '../audio'
 
 function World() {
   
@@ -97,6 +98,7 @@ function World() {
   }, [updatePlayers, players])
   // console.log(connectSocket, '<<<<<<<<< TES');
   // console.log(players, '<<<<<<<<< PLAYERS');
+  
 
   return (
     <>
@@ -117,6 +119,7 @@ function World() {
         <Socket />
         {/* <Booth /> */}
         <Inventory/>
+        <AudioPlayer url={'https://opengameart.org/sites/default/files/Caketown%201.mp3'} />
       </div>
     </>
   )
