@@ -9,8 +9,12 @@ io.on('connection', socket => {
   // player[id] = { state: {name:, input: {x: 0, y: 0}, position: {x: 4, y: 164}}}
 
   socket.on('ready', state => {
+    // console.log(state, '???? State dari client player');
     player = {id, ...state}
-    players.push(player)
+    // console.log(player, 'ini player ====');
+    // players.push(player)
+    players = [...players, player]
+    console.log(players, 'ini playerssss ====');
     socket.emit('playerJoin', players)
     socket.broadcast.emit('playerJoin', players)
   })
@@ -18,8 +22,17 @@ io.on('connection', socket => {
   socket.on('playerPos', player => {
     console.log(player, '==========');
     // player[id] = { state: {name: username, id: id, input: {x: 0, y: 0}, position: {x: position.x, y: position.y}}}
-    io.emit('playerPos', player)
-    socket.broadcast.emit('playerPos', player)
+    // const existingPlayers = players
+    // const filtered = players.filter(pl => pl.id !== player.id)
+    // console.log(filtered, 'FILTER');
+    // players = [ ...filtered, player]
+    
+    players =JSON.parse(JSON.stringify(players.map(pl => pl.id === player.id ? player : pl)))
+    // players = [player, ...filtered]
+    // players = []
+    console.log(players, 'data filtered MAP');
+    io.emit('playerPos', players)
+    // socket.broadcast.emit('playerPos', players)
   })
 
 
