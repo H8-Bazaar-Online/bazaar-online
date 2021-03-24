@@ -1,4 +1,4 @@
-
+import Swal from 'sweetalert2'
 const base_url = 'http://localhost:3001'
 
 export function setFetchProduct(payload) {
@@ -107,11 +107,29 @@ export function login(payload) {
         method: "POST",
         body: JSON.stringify(payload)
       })
+      if (!response.ok) {
+        const data = await response.json()
+        throw ({data})
+      }
       const data = await response.json()
       localStorage.access_token = await data.access_token;
       localStorage.name = await data.name
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+      });
+       Toast.fire({
+        icon: "success",
+        title: "Login Success"
+      });
     } catch (err) {
-      console.log(err);
+      Swal.fire({
+        title: 'Error !', 
+        text: err.data.message.map(error => {return (` ${error}`)}),
+        icon: 'error'})
     }
   };
 }
@@ -119,15 +137,31 @@ export function login(payload) {
 export function register (payload) {
   return async (dispatch) => {
     try {
-      await fetch(`${base_url}/users/register`, {
+      const response = await fetch(`${base_url}/users/register`, {
         headers: {
           "Content-Type": "application/json"
         },
         method: "POST",
         body: JSON.stringify(payload)
       })
+      const data = await response.json()
+      if (!response.ok) {
+        throw ({data})
+      }
+      Swal.fire({
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        title: 'Success', 
+        text: 'Registered Successfully', 
+        icon: 'success'})
+
     } catch (err) {
-      console.log(err);
+      console.log(err.data);
+      // Swal.fire({
+      //   title: 'Error !', 
+      //   text: err.data.message.map(error => {return (` ${error}`)}),
+      //   icon: 'error'})
     }
   };
 }
