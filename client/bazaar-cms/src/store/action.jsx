@@ -90,6 +90,29 @@ export function fetchMerchant() {
     }
   }
 }
+        
+export function setFetchAllMerchant(payload) {
+  return { type: 'MERCHANTS/FETCH_ALLMERCHANTS', payload }
+}
+
+export function fetcAllMerchant() {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/merchants/all`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      const data = await response.json()
+      // console.log(data,' ++++++ ini data merchant all');
+      dispatch(setFetchAllMerchant(data))
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
 
 export function setAddProduct(payload) {
   return { type: 'PRODUCTS/SET_ADD_PRODUCT', payload }
@@ -200,7 +223,6 @@ export function editProduct(payload) {
         body: JSON.stringify(newPayload)
       })
       const data = await response.json()
-      console.log(data, '>>>>>>>>>>>>?????');
       dispatch(fetchProduct())
       dispatch(setLoading(false))
     } catch (err) {
@@ -284,11 +306,29 @@ export function login(payload) {
         method: "POST",
         body: JSON.stringify(payload)
       })
+      if (!response.ok) {
+        const data = await response.json()
+        throw ({data})
+      }
       const data = await response.json()
       localStorage.access_token = await data.access_token;
       localStorage.name = await data.name
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+      });
+       Toast.fire({
+        icon: "success",
+        title: "Login Success"
+      });
     } catch (err) {
-      console.log(err);
+      Swal.fire({
+        title: 'Error !', 
+        text: err.data.message.map(error => {return (` ${error}`)}),
+        icon: 'error'})
     }
   };
 }
@@ -296,15 +336,24 @@ export function login(payload) {
 export function register (payload) {
   return async (dispatch) => {
     try {
-      await fetch(`${base_url}/users/register`, {
+      const response = await fetch(`${base_url}/users/register`, {
         headers: {
           "Content-Type": "application/json"
         },
         method: "POST",
         body: JSON.stringify(payload)
       })
+      const data = await response.json()
+      if (!response.ok) {
+        throw ({data})
+      }
+      Swal.fire('Success', 'Registered Successfully', 'success')
     } catch (err) {
-      console.log(err);
+      console.log(err.data);
+      // Swal.fire({
+      //   title: 'Error !', 
+      //   text: err.data.message.map(error => {return (` ${error}`)}),
+      //   icon: 'error'})
     }
   };
 }

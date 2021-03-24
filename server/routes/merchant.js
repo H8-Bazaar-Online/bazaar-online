@@ -5,7 +5,8 @@ const { authorizeCustomer } = require('../middlewares/authorize')
 // const { authorizationAdmin } = require('../middlewares/authorization')
 
 router.use(authenticate)
-router.get('/', MerchantController.getAllMerchant)
+router.get('/', MerchantController.getAllMerchantByUser)
+router.get('/all', MerchantController.getAllMerchant)
 // router.get('', MerchantController.getAllMerchantCustomer)
 router.post('/', MerchantController.createMerchant)
 

@@ -124,7 +124,7 @@ export default function Products() {
         dispatch(deleteProduct(id))
         Swal.fire(
           'Deleted!',
-          'Your file has been deleted.',
+          'Your product has been deleted.',
           'success'
         )
       }
