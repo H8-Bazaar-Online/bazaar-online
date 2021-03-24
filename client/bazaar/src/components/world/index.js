@@ -101,7 +101,7 @@ function World() {
         <Map tiles={tiles} />
         {
           players.map((player, index) => (
-             <Player key={index} skin="m1" player={player} updatePlayer={updatePlayers}/>
+             <Player key={index} skin="char1" player={player} updatePlayer={updatePlayers}/>
             //  <Player key={index} skin="m1" player={JSON.stringifyplayer}/>
           ))
         }

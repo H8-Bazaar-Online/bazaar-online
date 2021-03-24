@@ -19,7 +19,7 @@ function useWalk(maxSteps, player, updatePlayer) {
     up: 3
   }
   //stepsize value came from half size of MapTile
-  const stepSize = 10
+  const stepSize = 2
 
   const modifier = {
     down: { x: 0, y: stepSize },

@@ -1,23 +1,28 @@
 .App {
   margin: 0px;
   padding: 0px;
-  background-color: rgb(9, 0, 67);
 }
 
 .row {
   height: 40px;
 }
 
-.Sprite-container {
-  background-image: url(./img/m2.png);
+.char1 {
+  background-image: url(./img//char1.png);
 }
 
-.card {
-  /* display: grid; */
-  /* grid-template-columns: 1fr 1fr; */
-  margin: 30px;
-  min-height: 30rem;
+.char2 {
+  background-image: url(./img//char2.png);
 }
+
+.char3 {
+  background-image: url(./img//char3.png);
+}
+
+.char4 {
+  background-image: url(./img//char4.png);
+}
+
 form {
   max-width: 350px;
   border-radius: 5px;
@@ -30,23 +35,49 @@ form {
 }
 
 button {
-  margin-top: 20px;
-  padding: 10px;
+  margin-left: 10px;
+  padding: 5px 10px;
   background: transparent;
   border-radius: 5px;
+  color: white;
 }
 
 .render-chat {
   max-width: 350px;
   border-radius: 5px;
-  padding: 20px;
+  padding: 5px;
   /* box-shadow: 0px 3px 24px -8px rgba(0, 0, 0, 0.75); */
 }
 
 h3 {
-  color: #2f72da;
+  color: #ffffff;
+  font-size: 1.2rem;
 }
 
 span {
   color: black;
+}
+
+.chat-container {
+  position: absolute;
+  top: 365px;
+  left: 5px;
+  margin: 0px;
+  padding: 0px;
+  height: 235px;
+  width: 275px;
+  background: transparent;
+  border: 1px solid white;
+}
+
+.card-header {
+  padding: 0px 5px;
+}
+
+.card-footer {
+  padding: 0px 5px;
+}
+
+form {
+  padding: 5px;
 }
