@@ -22,7 +22,7 @@ function World() {
 
   useEffect(() => {
     if (socketConnect) {
-      socketConnect.emit('ready', {name: localStorage.name, position: {x: 100, y: 164}})
+      socketConnect.emit('ready', {name: localStorage.name, position: {x: 4, y: 170}})
       socketConnect.on('playerJoin', players => {
         dispatch(setSocketPlayers(players))
         dispatch(setSocketUpdatePlayers(players))

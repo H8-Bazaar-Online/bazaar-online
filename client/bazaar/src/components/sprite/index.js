@@ -1,5 +1,5 @@
 
-function Sprite({player, image, data, position }) {
+function Sprite({player, image, data, position, updatePlayer }) {
   // console.log(player, '<<<<<<<<<<<<<<<<<<<<<<<< TUKT UTKUTK PAKET ASHIAPPPP');
   const { x, y, h, w } = data
   
@@ -9,8 +9,8 @@ function Sprite({player, image, data, position }) {
       width: `${w}px`,
       backgroundPosition: `-${x}px -${y}px`,
       position: "absolute",
-      top: position.y,
-      left: position.x,
+      top: updatePlayer.position.y,
+      left: updatePlayer.position.x,
       // error in importing image using in-line style
       backgroundImage: image,
       backgroundRepeat: "no-repeat"

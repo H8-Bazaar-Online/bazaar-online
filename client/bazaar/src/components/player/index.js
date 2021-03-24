@@ -65,7 +65,7 @@ function Player({ skin, player, updatePlayer }) {
       }
     } else if (e.keyCode === 32) {
       document.getElementById('outlined-multiline-static').focus()
-    } else if (updatePlayer.name === 'kanan') {
+    } else if (updatePlayer.name === localStorage.name) {
       console.log('tesss');
       if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
         e.preventDefault()
