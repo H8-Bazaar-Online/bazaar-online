@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSocketPlayer, setSocketPlayers, setSocketUpdatePlayers } from '../../store/action'
+import Inventory from '../inventory/index'
+
 function World() {
   
 
@@ -92,8 +94,8 @@ function World() {
     <>
       <div style={{
         position: 'relative',
-        width: '800px',
-        height: '400px',
+        width: '1200px',
+        height: '608px',
         margin: '20px auto'
       }}>
         <Map tiles={tiles} />
@@ -106,6 +108,7 @@ function World() {
         {/* <Player skin="m2" /> */}
         <Socket />
         {/* <Booth /> */}
+        <Inventory/>
       </div>
     </>
   )

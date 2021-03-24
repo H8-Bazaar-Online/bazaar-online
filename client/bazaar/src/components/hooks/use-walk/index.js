@@ -43,12 +43,12 @@ function useWalk(maxSteps, player, updatePlayer) {
       const newX = prev.x + modifier[dir].x
       const newY = prev.y + modifier[dir].y
       //check the boundaries map
-      if (newX < 800 && newX >= 0 && newY < 400 && newY >= 0) {
+      if (newX < 1200 && newX >= 0 && newY < 580 && newY >= 0) {
         //check other object position
         let arrayX = Math.round((newX - 4) / 40) 
         let arrayY = Math.round((newY - 24) / 40)
         let tile = tiles[arrayY][arrayX]
-        if (tile === 1) {
+        if (tile < 4) {
           socketConnect.emit('playerPos', { id, name, position: { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y } })
           return { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y }
         } else {
