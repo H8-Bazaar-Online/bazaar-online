@@ -49,7 +49,7 @@ function Player({ skin, player, updatePlayer }) {
     if (e.keyCode === 13) {
       let arrayX = Math.round((position.x - 4) / 40)
       let arrayY = Math.round((position.y - 24) / 40)
-      if (tiles[arrayY - 1][arrayX] === 9) {
+      if (tiles[arrayY - 1][arrayX] < 50 && tiles[arrayY - 1][arrayX] > 10) {
         // <Booth onClick={modaldeh}/>  
         // history.push('/buy-product')
         modaldeh()

@@ -1,17 +1,217 @@
 .tile {
   display: inline-flex;
-  background-color: #308f30;
+  background-color: #bf956b;
   border: 0px;
 }
 
 .grass {
-  background-image: url('../../img/tree1.png');
+  background-image: url('../../img/active/grass.png');
+  background-size: contain;
+}
+.road {
+  background-image: url('../../img/active/floor.png');
+}
+
+.sand {
+  background-image: url('../../img/active/sand.png');
+}
+
+.water {
+  background-image: url('../../img/active/water.png');
+  background-size: cover;
+}
+
+.fountain1 {
+  background-image: url('../../img/active/fountain1.png');
   background-size: contain;
 }
 
-.road {
-  background-image: url('../../img/road1.png');
+.fountain2 {
+  background-size: contain;
+  background-image: url('../../img/active/fountain2.png');
 }
+
+.fountain3 {
+  background-size: contain;
+  background-image: url('../../img/active/fountain3.png');
+}
+
+.fountain4 {
+  background-size: contain;
+  background-image: url('../../img/active/fountain4.png');
+}
+
+.merchant-fashion1 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.fashion11 {
+  background-image: url('../../img/active/fashion11.png');
+  background-size: contain;
+}
+.fashion12 {
+  background-image: url('../../img/active/fashion12.png');
+  background-size: contain;
+}
+.fashion13 {
+  background-image: url('../../img/active/fashion13.png');
+  background-size: contain;
+}
+.fashion14 {
+  background-image: url('../../img/active/fashion14.png');
+  background-size: contain;
+}
+
+.merchant-fashion2 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.fashion21 {
+  background-image: url('../../img/active/fashion21.png');
+  background-size: contain;
+}
+.fashion22 {
+  background-image: url('../../img/active/fashion22.png');
+  background-size: contain;
+}
+.fashion23 {
+  background-image: url('../../img/active/fashion23.png');
+  background-size: contain;
+}
+.fashion24 {
+  background-image: url('../../img/active/fashion24.png');
+  background-size: contain;
+}
+
+.merchant-food1 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.food11 {
+  background-image: url('../../img/active/food11.png');
+  background-size: contain;
+}
+.food12 {
+  background-image: url('../../img/active/food12.png');
+  background-size: contain;
+}
+.food13 {
+  background-image: url('../../img/active/food13.png');
+  background-size: contain;
+}
+.food14 {
+  background-image: url('../../img/active/food14.png');
+  background-size: contain;
+}
+
+.merchant-food2 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.food21 {
+  background-image: url('../../img/active/food21.png');
+  background-size: contain;
+}
+.food22 {
+  background-image: url('../../img/active/food22.png');
+  background-size: contain;
+}
+.food23 {
+  background-image: url('../../img/active/food23.png');
+  background-size: contain;
+}
+.food24 {
+  background-image: url('../../img/active/food24.png');
+  background-size: contain;
+}
+
+.merchant-food3 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.food31 {
+  background-image: url('../../img/active/food31.png');
+  background-size: contain;
+}
+.food32 {
+  background-image: url('../../img/active/food32.png');
+  background-size: contain;
+}
+.food33 {
+  background-image: url('../../img/active/food33.png');
+  background-size: contain;
+}
+.food34 {
+  background-image: url('../../img/active/food34.png');
+  background-size: contain;
+}
+
+.merchant-food4 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.food41 {
+  background-image: url('../../img/active/food41.png');
+  background-size: contain;
+}
+.food42 {
+  background-image: url('../../img/active/food42.png');
+  background-size: contain;
+}
+.food43 {
+  background-image: url('../../img/active/food43.png');
+  background-size: contain;
+}
+.food44 {
+  background-image: url('../../img/active/food44.png');
+  background-size: contain;
+}
+
+.merchant-jew1 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.jew11 {
+  background-image: url('../../img/active/jew11.png');
+  background-size: contain;
+}
+.jew12 {
+  background-image: url('../../img/active/jew12.png');
+  background-size: contain;
+}
+.jew13 {
+  background-image: url('../../img/active/jew13.png');
+  background-size: contain;
+}
+.jew14 {
+  background-image: url('../../img/active/jew14.png');
+  background-size: contain;
+}
+
+.merchant-jew2 {
+  background-image: url('../../img/active/merchant.png');
+  background-size: contain;
+}
+.jew21 {
+  background-image: url('../../img/active/jew21.png');
+  background-size: contain;
+}
+.jew22 {
+  background-image: url('../../img/active/jew22.png');
+  background-size: contain;
+}
+.jew23 {
+  background-image: url('../../img/active/jew23.png');
+  background-size: contain;
+}
+.jew24 {
+  background-image: url('../../img/active/jew24.png');
+  background-size: contain;
+}
+
+
+
+
 
 .house {
   background-image: url('../../img/house1.png');
