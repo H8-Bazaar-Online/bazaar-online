@@ -36,6 +36,11 @@ export default function Login() {
   const backToRegister = (e) => {
     history.push('/register')
   }
+
+  const radioButtonValue = (e) => {
+    let {name, value} = e.target
+    console.log(value,"CHAR NAME");
+  }
   
   return (
     <div className='container-fluid'>
@@ -49,31 +54,46 @@ export default function Login() {
               </div>
               <label>Password:</label>
               <div className="nes-field">
-                <input type="password" id="password_field" name='password' value={formData.password} onChange={handleOnChange}  className="nes-input is-dark"/>
+                <input type="password" id="password_field" name='password' value={formData.password} onChange={handleOnChange} className="nes-input is-dark"/>
               </div>
               <br></br>
               <div>
                 <p>Choose your Avatar</p>
                 <label>
-                  <input type="radio" className="nes-radio" value='char1' name="character" />
-                  <span><img src={img1} alt="" style={{height: '80px'}}/></span>
+//                   <input type="radio" className="nes-radio" value='char1' name="character" />
+//                   <span><img src={img1} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char2' name="character" />
+//                   <span><img src={img2} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char3' name="character" />
+//                   <span><img src={img3} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char4' name="character" />
+//                   <span><img src={img4} alt="" style={{height: '80px'}}/></span>
+// =======
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char1' name="character" />
+                  <span><img src={img1} style={{height: '80px'}}/></span>
                 </label>
                 <label>
-                  <input type="radio" className="nes-radio" value='char2' name="character" />
-                  <span><img src={img2} alt="" style={{height: '80px'}}/></span>
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char2' name="character" />
+                  <span><img src={img2} style={{height: '80px'}}/></span>
                 </label>
                 <label>
-                  <input type="radio" className="nes-radio" value='char3' name="character" />
-                  <span><img src={img3} alt="" style={{height: '80px'}}/></span>
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char3' name="character" />
+                  <span><img src={img3} style={{height: '80px'}}/></span>
                 </label>
                 <label>
-                  <input type="radio" className="nes-radio" value='char4' name="character" />
-                  <span><img src={img4} alt="" style={{height: '80px'}}/></span>
-                </label>
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char4' name="character" />
+                  <span><img src={img4} style={{height: '80px'}}/></span>
+               </label>
               </div>
               <br></br> 
               <div>
-                <button type="button"  className="nes-btn is-primary" onClick={handleOnSubmitLogin}>Submit
+                <button type="button" className="nes-btn is-primary" onClick={handleOnSubmitLogin}>Submit
                 </button>
               </div>
               <br></br>
