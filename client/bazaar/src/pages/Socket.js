@@ -7,16 +7,10 @@ function Socket() {
 	const [chat, setChat] = useState([])
 
 	const { socketConnect } = useSelector((state) => state.socketConnect)
-	// console.log(chat, '<<<<<<<<<< CHAT KELUARLAHH');
 	useEffect(() => {
 		if (socketConnect) {
-			// console.log('yeyyy');
 			socketConnect.on("message", ({ name, message }) => {
-				// console.log('YEYEYEYEYEYEYEYEYEYEYYEEY');
-				// console.log(name, message, '<<<<<<<<<< NAME MESSAGE');
-				// setChat([ ...chat, { name, message } ])
-				setChat((chat) => chat.concat({ name, message }));
-				// setPlayers((player) => player.concat(state));
+				setChat((chat) => chat.concat({ name, message }))
 			})
 		}
 		// return () => socketConnect.disconnect()
@@ -31,9 +25,7 @@ function Socket() {
 		const { name, message } = state
 		socketConnect.emit("message", { name: localStorage.name, message })
 		e.preventDefault()
-		// console.log(state, '<<<<<<<<<<<<<< SEBELUM RESET');
 		setState({ message: "", name })
-		// console.log(state, '<<<<<<<<<<<<<< SESUDAH RESET');
 	}
 
 	const renderChat = () => {
@@ -54,11 +46,21 @@ function Socket() {
 			<div className="card-body">
 				{renderChat()}
 			</div>
-			<div className="card-footer">
+			<div className="card-footer ">
 				<form onSubmit={onMessageSubmit}>
 					{/* <div className="name-field">
                 <TextField name="name" onChange={(e) => setState({...state, name: e.target.value})} value={state.name} label="Name" />
             </div> */}
+						{/* <div class="nes-field d-flex" style={{height: 45}}>
+							<input type="text" id="name_field" class="nes-input" name="message"
+								onChange={(e) => {
+									console.log(e.target.value);
+									onTextChange(e)
+								}}
+								/>
+					<button>Send</button>
+
+						</div> */}
 					<input
 						name="message"
 						onChange={(e) => {
@@ -69,8 +71,10 @@ function Socket() {
 						id="outlined-multiline-static"
 						variant="outlined"
 						label="Message"
+						style={{marginRight: "5px"}}
 					/>
 					<button>Send</button>
+
 				</form>
 			</div>
 		</div>
