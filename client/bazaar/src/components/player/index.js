@@ -1,3 +1,4 @@
+import React from 'react'
 import Actor from '../actor/index'
 import useKeyPress from '../hooks/use-key-press/index'
 import useWalk from '../hooks/use-walk'
@@ -6,18 +7,20 @@ import { useHistory } from 'react-router-dom'
 import Booth from '../Booth'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProduct, fetchMerchant, setSocketConnect } from '../../store/action'
+import { fetchProduct, fetchMerchant, setSocketConnect, addCart } from '../../store/action'
+import { Modal } from 'react-bootstrap'
+import DataTable from "react-data-table-component";
+import Swal from 'sweetalert2'
 
 function Player({ skin, player, updatePlayer }) {
   const { merchants } = useSelector((state) => (state.merchants))
   const { products } = useSelector((state) => (state.products))
-  console.log(updatePlayer, '<<<<<<<<<<<< PROPS UPDATRPLAYER');
   const {socketConnect } = useSelector((state) => state.socketConnect)
 
   const dispatch = useDispatch();
   
   const { dir, step, walk, position } = useWalk(4, player, updatePlayer)
-  // console.log(position, '<<<<<<<<<<<<<<<<<<<< POSITION');
+  
   const data = {
     h: 48,
     w: 32
@@ -30,39 +33,102 @@ function Player({ skin, player, updatePlayer }) {
   
   const [showModal2, setShowModal] = useState(false)
 
-  async function modaldeh(id) { 
-    // console.log(id, '<<<<<<<<<<<<<< ID');
-    // console.log('tess');
-    dispatch(fetchProduct(id)) 
-
-    await setShowModal(true)
-    // await document.getElementById('dialog-dark').showModal(true)
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
+  const handleAddToCart = (id) => {
+    if (id) {
+      Toast.fire({
+        icon: 'success',
+        title: 'Success add to stock'
+      })
+      dispatch(addCart(id))
+    }
   }
 
-  const history = useHistory()  
-  console.log(player, '<<<<<<<<<<< PLAYER');
+  const columns = [
+    {
+      name: "image",
+      selector: "image_url",
+      cell: row => <div><img style={{ height: 80 }} src={row.image_url} alt={row.name}/></div>,
+      sortable: false
+    },
+    {
+      name: "name",
+      selector: "name",
+      sortable: true,
+    },
+    {
+      name: "price",
+      selector: "price",
+      sortable: true,
+    },
+    {
+      name: "stock",
+      selector: "stock",
+      width: "10%",
+      sortable: true,
+    },
+    {
+      name: "actions",
+      selector: "actions",
+      cell: row => <div>
+        {
+          row.stock === 0 ? (
+              <button type="button" className="nes-btn is-disabled" disabled>Out Of Stock</button>
+            ) : (
+              <button type="button" className="nes-btn" onClick={() => handleAddToCart(row.id)}>Add to cart</button>
+          )
+        }
+        </div>,
+      sortable: false
+    }
+  ]
+  
+  const [show, setShow] = useState(false);
+
+  function modaldeh(id) {
+    for (let i = 1; i <= 8; i++) {
+      if (id === i) {
+        dispatch(fetchProduct(i))
+      }
+    }
+    setShow(true)
+  }
+
+  useEffect(() => {
+    dispatch(fetchMerchant())
+  }, [dispatch])
+
+
+  const history = useHistory()
   useKeyPress((e) => {
     if (e.keyCode === 13) {
       let arrayX = Math.round((position.x - 4) / 40)
       let arrayY = Math.round((position.y - 24) / 40)
-      if (tiles[arrayY - 1][arrayX] < 50 && tiles[arrayY - 1][arrayX] > 10) {
-        // <Booth onClick={modaldeh}/>  
-        // history.push('/buy-product')
-        modaldeh()
-        alert('Iya mau apa?')
-        return console.log('ACTION')
-      } if (tiles[arrayY - 1][arrayX] < 50) {
-        alert('MASUK MERCHANT')
-        // history.push('/chat')
-        modaldeh(1)
-        // return console.log('ACTION')
+      // if (tiles[arrayY - 1][arrayX] < 50 && tiles[arrayY - 1][arrayX] > 10) {
+      //   // <Booth onClick={modaldeh}/>  
+      //   // history.push('/buy-product')
+      //   // modaldeh()
+      //   alert('Iya mau apa?')
+      //   return console.log('ACTION')
+      // } 
+      if (tiles[arrayY - 1][arrayX] < 50) {
+        modaldeh(tiles[arrayY - 1][arrayX])
       } else {
         return console.log('no valid action is within range')
       }
     } else if (e.keyCode === 32) {
       document.getElementById('outlined-multiline-static').focus()
     } else if (updatePlayer.name === localStorage.name) {
-      console.log('tesss');
       if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
         e.preventDefault()
         const direction = e.key.replace("Arrow", "").toLowerCase()
@@ -71,36 +137,44 @@ function Player({ skin, player, updatePlayer }) {
       }
     } 
   })
+
   return (
     <>
     {/* <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} player={player} /> */}
     <Actor sprite={skin} data={data} step={step} dir={dir} position={position} updatePlayer={updatePlayer} player={player} />
-      { showModal2 ? (
+        
+      { show ? (
         <>
-        <div>asdasd</div>
-          {/* <dialog className="nes-dialog is-dark" id="dialog-dark">
-            <form method="dialog">
-              <p className="title">Dark dialog</p>
-              <p>Alert: this is a dialog.</p>
-              <menu className="dialog-menu">
-                <button className="nes-btn">Cancel</button>
-                <button className="nes-btn is-primary">Confirm</button>
-              </menu>
-            </form>
-          </dialog> */}
-          {/* <div>{JSON.stringify(merchants)}</div> */}
-          <div className="nes-dialog is-dark" id="dialog-dark">
-            <form method="dialog">
-              {/* <p className="title">Dark dialog</p> */}
-          <div>{JSON.stringify(products)}</div>
-              {/* <p>Alert: this is a dialog.</p> */}
-              <menu className="dialog-menu">
-                <button className="nes-btn">Cancel</button>
-                <button className="nes-btn is-primary">Confirm</button>
-              </menu>
 
-            </form>
+        <Modal show={show} size="lg">
+          <div className="nes-dialog is-dark">
+
+          <Modal.Header>
+            {/* <Modal.Title>Merchant</Modal.Title> */}
+          </Modal.Header>
+          <Modal.Body>
+            {/* Woohoo, you're reading this text in a modal! */}
+            
+            <DataTable
+            title="Merchant"
+            columns={columns}
+            data={products}
+            // data={test}
+            defaultSortField="name"
+            paginationPerPage={5}
+            paginationRowsPerPageOptions={[5,10,20,30]}
+            pagination
+            responsive
+          />
+          </Modal.Body>
+          
+          <Modal.Footer>
+            <button type="button" className="nes-btn"  onClick={() => setShow(false)}>Close</button>
+          </Modal.Footer>
           </div>
+
+        </Modal>
+          
         </>
       ) : null }
     </>

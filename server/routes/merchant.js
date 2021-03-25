@@ -16,5 +16,5 @@ router.put('/:merchantid', MerchantController.updateMerchant)
 router.delete('/:merchantid', MerchantController.deleteMerchant)
 
 // router.use('/:id', authorizeCustomer)
-router.get('/customer-merchants', MerchantController.getAllMerchantCustomer)
+// router.get('/customer-merchants', MerchantController.getAllMerchantCustomer)
 module.exports = router

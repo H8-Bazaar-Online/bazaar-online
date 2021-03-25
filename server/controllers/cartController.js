@@ -2,13 +2,14 @@ const { Cart, Product, sequelize } = require('../models/index')
 
 class CartController {
   static getAll(req, res, next) {
-    let user_id = req.decoded.id
+    let user_id = +req.decoded.id
+    console.log(user_id, '<<<<<< ID');
     Cart.findAll({
       where: {
         user_id,
       },
       order: [['id', 'ASC']],
-      attributes: ['id', 'user_id', 'product_id', 'merchant_id', 'quantity'],
+      attributes: ['id', 'user_id', 'product_id', 'quantity'],
       include: [{
         model: Product,
         attributes: {
@@ -25,6 +26,7 @@ class CartController {
   }
 
   static create(req, res, next) {;
+    console.log(+req.decoded.id, '<<<<<<<< ID');
     let newCart = {
       user_id: +req.decoded.id,
       product_id: +req.params.product_id,
@@ -100,6 +102,32 @@ class CartController {
         next(err)
       })
   }
+
+  static async updateQty(req, res, next) {
+    try {
+      const {status} = req.body
+      // Model.decrement('number', { where: { foo: 'bar' });
+      if (status === 'plus') {
+        const data = await Cart.increment('quantity', {
+          where: {
+            id : +req.params.cart_id
+          }
+        })
+        res.status(200).json(data[0][0])
+      } else {
+        const data = await Cart.decrement('quantity', {
+          where: {
+            id : +req.params.cart_id
+          }
+        })
+        res.status(200).json(data[0][0])
+      }
+    } catch (err) {
+      next(err)
+    }
+  }
+  
+
 }
 
 module.exports = CartController

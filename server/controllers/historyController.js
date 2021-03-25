@@ -1,4 +1,4 @@
-const { History, Product } = require('../models')
+const { History, Product, Cart} = require('../models')
 
 class HistoryController {
   static async createHistory(req, res, next) {
@@ -7,14 +7,16 @@ class HistoryController {
     const { name, image_url, quantity, price } = req.body
     try {
       const product = await Product.findByPk(productId)
+      console.log(product, '<<<<<<<<<<<<<<<<<< PRODUCT dong');
       if (product.stock < 1) throw { name: 'CustomError', message: 'Out of Stock', status: 404 }
-
       const decrement = await product.decrement('stock', { by: quantity })
       if (!decrement) throw { name: 'CustomError', message: 'Product Not Found', status: 404 }
 
-      const history = await History.create({ name, image_url, quantity, price, user_id })
+      const history = await History.create({ name: product.name, image_url: product.image_url, quantity, price: product.price, user_id })
+      // const cart = await Cart
       res.status(201).json(history)
     } catch (err) {
+      console.log(err, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
       next(err)
     }
   }

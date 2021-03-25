@@ -36,44 +36,64 @@ export default function Login() {
   const backToRegister = (e) => {
     history.push('/register')
   }
+
+  const radioButtonValue = (e) => {
+    let {name, value} = e.target
+    console.log(value,"CHAR NAME");
+  }
   
   return (
     <div className='container-fluid'>
       <div className='d-flex justify-content-center align-center'>
         <div className='col-6'>
-          <div id="container" className="nes-container is-dark with-title is-centered">
+          <div id="container" className="nes-container with-title is-centered">
             <p className="title">Login</p>
-            <label for="name_field">Email:</label>
+            <label>Email:</label>
               <div className="nes-field">
                 <input type="email" id="name_field" name='email' value={formData.email} onChange={handleOnChange} className="nes-input is-dark"/>
               </div>
-              <label for="password_field">Password:</label>
+              <label>Password:</label>
               <div className="nes-field">
-                <input type="password" id="password_field" name='password' value={formData.password} onChange={handleOnChange}  className="nes-input is-dark"/>
+                <input type="password" id="password_field" name='password' value={formData.password} onChange={handleOnChange} className="nes-input is-dark"/>
               </div>
               <br></br>
               <div>
                 <p>Choose your Avatar</p>
                 <label>
-                  <input type="radio" className="nes-radio" value='char1' name="character" />
-                  <span  ><img src={img1} style={{height: '80px'}}/></span>
+//                   <input type="radio" className="nes-radio" value='char1' name="character" />
+//                   <span><img src={img1} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char2' name="character" />
+//                   <span><img src={img2} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char3' name="character" />
+//                   <span><img src={img3} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char4' name="character" />
+//                   <span><img src={img4} alt="" style={{height: '80px'}}/></span>
+// =======
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char1' name="character" />
+                  <span><img src={img1} style={{height: '80px'}}/></span>
                 </label>
                 <label>
-                  <input type="radio" className="nes-radio" value='char2' name="character" />
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char2' name="character" />
                   <span><img src={img2} style={{height: '80px'}}/></span>
                 </label>
                 <label>
-                  <input type="radio" className="nes-radio" value='char3' name="character" />
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char3' name="character" />
                   <span><img src={img3} style={{height: '80px'}}/></span>
                 </label>
                 <label>
-                  <input type="radio" className="nes-radio" value='char4' name="character" />
+                  <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char4' name="character" />
                   <span><img src={img4} style={{height: '80px'}}/></span>
-                </label>
+               </label>
               </div>
               <br></br> 
               <div>
-                <button type="button"  className="nes-btn is-primary" onClick={handleOnSubmitLogin}>Submit
+                <button type="button" className="nes-btn is-primary" onClick={handleOnSubmitLogin}>Submit
                 </button>
               </div>
               <br></br>

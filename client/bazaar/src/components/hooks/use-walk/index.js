@@ -14,15 +14,8 @@ function useWalk(maxSteps, player, updatePlayer) {
   const { socketConnect, updatePlayers } = useSelector(state => state.socketConnect)
 
   
-  useEffect(() => {
-    // if (position) {
-      //   setPosition({
-        //     x: updatePlayer.position.x,
-        //     y: updatePlayer.position.y
-        //   })
-        // }
-      console.log(updatePlayer, 'USE WALK ------')
-  }, [updatePlayer])
+  // useEffect(() => {
+  // }, [updatePlayer])
 
 
   const directions = {
@@ -52,7 +45,6 @@ function useWalk(maxSteps, player, updatePlayer) {
   function move(dir) {
     const { id, name, position } = updatePlayer
     setPosition((prev) => {
-      console.log(prev, '<<<<<<<?????????');
       const newX = prev.x + modifier[dir].x
       const newY = prev.y + modifier[dir].y
       //check the boundaries map
