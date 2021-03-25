@@ -1,4 +1,4 @@
-const { Product } = require('../models/')
+const { Product, Merchant } = require('../models/')
 const { cloudinary } = require('../utils/cloudinary');
 
 class productController {
@@ -39,6 +39,9 @@ class productController {
     Product.findAll({
       where: {
         user_id
+      },
+      include: {
+        model: Merchant
       }
     })
       .then(result => {
