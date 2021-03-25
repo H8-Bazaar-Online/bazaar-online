@@ -2,26 +2,26 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router';
 import Sidebar from '../components/Sidebar'
-import { fetcAllMerchant } from '../store/action'
+import { fetcAllMerchant, fetcAllProduct, fetcAllHistory } from '../store/action'
 
 export default function Dashboard() {
-  const [showModal, setShowModal] = React.useState(false);
+  const [ showModal, setShowModal ] = React.useState(false);
   const { allMerchants } = useSelector((state) => state.merchants)
+  const { allProduct } = useSelector((state) => state.products)
+  const { allHistory } = useSelector((state) => state.history)
   const { error } = useSelector((state)=> state.users)
   const dispatch = useDispatch()
   const history = useHistory()
   
   useEffect(() => {
     dispatch(fetcAllMerchant())
+    dispatch(fetcAllProduct())
+    dispatch(fetcAllHistory())
     if (error) {
-      // setTimeout(() => {
-      //   history.push('/')
-      // }, 500)
-    // } else {
       history.push('/login')
     }
   }, [dispatch])
-
+  
   useEffect(() => {
     if (window.location.pathname === '/register') {
       history.push('/register')
@@ -42,7 +42,11 @@ export default function Dashboard() {
             Dashboard
           </div>
           <div className="w-full bg-gray-900 p-10">
-            <p className="text-white"> { JSON.stringify(allMerchants)}</p>
+            <p className="text-white"> MERCHANTS { JSON.stringify(allMerchants)}</p>
+            <br/>
+            <p className="text-white"> PRODUCTS { JSON.stringify(allProduct)}</p>
+            <br/>
+            <p className="text-white"> HISTORY { JSON.stringify(allHistory)}</p>
           {/* <button
             className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             type="button"

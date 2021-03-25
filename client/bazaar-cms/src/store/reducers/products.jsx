@@ -2,7 +2,8 @@ const initialState = {
   products: [],
   product: {},
   loading: false,
-  error: false
+  error: false,
+  allProduct: []
 }
 
 function reducer(state = initialState, action) {
@@ -10,6 +11,8 @@ function reducer(state = initialState, action) {
   switch(type) {
     case 'PRODUCTS/FETCH_ALL':
       return { ...state, products: payload }
+    case 'PRODUCTS/FETCH_ALLPRODUCT':
+      return { ...state, allProduct: payload }
     case 'PRODUCTS/FETCH_BY_ID':
       return { ...state, product: payload }
     case 'PRODUCTS/SET_ADD_PRODUCT':
