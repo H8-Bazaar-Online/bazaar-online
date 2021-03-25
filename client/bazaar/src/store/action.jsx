@@ -8,7 +8,6 @@ export function setFetchProduct(payload) {
 export function fetchProduct(payload) {
   return async (dispatch) => {
     try {
-      console.log('====================================');
       dispatch(setLoading(true))
       const response = await fetch(`${base_url}/customer-products/${payload}`, {
         headers: {
@@ -73,17 +72,15 @@ export function setFetchMerchant(payload) {
 }
 
 export function fetchMerchant() {
+  console.log('MASUK SINI');
   return async (dispatch) => {
-    console.log('==================================== FETCH MERCHANTS');
     try {
-      console.log('==========================');
       dispatch(setLoading(true))
       const response = await fetch(`${base_url}/customer-merchants`, {
         headers: {
           access_token: localStorage.getItem("access_token"),
         },
       })
-      console.log('====================');
       const data = await response.json()
       dispatch(setFetchMerchant(data))
       dispatch(setLoading(false))
@@ -93,8 +90,173 @@ export function fetchMerchant() {
   }
 }
 
+export function setFetchCarts(payload) {
+  return { type: 'CARTS/FETCH_ALL', payload }
+}
+
+export function fetchCarts() {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/carts`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      const data = await response.json()
+      dispatch(setFetchCarts(data))
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+export function setFetchHistories(payload) {
+  return { type: 'HISTORIES/FETCH_ALL', payload }
+}
+
+export function fetchHistories() {
+  return async (dispatch) => {  
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/histories`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      const data = await response.json()
+      dispatch(setFetchHistories(data))
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+export function setAddHistory(payload) {
+  return { type: 'MERCHANTS/SET_ADD_MERCHANT', payload }
+}
+
+export function addHistory(payload) {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      for (const el of payload) {
+        console.log(el, '<<<<<<');
+        const response = await fetch(`${base_url}/histories/${el.product_id}`, {
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+          method: "POST"
+        })
+        const data = await response.json()
+        dispatch(setAddHistory(data))
+        await fetch(`${base_url}/carts/${el.id}`, {
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+          method: "DELETE"
+        })
+        if (!response.ok) {
+          throw (data)
+        }
+        dispatch(fetchCarts())
+        dispatch(fetchHistories())
+      }
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err, '<<<<<<<<<'); 
+      // Swal.fire({
+      //   title: 'Error !', 
+      //   text: err.data.message.map(error => {return (` ${error}`)}),
+      //   icon: 'error'
+      // })
+    }
+  }
+}
+
+export function cartUpdateQty(payload) {
+  const {id, status} = payload
+  return async (dispatch) => {  
+    try {
+      dispatch(setLoading(true))
+      await fetch(`${base_url}/carts/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          access_token: localStorage.getItem("access_token"),
+        },
+        method: "PATCH",
+        body: JSON.stringify(payload)
+      })
+      dispatch(fetchCarts())
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+export function setAddCart(payload) {
+  return { type: 'MERCHANTS/SET_ADD_MERCHANT', payload }
+}
+
+export function addCart(payload) {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/carts/${payload}`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+        method: "POST"
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        throw (data)
+      }
+      dispatch(setAddCart(data))
+      dispatch(fetchCarts())
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err, '<<<<<<<<<<');
+      // Swal.fire({
+      //   title: 'Error !', 
+      //   text: err.data.message.map(error => {return (` ${error}`)}),
+      //   icon: 'error'
+      // })
+    }
+  }
+}
+
+export function setDeleteCart(payload) {
+  return { type: 'HISTORIES/SET_DELETE', payload }
+}
+
+export function deleteCart(payload) {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      await fetch(`${base_url}/carts/${payload}`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+        method: 'DELETE'
+      })
+      dispatch(fetchCarts())
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
 export function setLoading(payload) {
   return { type: 'PRODUCTS/SET_LOADING', payload }
+}
+
+export function setUsername(payload) {
+  return { type: 'PRODUCTS/SET_USERNAME', payload }
 }
 
 export function login(payload) {
@@ -114,6 +276,7 @@ export function login(payload) {
       const data = await response.json()
       localStorage.access_token = await data.access_token;
       localStorage.name = await data.name
+      dispatch(setUsername(data.name))
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -167,7 +330,6 @@ export function register (payload) {
 }
 
 export function setSocketConnect(payload) {
-  console.log(payload, '<<<<<<<<<<<<< SOCKET CONNECT');
   return { type: 'SOCKET/SET_CONNECT', payload }
 }
 

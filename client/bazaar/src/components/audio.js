@@ -8,16 +8,14 @@ const useAudio = url => {
 
   useEffect(() => {
     playing ? audio.play() : audio.pause();
-  },
-    [playing]
-  );
+  }, [playing,audio] );
 
   useEffect(() => {
     audio.addEventListener('ended', () => setPlaying(false));
     return () => {
       audio.removeEventListener('ended', () => setPlaying(false));
     };
-  }, []);
+  }, [audio]);
 
   return [playing, toggle];
 };
@@ -29,7 +27,7 @@ const Player = ({ url }) => {
     <div style={{
       position: 'absolute',
       top: '10px',
-      right: '60px',
+      right: '130px',
     }}>
       <button className="nes-btn" onClick={toggle}>{playing ? <i className="bi bi-volume-up"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-volume-up" viewBox="0 0 16 16">
         <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z" />

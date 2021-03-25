@@ -8,7 +8,9 @@ import io from 'socket.io-client'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSocketPlayer, setSocketPlayers, setSocketUpdatePlayers } from '../../store/action'
 import Inventory from '../inventory/index'
+import History from '../History'
 import AudioPlayer from '../audio'
+import { useHistory } from 'react-router'
 
 function World() {
   
@@ -18,8 +20,6 @@ function World() {
   const {socketConnect, player, players, updatePlayers} = useSelector((state) => state.socketConnect)
   const [clonePlayers, setClonePlayers] = useState(players)
   const [localPlayers, setLocalPlayers] = useState([])
-  // console.log(players, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PLAYERS');
-  // console.log(clonePlayers, '<<<<<<<< CLONEEEEEEE PLAYERS YEE');
 
   useEffect(() => {
     if (socketConnect) {
@@ -33,7 +33,6 @@ function World() {
       socketConnect.on('playerPos', (state) => {
         // setPlayers((player) => player.concat(state));
         dispatch(setSocketUpdatePlayers(state))
-        console.log(state, '|||||||||||||||||||||');
       })
 
     }
@@ -57,22 +56,14 @@ function World() {
         
   //     })
       // socketConnect.on('playerPos', (state) => {
-      //   // console.log('============================');
       //   // setPlayers((player) => player.concat(state));
-      //   // console.log(state, '<<<<<<<<<<<<<<<<<< DAPET STATE PLAYER POSE ???');
         
       // })
   //     // socketConnect.on('playerDisconnected', name => {
-  //     //   console.log(players, '<<<<<<<<<<<<<<<<<<<<< PLAUER');
   //     //   // const allPlayers = this.allPlayers.getChildren()
   //     //   setClonePlayers((player) => [...players, player])
-  //     //   console.log(clonePlayers, '>>>>>>>>>>>>>>  PLAYERRSS <<<<<<<<<<<<<<<<< ============');
   //     //   clonePlayers.forEach(player => {
-  //     //     console.log('TESSSSS MASUK LUU');
-  //     //     console.log(player, '<<<<<<<<<<<<<<< ============ PLAYER');
-  //     //     console.log(player.name, '=================>>>>>>>>>>>> NAME PLAYER');
   //     //     if(player.name === name){
-  //     //       console.log('MASUK SINNIII');
   //     //       return player.disconnect()
   //     //     }
   //     //   })
@@ -88,17 +79,26 @@ function World() {
   // }, [socketConnect])
 
   useEffect(() => {
-    console.log(players, '<<<<<<<<<<<<<<<<< USE EFFECT PLAYERS');
-    console.log(updatePlayers, 'TERRRRUPDATEEE');
 
     if (updatePlayers) {
       setLocalPlayers(updatePlayers)
     }
 
-  }, [updatePlayers, players])
-  // console.log(connectSocket, '<<<<<<<<< TES');
-  // console.log(players, '<<<<<<<<< PLAYERS');
-  
+  }, [updatePlayers, players]) 
+
+  const history = useHistory()
+
+  // useEffect(() => {
+  //   if (window.location.pathname === '/register') {
+  //     history.push('/register')
+  //   } else {
+  //     if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
+  //       history.push('/login')
+  //     } else {
+  //       history.push('/game')
+  //     }
+  //   }
+  // }, [history])
 
   return (
     <>
@@ -120,6 +120,7 @@ function World() {
         {/* <Booth /> */}
         <Inventory/>
         <AudioPlayer url={'https://opengameart.org/sites/default/files/Caketown%201.mp3'} />
+        <History />
       </div>
     </>
   )

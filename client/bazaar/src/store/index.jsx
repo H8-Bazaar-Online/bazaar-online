@@ -3,6 +3,8 @@ import thunk from 'redux-thunk'
 import productsReducer from './reducers/products';
 import usersReducer from './reducers/users';
 import merchantsReducer from './reducers/merchants';
+import chartsReducer from './reducers/carts';
+import historiesReducer from './reducers/histories';
 import socketConnectReducer from './reducers/socket';
 import logger from './middlewares/logger'
 
@@ -12,6 +14,8 @@ const rootReducer = combineReducers({
   product: productsReducer,
   merchants: merchantsReducer,
   merchant: merchantsReducer,
+  carts: chartsReducer,
+  histories: historiesReducer,
   socketConnect: socketConnectReducer
 })
 

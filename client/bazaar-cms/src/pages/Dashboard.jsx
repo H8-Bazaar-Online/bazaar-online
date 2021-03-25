@@ -41,12 +41,7 @@ export default function Dashboard() {
           <div className="w-full bg-green-500 text-white p-5">
             Dashboard
           </div>
-          <div className="w-full bg-gray-900 p-10">
-            <p className="text-white"> MERCHANTS { JSON.stringify(allMerchants)}</p>
-            <br/>
-            <p className="text-white"> PRODUCTS { JSON.stringify(allProduct)}</p>
-            <br/>
-            <p className="text-white"> HISTORY { JSON.stringify(allHistory)}</p>
+         
           {/* <button
             className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             type="button"
@@ -112,6 +107,5 @@ export default function Dashboard() {
       ) : null}
           </div>
         </div>
-    </div>
   )
 }

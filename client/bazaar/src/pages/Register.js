@@ -43,7 +43,9 @@ export default function Register() {
     let {name, value} = e.target
     setFormDataRegis((prev) => ({ ...prev, [name]: value }))
   }
-  
+  const backToLogin = (e) => {
+    history.push('/login')
+  }
   return (
     <div className='container-fluid'>
       <div className='d-flex justify-content-center align-center'>
@@ -64,6 +66,8 @@ export default function Register() {
                 </div>
                 <br></br>      
               <button type="button" className="nes-btn is-primary" onClick={handleOnSubmitRegister}>Submit</button>
+              <button type="button" className="nes-btn is-secondary" onClick={backToLogin}>Back to Login</button>
+
             {
               showModal ? (
                 <section id="submit">

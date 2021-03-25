@@ -1,5 +1,6 @@
 const initialState = {
   users: [],
+  username: "",
   loading: false,
   error: false
 }
@@ -9,6 +10,8 @@ function reducer(state = initialState, action) {
   switch(type) {
     case 'PRODUCTS/LOGIN':
       return { ...state, products: payload }
+    case 'PRODUCTS/SET_USERNAME':
+      return { ...state, username: payload }
     case 'USERS/SET_ADD_USERS':
       return { ...state, users: [...state.users, payload] }
     case 'USERS/SET_LOADING':

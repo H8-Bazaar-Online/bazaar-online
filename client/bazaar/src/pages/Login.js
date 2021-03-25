@@ -46,13 +46,13 @@ export default function Login() {
     <div className='container-fluid'>
       <div className='d-flex justify-content-center align-center'>
         <div className='col-6'>
-          <div id="container" className="nes-container is-dark with-title is-centered">
+          <div id="container" className="nes-container with-title is-centered">
             <p className="title">Login</p>
-            <label for="name_field">Email:</label>
+            <label>Email:</label>
               <div className="nes-field">
                 <input type="email" id="name_field" name='email' value={formData.email} onChange={handleOnChange} className="nes-input is-dark"/>
               </div>
-              <label for="password_field">Password:</label>
+              <label>Password:</label>
               <div className="nes-field">
                 <input type="password" id="password_field" name='password' value={formData.password} onChange={handleOnChange} className="nes-input is-dark"/>
               </div>
@@ -60,6 +60,21 @@ export default function Login() {
               <div>
                 <p>Choose your Avatar</p>
                 <label>
+//                   <input type="radio" className="nes-radio" value='char1' name="character" />
+//                   <span><img src={img1} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char2' name="character" />
+//                   <span><img src={img2} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char3' name="character" />
+//                   <span><img src={img3} alt="" style={{height: '80px'}}/></span>
+//                 </label>
+//                 <label>
+//                   <input type="radio" className="nes-radio" value='char4' name="character" />
+//                   <span><img src={img4} alt="" style={{height: '80px'}}/></span>
+// =======
                   <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char1' name="character" />
                   <span><img src={img1} style={{height: '80px'}}/></span>
                 </label>
@@ -74,7 +89,7 @@ export default function Login() {
                 <label>
                   <input type="radio" onChange={radioButtonValue} className="nes-radio" value='char4' name="character" />
                   <span><img src={img4} style={{height: '80px'}}/></span>
-                </label>
+               </label>
               </div>
               <br></br> 
               <div>
