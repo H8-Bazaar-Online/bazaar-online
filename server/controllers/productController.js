@@ -13,6 +13,15 @@ class productController {
     })
   }
 
+  static getAllDataProduct(req, res, next) {
+    Product.findAll()
+    .then((product) => {
+      res.status(200).json(product)
+    }).catch((err) => {
+      next(err)
+    })
+  }
+
   static async uploadImage (req,res, next){
       try {
           const fileStr = req.body.data;
@@ -21,7 +30,6 @@ class productController {
           });
           res.status(200).json(uploadResponse.url)
       } catch (err) {
-          console.error(err);
           next(err)
       }
   } 

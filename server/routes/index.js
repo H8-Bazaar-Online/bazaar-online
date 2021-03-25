@@ -20,5 +20,4 @@ router.use('/histories', historyRouter)
 router.get('/customer-merchants', MerchantController.getAllMerchantCustomer)
 router.get('/customer-products/:user_id', ProductController.getAllProductCustomer)
 
-
 module.exports = router

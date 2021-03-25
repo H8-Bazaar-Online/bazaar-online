@@ -114,6 +114,50 @@ export function fetcAllMerchant() {
   }
 }
 
+export function setFetchAllProduct(payload) {
+  return { type: 'PRODUCTS/FETCH_ALLPRODUCT', payload }
+}
+
+export function fetcAllProduct() {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/products/all`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      const data = await response.json()
+      dispatch(setFetchAllProduct(data))
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+export function setFetchAllHistory(payload) {
+  return { type: 'HISTORY/SET_FETCHALLHISTORY', payload }
+}
+
+export function fetcAllHistory() {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(`${base_url}/histories/all`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      const data = await response.json()
+      dispatch(setFetchAllHistory(data))
+      dispatch(setLoading(false))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
 export function setAddProduct(payload) {
   return { type: 'PRODUCTS/SET_ADD_PRODUCT', payload }
 }
@@ -252,8 +296,6 @@ export function editMerchant(payload) {
         method: "PUT",
         body: JSON.stringify(newPayload)
       })
-      // const data = await response.json()
-      // dispatch(setAddProduct(data))
       dispatch(fetchMerchant())
       dispatch(setLoading(false))
     } catch (err) {

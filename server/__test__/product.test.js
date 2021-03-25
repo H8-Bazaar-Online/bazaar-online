@@ -33,7 +33,7 @@ let productData = {
 
 
 describe('Product routes', () => {
-  let userToken, productId, user2Token, merchantId
+  let userToken, productId, user2Token, merchantId, user_Id_cust
   beforeAll(done => {
     User.create({ username: data.username, email: data.email, password: data.password, role: 'merchant' })
       .then(user => {
@@ -52,6 +52,7 @@ describe('Product routes', () => {
         return User.create({ username: data2.username, email: data2.email, password: data2.password, role: 'customer' })
       })
       .then(user2 => {
+        user_Id_cust = user2.id
         user2Token = generateToken({ id: user2.id, email: user2.email, role: user2.role }, 'secret')
         done()
       })
@@ -168,6 +169,23 @@ describe('Product routes', () => {
       })
     })
   })
+  describe('GET /products', () => {
+    describe('Success process', () => {
+      test('should return array of products with status code 200', (done) => {
+        request(app)
+          .get(`/customer-products/${user_Id_cust}`)
+          .set('access_token', userToken)
+          .end((err, res) => {
+
+            expect(err).toBe(null)
+            expect(Array.isArray(res.body)).toEqual(true)
+            expect(res.status).toBe(200)
+            done()
+          })
+      })
+    })
+  })
+
   describe('GET ONE /products', () => {
     describe('Success process', () => {
       test('should return data product with status code 200', (done) => {
