@@ -1,6 +1,6 @@
 const request = require('supertest')
 const app = require('../app')
-const { sequelize, User, Merchant, Product, Cart } = require('../models')
+const { sequelize, User, Merchant, Product, History } = require('../models')
 const { queryInterface } = sequelize
 const { generateToken } = require('../helpers/jwt')
 
@@ -47,7 +47,7 @@ beforeAll((done) => {
         name: 'bakso',
         description: 'bakso halus',
         price: 10000,
-        stock: 2,
+        stock: 3,
         category: 'food',
         image_url: 'www.bakso.com',
         merchant_id: data.id
@@ -112,6 +112,43 @@ afterAll((done) => {
       })
       .catch(err => {
         done(err)
+      })
+    })
+  })
+
+  
+  describe('POST /history success', () => {
+    test('create success', (done) => {
+    request(app)
+      .post(`/histories/${product_id}`)
+      .set('Accept', 'application/json')
+      .set('access_token', access_token_cust)
+      .send({name: 'tes', image_url: 'jttp', quantity: 1, price: 1000, user_id})
+      .then(response => {
+        const { status, body } = response
+        expect(status).toBe(201)
+        expect(body).toHaveProperty('name', expect.any(String))
+        expect(body).toHaveProperty('quantity', expect.any(Number))
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+    })
+  })
+
+  describe('GET ALL /histories', () => {
+    describe('Success process', () => {
+      test('should return array of histories with status code 200', (done) => {
+        request(app)
+          .get('/histories/all')
+          .set('access_token', access_token_merchant)
+          .end((err, res) => {
+            expect(err).toBe(null)
+            expect(Array.isArray(res.body)).toEqual(true)
+            expect(res.status).toBe(200)
+            done()
+          })
       })
     })
   })
