@@ -95,27 +95,17 @@ function Player({ skin, player, updatePlayer }) {
     }
     setShow(true)
   }
-  // console.log(products, '<<< prod');
 
   useEffect(() => {
     dispatch(fetchCarts())
   }, [dispatch])
-
-  // console.log(carts, ' <<<<<<<<<<<<<<< CARTS');
-
 
   const history = useHistory()
   useKeyPress((e) => {
     if (e.keyCode === 13) {
       let arrayX = Math.round((position.x - 4) / 40)
       let arrayY = Math.round((position.y - 24) / 40)
-      // if (tiles[arrayY - 1][arrayX] < 50 && tiles[arrayY - 1][arrayX] > 10) {
-      //   // <Booth onClick={modaldeh}/>  
-      //   // history.push('/buy-product')
-      //   // modaldeh()
-      //   alert('Iya mau apa?')
-      //   return console.log('ACTION')
-      // } 
+      
       if (tiles[arrayY - 1][arrayX] < 50) {
         modaldeh(tiles[arrayY - 1][arrayX])
       } else {

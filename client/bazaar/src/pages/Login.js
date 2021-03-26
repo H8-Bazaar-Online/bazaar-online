@@ -67,21 +67,6 @@ export default function Login() {
               <div>
                 <p>Choose your Avatar</p>
                 <label>
-{/* //                   <input type="radio" className="nes-radio" value='char1' name="character" />
-//                   <span><img src={img1} alt="" style={{height: '80px'}}/></span>
-//                 </label>
-//                 <label>
-//                   <input type="radio" className="nes-radio" value='char2' name="character" />
-//                   <span><img src={img2} alt="" style={{height: '80px'}}/></span>
-//                 </label>
-//                 <label>
-//                   <input type="radio" className="nes-radio" value='char3' name="character" />
-//                   <span><img src={img3} alt="" style={{height: '80px'}}/></span>
-//                 </label>
-//                 <label>
-//                   <input type="radio" className="nes-radio" value='char4' name="character" />
-//                   <span><img src={img4} alt="" style={{height: '80px'}}/></span>
-// ======= */}
                   <input type="radio" onChange={handleOnChange} className="nes-radio" value='char1' name="character" />
                   <span><img src={img1} alt="" style={{height: '80px'}}/></span>
                 </label>
