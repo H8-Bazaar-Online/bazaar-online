@@ -1,5 +1,17 @@
 import Swal from 'sweetalert2'
-const base_url = 'http://localhost:3001'
+const base_url = 'http://18.140.68.162:80'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top',
+  showConfirmButton: false,
+  timer: 2000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
 
 export function setFetchProduct(payload) {
   return { type: 'PRODUCTS/FETCH_ALL', payload }
@@ -71,24 +83,24 @@ export function setFetchMerchant(payload) {
   return { type: 'MERCHANTS/FETCH_ALL', payload }
 }
 
-export function fetchMerchant() {
-  console.log('MASUK SINI');
-  return async (dispatch) => {
-    try {
-      dispatch(setLoading(true))
-      const response = await fetch(`${base_url}/customer-merchants`, {
-        headers: {
-          access_token: localStorage.getItem("access_token"),
-        },
-      })
-      const data = await response.json()
-      dispatch(setFetchMerchant(data))
-      dispatch(setLoading(false))
-    } catch (err) {
-      console.log(err);
-    }
-  }
-}
+// export function fetchMerchant() {
+//   console.log('MASUK SINI');
+//   return async (dispatch) => {
+//     try {
+//       dispatch(setLoading(true))
+//       const response = await fetch(`${base_url}/customer-merchants`, {
+//         headers: {
+//           access_token: localStorage.getItem("access_token"),
+//         },
+//       })
+//       const data = await response.json()
+//       dispatch(setFetchMerchant(data))
+//       dispatch(setLoading(false))
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   }
+// }
 
 export function setFetchCarts(payload) {
   return { type: 'CARTS/FETCH_ALL', payload }
@@ -139,18 +151,22 @@ export function setAddHistory(payload) {
 }
 
 export function addHistory(payload) {
+  console.log(payload, '<<<<<<<<<<<< PAYLOAD');
   return async (dispatch) => {
     try {
       dispatch(setLoading(true))
       for (const el of payload) {
-        console.log(el, '<<<<<<');
+        // console.log(el, '<<<<<<');
         const response = await fetch(`${base_url}/histories/${el.product_id}`, {
           headers: {
+            "Content-Type": "application/json",
             access_token: localStorage.getItem("access_token"),
           },
-          method: "POST"
+          method: "POST",
+          body: JSON.stringify(payload)
         })
         const data = await response.json()
+        console.log(data, '<<<<<<<<< DATA');
         dispatch(setAddHistory(data))
         await fetch(`${base_url}/carts/${el.id}`, {
           headers: {
@@ -164,6 +180,10 @@ export function addHistory(payload) {
         dispatch(fetchCarts())
         dispatch(fetchHistories())
       }
+      Toast.fire({
+        icon: 'success',
+        title: 'Success checkout'
+      })
       dispatch(setLoading(false))
     } catch (err) {
       console.log(err, '<<<<<<<<<'); 
@@ -260,6 +280,7 @@ export function setUsername(payload) {
 }
 
 export function login(payload) {
+  console.log(payload, '<<<<');
   return async (dispatch) => {
     try {
       const response = await fetch(`${base_url}/users/login`, {
@@ -276,6 +297,7 @@ export function login(payload) {
       const data = await response.json()
       localStorage.access_token = await data.access_token;
       localStorage.name = await data.name
+      localStorage.character = await payload.character
       dispatch(setUsername(data.name))
       const Toast = Swal.mixin({
         toast: true,
@@ -289,10 +311,15 @@ export function login(payload) {
         title: "Login Success"
       });
     } catch (err) {
+      console.log(err);
       Swal.fire({
         title: 'Error !', 
         text: err.data.message.map(error => {return (` ${error}`)}),
-        icon: 'error'})
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      })
     }
   };
 }
@@ -321,10 +348,10 @@ export function register (payload) {
 
     } catch (err) {
       console.log(err.data);
-      // Swal.fire({
-      //   title: 'Error !', 
-      //   text: err.data.message.map(error => {return (` ${error}`)}),
-      //   icon: 'error'})
+      Swal.fire({
+        title: 'Error !', 
+        text: err.data.message.map(error => {return (` ${error}`)}),
+        icon: 'error'})
     }
   };
 }

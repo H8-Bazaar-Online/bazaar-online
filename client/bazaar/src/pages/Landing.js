@@ -18,15 +18,16 @@ export default function Landing() {
   return (
     <div className='container-fluid'>
       <div className='d-flex justify-content-center align-center'>
-        <div className='col-6'>
-          <div className="nes-container with-title is-centered text-white">
+        <div className='col-8'>
+          <div className="nes-container with-title is-centered is-dark" style={{marginTop: "5rem"}}>
             <h1 className="title">Virtual Bazaar</h1>
-              <p>Welcome To The Most Anticipated Event of The Year</p>
+              <p style={{paddingTop: 15}}>Welcome To The Most Anticipated Event of The Year</p>
               <p>This year, our theme is local products and SME's</p>
               <p>Our main attractions are:</p>
-              <p>Flash Sale</p>
-              <p>Product Launching</p>
-              <p>Auction of rare collectible items</p>
+              <p>- Flash Sale -</p>
+              <p>- Product Launching -</p>
+              <p>- Auction of rare collectible items -</p>
+              <hr className="text-white"></hr>
               <p>Get Excited as we are? Come and join this event!!</p>
               <p>This event supported by:</p>
               <img src="https://www.clipartkey.com/mpngs/m/164-1640320_hacktiv8-logo.png" alt="" style={{imageRendering: 'pixelated', height: '80px'}}/>

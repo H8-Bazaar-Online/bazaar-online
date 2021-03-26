@@ -133,6 +133,7 @@ function Map(props) {
       backgroundColor: 'grey',
       border: '4px solid white',
     }}>
+      
       {
         props.tiles.map((row, index) => <MapRow tiles={row} key={index} />)
       }

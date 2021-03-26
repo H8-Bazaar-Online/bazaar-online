@@ -25,7 +25,7 @@ function App() {
     if (window.location.pathname === '/register') {
       history.push('/register')
     } else {
-      if (localStorage.access_token === 'undefined' || !localStorage.access_token) {
+      if (localStorage.access_token === 'undefined' || !localStorage.access_token || localStorage.length === 0) {
         history.push('/')
       } else {
         history.push('/game')
@@ -34,7 +34,7 @@ function App() {
   }, [history])
 
   useEffect(() => {
-    dispatch(setSocketConnect(io.connect("http://localhost:3001")))
+    dispatch(setSocketConnect(io.connect("http://18.140.68.162:80/")))
   }, [dispatch])
 
 
