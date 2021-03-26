@@ -11,8 +11,9 @@ class HistoryController {
       if (product.stock < 1) throw { name: 'CustomError', message: 'Out of Stock', status: 404 }
       const decrement = await product.decrement('stock', { by: quantity })
       if (!decrement) throw { name: 'CustomError', message: 'Product Not Found', status: 404 }
+      const qty = req.body[0].quantity
 
-      const history = await History.create({ name: product.name, image_url: product.image_url, quantity, price: product.price, user_id })
+      const history = await History.create({ name: product.name, image_url: product.image_url, quantity: qty, price: product.price, user_id })
       // const cart = await Cart
       res.status(201).json(history)
     } catch (err) {
