@@ -32,18 +32,12 @@ export default function Login() {
 
   const handleOnChange = (e)=>{
     let {name, value} = e.target
-    console.log(value);
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const backToRegister = (e) => {
     history.push('/register')
   }
-
-  // const handleOnChange = (e) => {
-  //   let {name, value} = e.target
-  //   console.log(value,"CHAR NAME");
-  // }
   
   return (
     <div className='container-fluid'>

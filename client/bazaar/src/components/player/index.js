@@ -105,7 +105,7 @@ function Player({ skin, player, updatePlayer }) {
     if (e.keyCode === 13) {
       let arrayX = Math.round((position.x - 4) / 40)
       let arrayY = Math.round((position.y - 24) / 40)
-      
+
       if (tiles[arrayY - 1][arrayX] < 50) {
         modaldeh(tiles[arrayY - 1][arrayX])
       } else {
@@ -135,7 +135,6 @@ function Player({ skin, player, updatePlayer }) {
     }}>
       <button onClick={handleLogout} type="button" className="nes-btn" ><i className="fas fa-sign-out-alt"></i></button>
     </div>
-    {/* <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} player={player} /> */}
     <Actor sprite={skin} data={data} step={step} dir={dir} position={position} updatePlayer={updatePlayer} player={player} />
         
       { show ? (

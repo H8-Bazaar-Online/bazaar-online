@@ -53,7 +53,6 @@ function Socket() {
 					<input
 						name="message"
 						onChange={(e) => {
-							console.log(e.target.value);
 							onTextChange(e)
 						}}
 						value={state.message}

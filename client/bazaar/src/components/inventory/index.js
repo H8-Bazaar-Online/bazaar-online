@@ -21,7 +21,6 @@ function Inventory() {
 
   const handlePlusQty = (id) => {
     carts.forEach(el => {
-      console.log(el, '<<');
       if (el.id === id) {
         if (el.quantity < el.Product.stock) {
           dispatch(cartUpdateQty({id, status: 'plus'}))
