@@ -4,18 +4,11 @@ import { useSelector } from 'react-redux'
 
 
 function useWalk(maxSteps, player, updatePlayer) {
-  // console.log(player, ')))))))))))))');
   const [dir, setDir] = useState(0)
   const [step, setStep] = useState(0)
   const [position, setPosition] = useState({ x: updatePlayer.position.x, y: updatePlayer.position.y })
-  // const [position, setPosition] = useState({ x: 4, y: 164 })
-  // const { updatePlayers } = useSelector(state => state.socketConnect)
 
   const { socketConnect, updatePlayers } = useSelector(state => state.socketConnect)
-
-  
-  // useEffect(() => {
-  // }, [updatePlayer])
 
 
   const directions = {
@@ -54,14 +47,11 @@ function useWalk(maxSteps, player, updatePlayer) {
         let arrayY = Math.round((newY - 24) / 40)
         let tile = tiles[arrayY][arrayX]
         if (tile === 90 || tile === 91) {
-          // socketConnect.emit('playerPos', { id, name, position: { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y } })
           return { x: prev.x + modifier[dir].x, y: prev.y + modifier[dir].y }
         } else {
-          // socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
           return { x: prev.x, y: prev.y }
         }
       } else {
-        // socketConnect.emit('playerPos', { id, name, position:{ x: prev.x, y: prev.y } })
         return { x: prev.x, y: prev.y }
       }
     })

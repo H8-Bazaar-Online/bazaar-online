@@ -151,12 +151,10 @@ export function setAddHistory(payload) {
 }
 
 export function addHistory(payload) {
-  console.log(payload, '<<<<<<<<<<<< PAYLOAD');
   return async (dispatch) => {
     try {
       dispatch(setLoading(true))
       for (const el of payload) {
-        // console.log(el, '<<<<<<');
         const response = await fetch(`${base_url}/histories/${el.product_id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -166,7 +164,6 @@ export function addHistory(payload) {
           body: JSON.stringify(payload)
         })
         const data = await response.json()
-        console.log(data, '<<<<<<<<< DATA');
         dispatch(setAddHistory(data))
         await fetch(`${base_url}/carts/${el.id}`, {
           headers: {
@@ -280,7 +277,6 @@ export function setUsername(payload) {
 }
 
 export function login(payload) {
-  console.log(payload, '<<<<');
   return async (dispatch) => {
     try {
       const response = await fetch(`${base_url}/users/login`, {
