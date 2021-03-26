@@ -79,29 +79,34 @@ function Inventory() {
     {
       name: "image",
       selector: "image_url",
-      width: '25%',
+      center:true,
+      width: '35%',
       cell: row => <div><img style={{ height: 120 }} src={row?.Product?.image_url} alt={row?.Product?.name}/></div>,
       sortable: true
     },
     {
       name: "name",
-      width: '15%',
+      center:true,
+      width: '20%',
       cell: row => <div>{row?.Product?.name}</div>,
       sortable: true
     },
     {
       name: "price",
-      width: '15%',
+      center:true,
+      width: '35%',
       cell: row => <div>Rp. {row?.Product?.price.toLocaleString('id')}</div>,
       sortable: true
     },
     {
-      name: "",
+      name: "Qty",
+      center:true,
+      width: '35%',
       cell: row => 
         <div className="d-flex">
           <button type="button" className="nes-btn is-primary" onClick={() => handleMinusQty(row?.id)}><i className="fas fa-minus"></i>
           </button>
-          <div className="nes-field" style={{marginRight: 10, marginLeft: 10, width: 80}}>
+          <div className="nes-field" style={{marginRight: 0, marginLeft: 0, width: 80}}>
             <input type="number" id="name_field" defaultValue={row?.quantity} className="nes-input"/>
           </div>
           <button type="button" className="nes-btn pl-10 is-primary" onClick={() => handlePlusQty(row?.id)}><i className="fas fa-plus"></i>
@@ -111,7 +116,8 @@ function Inventory() {
     },
     {
       name: "Total Price",
-      width: '15%',
+      center:true,
+      width: '25%',
       cell: row => <div>Rp. {((row?.quantity * row?.Product?.price).toLocaleString('id'))}</div>,
       sortable: true
     },
@@ -134,16 +140,18 @@ function Inventory() {
           <Modal.Header>
             {/* <Modal.Title>Merchant</Modal.Title> */}
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="bg-white">
             <DataTable
             title="Cart"
             columns={columns}
             data={carts}
             // data={test}
             defaultSortField="title"
+            paginationPerPage={5}
+            paginationRowsPerPageOptions={[5,10,20,30]}
             pagination
-            // selectableRows
-            // ectableRowsComponent={BootyCheckbox}
+            responsive
+            
           />
           </Modal.Body>
           

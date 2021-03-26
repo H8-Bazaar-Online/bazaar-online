@@ -10,11 +10,6 @@ export default function Register() {
 
   const [showModal, setShowModal] = useState(false);
   
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  
   const [formDataRegis, setFormDataRegis] = useState({
     username: '',
     email: '',
@@ -50,7 +45,7 @@ export default function Register() {
     <div className='container-fluid'>
       <div className='d-flex justify-content-center align-center'>
         <div className='col-6'>
-          <div id="container" className="nes-container is-dark with-title is-centered">
+          <div id="container" className="nes-container is-dark with-title is-centered" style={{marginTop: "7rem"}}>
             <p className="title">Register</p>
               <label for="name_field">Username:</label>
               <div className="nes-field">
@@ -65,8 +60,8 @@ export default function Register() {
                   <input name='password' value={formDataRegis.password} onChange={handleOnChangeRegis} type="password"id="password_field" className="nes-input is-dark"/>
                 </div>
                 <br></br>      
-              <button type="button" className="nes-btn is-primary" onClick={handleOnSubmitRegister}>Submit</button>
               <button type="button" className="nes-btn is-secondary" onClick={backToLogin}>Back to Login</button>
+              <button type="button" className="nes-btn is-primary" onClick={handleOnSubmitRegister}>Submit</button>
 
             {
               showModal ? (

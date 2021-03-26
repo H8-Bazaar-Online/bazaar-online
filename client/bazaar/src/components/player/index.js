@@ -4,17 +4,16 @@ import useKeyPress from '../hooks/use-key-press/index'
 import useWalk from '../hooks/use-walk'
 import { tiles } from '../map/tiles'
 import { useHistory } from 'react-router-dom'
-import Booth from '../Booth'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProduct, fetchMerchant, setSocketConnect, addCart } from '../../store/action'
+import { fetchProduct, addCart, fetchCarts } from '../../store/action'
 import { Modal } from 'react-bootstrap'
 import DataTable from "react-data-table-component";
 import Swal from 'sweetalert2'
 
 function Player({ skin, player, updatePlayer }) {
-  const { merchants } = useSelector((state) => (state.merchants))
   const { products } = useSelector((state) => (state.products))
+  const { carts } = useSelector((state) => (state.carts))
   const {socketConnect } = useSelector((state) => state.socketConnect)
 
   const dispatch = useDispatch();
@@ -27,11 +26,9 @@ function Player({ skin, player, updatePlayer }) {
   }
   const currentPosition = () => {
     if (socketConnect) {
-      socketConnect.emit('playerPos', {...updatePlayer, position: { x: position.x, y: position.y }, data: { x: step * data.w, y: dir * data.h, h: data.h, w: data.w } })
+      socketConnect.emit('playerPos', {...updatePlayer, character : localStorage.character , position: { x: position.x, y: position.y }, data: { x: step * data.w, y: dir * data.h, h: data.h, w: data.w }, })
     }
   }
-  
-  const [showModal2, setShowModal] = useState(false)
 
   const Toast = Swal.mixin({
     toast: true,
@@ -64,17 +61,12 @@ function Player({ skin, player, updatePlayer }) {
     {
       name: "name",
       selector: "name",
+      cell: row => <div style={{fontSize: 10}}>{row.name}</div>,
       sortable: true,
     },
     {
       name: "price",
-      selector: "price",
-      sortable: true,
-    },
-    {
-      name: "stock",
-      selector: "stock",
-      width: "10%",
+      cell: row => <div style={{fontSize: 10}}>Rp. {row.price.toLocaleString('id')}</div>,
       sortable: true,
     },
     {
@@ -85,7 +77,7 @@ function Player({ skin, player, updatePlayer }) {
           row.stock === 0 ? (
               <button type="button" className="nes-btn is-disabled" disabled>Out Of Stock</button>
             ) : (
-              <button type="button" className="nes-btn" onClick={() => handleAddToCart(row.id)}>Add to cart</button>
+              <button type="button" className="nes-btn is-info" onClick={() => handleAddToCart(row.id)}>Add to cart</button>
           )
         }
         </div>,
@@ -103,10 +95,13 @@ function Player({ skin, player, updatePlayer }) {
     }
     setShow(true)
   }
+  // console.log(products, '<<< prod');
 
   useEffect(() => {
-    dispatch(fetchMerchant())
+    dispatch(fetchCarts())
   }, [dispatch])
+
+  // console.log(carts, ' <<<<<<<<<<<<<<< CARTS');
 
 
   const history = useHistory()
@@ -137,9 +132,19 @@ function Player({ skin, player, updatePlayer }) {
       }
     } 
   })
-
+  const handleLogout = (e) => {
+    localStorage.clear()
+    history.push('/')
+  }
   return (
     <>
+    <div className="Inventory" style={{
+      position: 'absolute',
+      bottom: '10px',
+      right: '10px',
+    }}>
+      <button onClick={handleLogout} type="button" className="nes-btn" ><i className="fas fa-sign-out-alt"></i></button>
+    </div>
     {/* <Actor sprite={`./img/${skin}.png`} data={data} step={step} dir={dir} position={position} player={player} /> */}
     <Actor sprite={skin} data={data} step={step} dir={dir} position={position} updatePlayer={updatePlayer} player={player} />
         
@@ -152,7 +157,7 @@ function Player({ skin, player, updatePlayer }) {
           <Modal.Header>
             {/* <Modal.Title>Merchant</Modal.Title> */}
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="bg-white">
             {/* Woohoo, you're reading this text in a modal! */}
             
             <DataTable

@@ -14,11 +14,6 @@ function History() {
     dispatch(fetchHistories())
   }, [dispatch])
 
-  const handleAddToCart = (id) => {
-    console.log(id, '<<<< ID ');
-    
-  }
-
   const [show, setShow] = useState(false);
 
   const columns = [
@@ -30,24 +25,23 @@ function History() {
       sortable: true
     },
     {
-      name: "name",
+      name: "Name",
       cell: row => <div>{row.name}</div>,
       sortable: true
     },
     {
-      name: "price",
+      name: "Price",
       cell: row => <div>{row.price}</div>,
       sortable: true
     },
     {
-      name: "quantity",
+      name: "Qty",
       cell: row => <div>{row.quantity}</div>,
       width: '10%',
       sortable: true
     },
     {
       name: "Total Price",
-      width: '15%',
       cell: row => <div>Rp. {((row?.quantity * row?.price).toLocaleString('id'))}</div>,
       sortable: true
     },
@@ -69,14 +63,14 @@ function History() {
           <Modal.Header>
             {/* <Modal.Title>Merchant</Modal.Title> */}
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="bg-white">
             <DataTable
             title="History"
             columns={columns}
             data={histories}
+            defaultSortField="name"
             paginationPerPage={5}
             paginationRowsPerPageOptions={[5,10,20,30]}
-            defaultSortField="name"
             pagination
             responsive
           />

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import '../App.css'
 
@@ -31,7 +31,7 @@ function Socket() {
 	const renderChat = () => {
 		return chat.map(({ name, message }, index) => (
 			<div key={index}>
-				<h3>
+				<h3 style={{fontSize:13}}>
 					{name}: <span>{message}</span>
 				</h3>
 			</div>
@@ -41,26 +41,15 @@ function Socket() {
 	return (
 		<div className="card chat-container">
 			<div className="card-header render-chat">
-				<h3>Public Chat</h3>
+				<p className="text-white mb-0">Public Chat</p>
 			</div>
 			<div className="card-body">
 				{renderChat()}
 			</div>
 			<div className="card-footer ">
 				<form onSubmit={onMessageSubmit}>
-					{/* <div className="name-field">
-                <TextField name="name" onChange={(e) => setState({...state, name: e.target.value})} value={state.name} label="Name" />
-            </div> */}
-						{/* <div class="nes-field d-flex" style={{height: 45}}>
-							<input type="text" id="name_field" class="nes-input" name="message"
-								onChange={(e) => {
-									console.log(e.target.value);
-									onTextChange(e)
-								}}
-								/>
-					<button>Send</button>
-
-						</div> */}
+						<div className="d-flex items-center">
+							
 					<input
 						name="message"
 						onChange={(e) => {
@@ -70,10 +59,13 @@ function Socket() {
 						value={state.message}
 						id="outlined-multiline-static"
 						variant="outlined"
+						className="nes-input"
 						label="Message"
-						style={{marginRight: "5px"}}
 					/>
-					<button>Send</button>
+                {/* <input type="email" id="name_field" name='email' className="nes-input is-dark"/> */}
+
+					<button style={{height:50, paddingRight:10}} className="nes-btn"><i className="fas fa-paper-plane text-dark"></i></button>
+						</div>
 
 				</form>
 			</div>
